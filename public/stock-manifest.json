@@ -1,0 +1,13 @@
+{
+  "name": "Maison Reserve — Stock Received",
+  "short_name": "Stock Received",
+  "start_url": "/stock-portal",
+  "scope": "/stock-portal",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#020617",
+  "theme_color": "#0F766E",
+  "icons": [
+    { "src": "/assets/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

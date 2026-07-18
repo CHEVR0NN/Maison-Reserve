@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.data/
+.env
+.env.*
+_asset_*
+_docx_extract/
+_standalone_bundle.js
+.chrome-qa*/
+.chrome-*/
+qa-*.png
+npm-debug.log*

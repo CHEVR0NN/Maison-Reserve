@@ -1,0 +1,15 @@
+export function generateRules(now = new Date()) {
+  const mins = (n) => new Date(now.getTime() - n * 60000).toISOString();
+  return [
+    { id: "auto_1", domain: "inventory", name: "Low-Stock Reorder Alert", description: "Flags SKUs below minStock and drafts a supplier reorder note.", enabled: true, schedule: "continuous", lastRunAt: mins(4), lastRunResult: "success", lastRunSummary: "3 SKUs flagged for reorder", runLog: [] },
+    { id: "auto_2", domain: "inventory", name: "Velocity Recompute", description: "Recalculates 30-day sell-through velocity per SKU.", enabled: true, schedule: "daily", lastRunAt: mins(340), lastRunResult: "success", lastRunSummary: "62 SKUs recalculated", runLog: [] },
+    { id: "auto_3", domain: "loyalty", name: "Points Expiry Sweep", description: "Rolls off Reserve Points past their 24-month expiry window.", enabled: true, schedule: "daily", lastRunAt: mins(500), lastRunResult: "success", lastRunSummary: "2 members swept", runLog: [] },
+    { id: "auto_4", domain: "loyalty", name: "Tier Recompute", description: "Re-derives member tier from rolling 13-month spend.", enabled: true, schedule: "continuous", lastRunAt: mins(2), lastRunResult: "success", lastRunSummary: "All members in sync", runLog: [] },
+    { id: "auto_5", domain: "loyalty", name: "Welcome Journey", description: "Enrolls marketplace buyers into the owned-channel welcome journey.", enabled: true, schedule: "continuous", lastRunAt: mins(18), lastRunResult: "success", lastRunSummary: "1 new member enrolled", runLog: [] },
+    { id: "auto_6", domain: "loyalty", name: "Abandoned Cart Recovery", description: "Sends timed WhatsApp/SMS/email follow-ups on high-value abandoned carts.", enabled: true, schedule: "hourly", lastRunAt: mins(46), lastRunResult: "success", lastRunSummary: "1 recovery sent", runLog: [] },
+    { id: "auto_7", domain: "marketplace", name: "Stock Push Sync", description: "Pushes authoritative stock counts to Lazada & Shopee to prevent oversell.", enabled: true, schedule: "continuous", lastRunAt: mins(22), lastRunResult: "success", lastRunSummary: "62 SKUs pushed", runLog: [] },
+    { id: "auto_8", domain: "marketplace", name: "Order Import", description: "Pulls new marketplace orders into the unified Orders pipeline.", enabled: true, schedule: "continuous", lastRunAt: mins(9), lastRunResult: "success", lastRunSummary: "2 orders imported", runLog: [] },
+    { id: "auto_9", domain: "delivery", name: "Driver Auto-Assign", description: "Assigns today's out-for-delivery orders to the nearest available truck by zone.", enabled: true, schedule: "continuous", lastRunAt: mins(31), lastRunResult: "success", lastRunSummary: "10 stops assigned across 2 trucks", runLog: [] },
+    { id: "auto_10", domain: "delivery", name: "Route Optimization", description: "Re-sequences each truck's stop order for shortest total distance.", enabled: false, schedule: "hourly", lastRunAt: mins(120), lastRunResult: "skipped", lastRunSummary: "Disabled — manual dispatch preferred today", runLog: [] },
+  ];
+}
