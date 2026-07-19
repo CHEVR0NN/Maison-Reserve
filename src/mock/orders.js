@@ -57,7 +57,12 @@ export function generateOrders(now = new Date(), count = 54) {
     else if (i < 51) status = "delivered";
     else status = "cancelled";
 
-    const minutesAgo = randInt(rand, 5, status === "delivered" ? 60 * 24 * 6 : 60 * 6);
+    // Non-delivered orders are "today's pipeline" — anchor them within minutes
+    // since local midnight so they never spill into yesterday no matter what
+    // time of day the demo happens to be viewed (e.g. just after midnight).
+    const startOfToday = new Date(now); startOfToday.setHours(0, 0, 0, 0);
+    const minutesSinceMidnight = Math.max(5, Math.floor((now.getTime() - startOfToday.getTime()) / 60000));
+    const minutesAgo = status === "delivered" ? randInt(rand, 5, 60 * 24 * 6) : randInt(rand, 1, Math.min(60 * 6, minutesSinceMidnight));
     const placedAt = new Date(now.getTime() - minutesAgo * 60000).toISOString();
     const packedAt = STATUS_FLOW.indexOf(status) >= 1 ? new Date(new Date(placedAt).getTime() + 20 * 60000).toISOString() : null;
     const dispatchedAt = STATUS_FLOW.indexOf(status) >= 2 ? new Date(new Date(placedAt).getTime() + 55 * 60000).toISOString() : null;
