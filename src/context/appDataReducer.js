@@ -191,6 +191,8 @@ export function appDataReducer(state, action) {
       return { ...state, stock: { ...state.stock, receipts: [action.receipt, ...state.stock.receipts] } };
     case "STOCK_REMOVE_RECEIPT":
       return { ...state, stock: { ...state.stock, receipts: state.stock.receipts.filter((r) => r.id !== action.id) } };
+    case "STOCK_UPDATE_RECEIPT":
+      return { ...state, stock: { ...state.stock, receipts: state.stock.receipts.map((r) => r.id === action.id ? { ...r, ...action.patch } : r) } };
 
     // ---- generic ambient tick patch (see context/liveTicker.js) ----
     case "TICK_PATCH":

@@ -13,7 +13,7 @@ import InboxPage from "./pages/InboxPage.jsx";
 import MarketplacePage from "./pages/MarketplacePage.jsx";
 import AutomationPage from "./pages/AutomationPage.jsx";
 import DriverPortalPage from "./pages/DriverPortalPage.jsx";
-import MelvinStockPortalPage from "./pages/MelvinStockPortalPage.jsx";
+import StockPortalPage from "./pages/StockPortalPage.jsx";
 
 const PAGE_TITLES = {
   Today: ["Command Center", "Today's operational snapshot"],
@@ -39,7 +39,7 @@ function MainShell() {
     Inbox: state.inbox.threads.filter((t) => t.unread).length,
   }), [state.orders.items, state.inbox.threads]);
 
-  if (!state.session.role) return <LoginView />;
+  if (state.session.role !== "staff") return <LoginView />;
 
   const [title, subtitle] = PAGE_TITLES[tab] || [];
 
@@ -72,7 +72,7 @@ function MainShell() {
 function Router() {
   const path = window.location.pathname;
   if (path === "/driver-portal") return <DriverPortalPage />;
-  if (path === "/stock-portal") return <MelvinStockPortalPage />;
+  if (path === "/stock-portal") return <StockPortalPage />;
   return <MainShell />;
 }
 

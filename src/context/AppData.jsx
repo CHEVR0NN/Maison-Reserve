@@ -79,6 +79,7 @@ export function AppDataProvider({ children }) {
     stock: {
       addReceipt: (receipt) => dispatch({ type: "STOCK_ADD_RECEIPT", receipt: { id: nextId("rcpt"), ...receipt } }),
       removeReceipt: (id) => dispatch({ type: "STOCK_REMOVE_RECEIPT", id }),
+      updateReceipt: (id, patch) => dispatch({ type: "STOCK_UPDATE_RECEIPT", id, patch }),
     },
     resetDemoData: () => dispatch({ type: "RESET_STATE", nextState: buildInitialState(new Date()) }),
   }), [dispatch]);
