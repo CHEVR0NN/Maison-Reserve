@@ -186,7 +186,7 @@ export function appDataReducer(state, action) {
       };
     }
 
-    // ---- stock (Melvin) ----
+    // ---- stock (receiving) ----
     case "STOCK_ADD_RECEIPT":
       return { ...state, stock: { ...state.stock, receipts: [action.receipt, ...state.stock.receipts] } };
     case "STOCK_REMOVE_RECEIPT":

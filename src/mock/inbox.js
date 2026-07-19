@@ -5,7 +5,7 @@ const OPENERS = [
   "Hi, is the Hennessy VSOP back in stock?",
   "Can I get a quote for a mixed case of red wine?",
   "Do you deliver to Sentosa on weekends?",
-  "What's my current Beeva Coins balance?",
+  "What's my current Reserve Points balance?",
   "Looking for a gift bundle under $150, any recommendations?",
   "My order MR-10241 hasn't arrived yet, any update?",
   "Do you carry Macallan 18yo?",

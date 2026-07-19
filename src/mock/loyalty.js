@@ -47,7 +47,7 @@ export function generateMembers(now = new Date()) {
 export function generateBroadcasts(now = new Date()) {
   const templates = [
     { name: "Weekend Wine Flash Sale", channel: "Email + SMS", audience: "All members" },
-    { name: "Queen Bee Early Access", channel: "Email", audience: "Queen Bee & above" },
+    { name: "Grand Cru Early Access", channel: "Email", audience: "Grand Cru & above" },
     { name: "Birthday Voucher Drop", channel: "SMS", audience: "Birthday this month" },
     { name: "Whisky Restock Alert", channel: "WhatsApp", audience: "Bourbon & Whisky buyers" },
     { name: "Referral Double Points", channel: "Email", audience: "All members" },

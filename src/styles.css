@@ -2223,7 +2223,7 @@ td .dim { color: var(--muted); font-size: 12px; }
 .tier-card.general:hover { border-color: var(--honey-deep); }
 .tier-card.queen { border-color: var(--honey-deep); background: linear-gradient(165deg, rgba(20,184,166,0.10), var(--surface)); }
 .tier-card.queen:hover { border-color: var(--honey); }
-/* Black Bee is always "premium dark" — never inherits light-mode surface colours */
+/* Maison Noir is always "premium dark" — never inherits light-mode surface colours */
 .tier-card.black {
   border-color: #4a4030;
   background: linear-gradient(165deg, #18130a, #0c0a05);

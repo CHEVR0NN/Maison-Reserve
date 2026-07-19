@@ -25,7 +25,7 @@ export const fmtAsOf = (iso) => {
   }) + " SGT";
 };
 
-// Master 15-zone / 82-prefix lookup table from Melvin's verified manifest (Driver 20260521.xlsx)
+// Master 15-zone / 82-prefix Singapore postal lookup table
 const POSTAL_TO_ZONE_MAP = {
   "01": "C1", "02": "C1", "03": "C1", "04": "C1", "05": "C1", "06": "C1", "07": "C1", "08": "C1",
   "09": "C3", "10": "C3", "11": "W1", "12": "W1", "13": "W1", "14": "C3", "15": "C3", "16": "C3",
