@@ -48,6 +48,9 @@ export default function Sidebar({ tab, setTab, badges = {}, onResetDemo }) {
         <button type="button" className="sidebar-reset-btn" onClick={onResetDemo}>
           <RotateCcw size={13} /> Reset Demo Data
         </button>
+        <div style={{ textAlign: "center", fontSize: 10.5, color: "var(--ink-3)", letterSpacing: ".04em" }}>
+          Maison Reserve v1.0.0 · Portfolio Demo
+        </div>
       </div>
     </aside>
   );
