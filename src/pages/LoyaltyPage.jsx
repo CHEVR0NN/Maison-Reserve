@@ -8,9 +8,9 @@ import Modal from "../components/ui/Modal.jsx";
 const TIER_PRESET = {
   "Cellar Member":   { cls: "worker",  fill: "none",    stroke: "#5a4d28", mltColor: "#8C8266", bday: "S$10 worth",  entry: "None",     raf: "Not eligible" },
   "Vintner's Circle":{ cls: "soldier", fill: "none",    stroke: "#7a6a3a", mltColor: "#C9BFA6", bday: "S$20 worth",  entry: "500 pts",  raf: "Not eligible" },
-  "Estate Reserve":  { cls: "general", fill: "none",    stroke: "#0F766E", mltColor: "#2DD4BF", bday: "S$50 worth",  entry: "1000 pts", raf: "0.25× mult" },
-  "Grand Cru":       { cls: "queen",   fill: "#14B8A6", stroke: "#2DD4BF", mltColor: "#04120F", bday: "S$100 worth", entry: "3000 pts", raf: "0.5× mult" },
-  "Maison Noir":     { cls: "black",   fill: "#0c0a05", stroke: "#2DD4BF", mltColor: "#2DD4BF", bday: "S$300 worth", entry: "5000 pts", raf: "0.75× mult" },
+  "Estate Reserve":  { cls: "general", fill: "none",    stroke: "#8A6B2C", mltColor: "#E8B85A", bday: "S$50 worth",  entry: "1000 pts", raf: "0.25× mult" },
+  "Grand Cru":       { cls: "queen",   fill: "#CC9A3E", stroke: "#E8B85A", mltColor: "#1B1712", bday: "S$100 worth", entry: "3000 pts", raf: "0.5× mult" },
+  "Maison Noir":     { cls: "black",   fill: "#0c0a05", stroke: "#F0C36B", mltColor: "#F0C36B", bday: "S$300 worth", entry: "5000 pts", raf: "0.75× mult" },
 };
 
 const CHANNELS = ["Email + SMS", "Email", "SMS", "WhatsApp"];
@@ -102,14 +102,9 @@ export default function LoyaltyPage() {
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: 2, background: "var(--surface-2)", border: "1px solid var(--line)", borderRadius: 10, padding: 3, width: "fit-content", marginBottom: 20 }}>
+      <div className="seg-tabs" role="tablist" aria-label="Loyalty view" style={{ marginBottom: 20 }}>
         {[{ id: "members", label: "Members" }, { id: "campaigns", label: "Campaigns" }].map((t) => (
-          <button key={t.id} onClick={() => setTab(t.id)} style={{
-            padding: "6px 16px", borderRadius: 8, border: "1px solid transparent",
-            background: tab === t.id ? "var(--amber-glow)" : "transparent",
-            color: tab === t.id ? "var(--honey-2)" : "var(--muted)",
-            fontSize: 12.5, fontWeight: tab === t.id ? 700 : 500, cursor: "pointer",
-          }}>
+          <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} className={`seg-tab${tab === t.id ? " active" : ""}`} onClick={() => setTab(t.id)}>
             {t.label}
           </button>
         ))}
@@ -122,8 +117,9 @@ export default function LoyaltyPage() {
               const preset = TIER_PRESET[tier.name] || TIER_PRESET["Cellar Member"];
               const stat = tierStats.get(tier.name) || { members: 0, points: 0 };
               return (
-                <div className={`tier-card ${preset.cls}${filterTier === tier.name ? " tier-card-active" : ""}`} key={tier.name}
-                  onClick={() => setFilterTier(filterTier === tier.name ? null : tier.name)} style={{ cursor: "pointer" }}>
+                <button type="button" className={`tier-card ${preset.cls}${filterTier === tier.name ? " tier-card-active" : ""}`} key={tier.name}
+                  aria-pressed={filterTier === tier.name}
+                  onClick={() => setFilterTier(filterTier === tier.name ? null : tier.name)}>
                   <div className="tier-hex">
                     <GemIcon fill={preset.fill} stroke={preset.stroke} />
                     <span className="mlt" style={{ color: preset.mltColor }}>{tier.mult.toFixed(1)}×</span>
@@ -138,7 +134,7 @@ export default function LoyaltyPage() {
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}><span className="dim">Entry Reward:</span><span className="strong">{preset.entry}</span></div>
                     <div style={{ display: "flex", justifyContent: "space-between" }}><span className="dim">Referral Bonus:</span><span className="strong">{preset.raf}</span></div>
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -157,8 +153,17 @@ export default function LoyaltyPage() {
                     <tr>
                       {[{ key: "name", label: "Member" }, { key: "tier", label: "Tier" }, { key: "spend", label: "13-mo Spend" }, { key: "bal", label: "Points Bal" }, { key: "exp", label: "Expiring Soon" }].map(({ key, label }) => {
                         const isActive = sortCol === key;
+                        const toggleSort = () => sortCol === key ? setSortAsc(!sortAsc) : (setSortCol(key), setSortAsc(false));
                         return (
-                          <th key={key} className={`loy-th${isActive ? " loy-th-active" : ""}`} onClick={() => sortCol === key ? setSortAsc(!sortAsc) : (setSortCol(key), setSortAsc(false))}>
+                          <th
+                            key={key}
+                            className={`loy-th${isActive ? " loy-th-active" : ""}`}
+                            role="button"
+                            tabIndex={0}
+                            aria-sort={isActive ? (sortAsc ? "ascending" : "descending") : "none"}
+                            onClick={toggleSort}
+                            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleSort(); } }}
+                          >
                             <span className="loy-th-inner">{label}</span>
                           </th>
                         );
@@ -166,10 +171,20 @@ export default function LoyaltyPage() {
                     </tr>
                   </thead>
                   <tbody>
+                    {visibleMembers.length === 0 && (
+                      <tr>
+                        <td colSpan={5}>
+                          <div className="empty-state" style={{ padding: "36px 0" }}>
+                            <b>No members in {filterTier}</b>
+                            <span>Nobody has reached this tier yet — check back as members climb the ladder.</span>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
                     {visibleMembers.map((m) => (
                       <tr key={m.id}>
                         <td><span className="strong">{m.name}</span></td>
-                        <td><span className={`tier-badge tier-${(TIER_PRESET[m.tier] || {}).cls || "gold"}`} style={{ background: "var(--amber-glow)", color: "var(--honey-2)" }}>{m.tier}</span></td>
+                        <td><span className={`tier-badge tier-${(TIER_PRESET[m.tier] || {}).cls || "general"}`}>{m.tier}</span></td>
                         <td className="mono">S${fmtN(m.spend13mo)}</td>
                         <td className="mono" style={{ color: "var(--honey-2)" }}>{fmtN(m.pointsBalance)}</td>
                         <td>{m.coinsExpiringSoon ? <span style={{ color: "var(--orange)", fontFamily: "var(--mono)", fontSize: 12 }}>{fmtN(m.pointsBalance)} in {m.expiringInDays}d</span> : <span className="dim">-</span>}</td>
@@ -238,6 +253,12 @@ export default function LoyaltyPage() {
           </div>
 
           <div className="camp-list" style={{ marginTop: 14 }}>
+            {broadcasts.length === 0 && (
+              <div className="empty-state">
+                <b>No campaigns yet</b>
+                <span>Broadcasts you send to loyalty segments will show up here.</span>
+              </div>
+            )}
             {broadcasts.map((c) => (
               <div className="camp" key={c.id}>
                 <div className="camp-date">

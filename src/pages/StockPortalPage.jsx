@@ -11,8 +11,6 @@ import BottleArt from "../components/BottleArt.jsx";
 
 const GLOBAL_CSS = `
   .mvp {
-    --mono: var(--mono);
-    --sans: var(--sans);
     background: var(--bg);
     color: var(--ink);
     font-family: var(--sans);
@@ -21,8 +19,8 @@ const GLOBAL_CSS = `
   .mvp.dark, .mvp.light {
     --kraft: var(--bg); --kraft-line: var(--line-soft); --card: var(--surface);
     --ink: var(--cream); --ink-soft: var(--cream-dim); --ink-faint: var(--muted);
-    --honey: var(--honey); --honey-2: var(--honey-2); --honey-soft: var(--amber-glow); --honey-text: var(--honey-2);
-    --bottle: var(--honey-2); --red: var(--red); --red-soft: var(--red-bg); --green: var(--green);
+    --honey-soft: var(--amber-glow); --honey-text: var(--honey-2);
+    --bottle: var(--honey-2); --red-soft: var(--red-bg);
   }
   .mvp * { box-sizing: border-box; }
   .mvp-shell { max-width: 480px; margin: 0 auto; padding: 22px 18px 60px; }
@@ -63,7 +61,7 @@ const GLOBAL_CSS = `
   .mvp-note { width: 100%; font-size: 15px; padding: 13px 14px; border-radius: 12px; border: 1.5px solid var(--kraft-line); background: var(--kraft); color: var(--ink); font-family: inherit; }
   .mvp-submit {
     width: 100%; padding: 17px; border-radius: 14px; border: none; margin-top: 8px;
-    background: var(--honey); color: #04120F; font-size: 16.5px; font-weight: 800;
+    background: var(--honey); color: #1B1712; font-size: 16.5px; font-weight: 800;
     letter-spacing: 0.3px; cursor: pointer;
   }
   .mvp-submit:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -101,7 +99,7 @@ const GLOBAL_CSS = `
   .mvp-slip-edit-note { width: 100%; font-size: 14px; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--kraft-line); background: var(--kraft); color: var(--ink); font-family: inherit; }
   .mvp-slip-edit-note:focus { outline: none; border-color: var(--honey); }
   .mvp-slip-edit-actions { display: flex; gap: 8px; margin-top: 2px; }
-  .mvp-slip-save { font-size: 12.5px; font-weight: 800; color: #04120F; background: var(--honey); border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+  .mvp-slip-save { font-size: 12.5px; font-weight: 800; color: #1B1712; background: var(--honey); border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
   .mvp-slip-cancel { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); background: none; border: 1.5px solid var(--kraft-line); border-radius: 8px; padding: 8px 14px; cursor: pointer; }
   .mvp-empty { text-align: center; padding: 30px 10px; color: var(--ink-faint); font-size: 13.5px; }
   .mvp-login-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
@@ -123,14 +121,15 @@ const GLOBAL_CSS = `
   .mvp-bulk-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
   .mvp-bulk-filebtn { display: inline-flex; align-items: center; padding: 10px 16px; border-radius: 10px; border: 1.5px dashed var(--kraft-line); background: var(--kraft); color: var(--ink-soft); font-size: 13.5px; font-weight: 700; cursor: pointer; }
   .mvp-bulk-filebtn:hover { border-color: var(--honey); color: var(--ink); }
+  .mvp-bulk-filebtn:focus-within { outline: 2px solid var(--honey); outline-offset: 2px; }
   .mvp-bulk-preview { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; max-height: 200px; overflow-y: auto; }
   .mvp-bulk-preview-row { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; padding: 6px 10px; border-radius: 8px; background: var(--kraft); font-family: var(--mono); }
   .mvp-bulk-preview-right { display: flex; align-items: center; gap: 8px; }
   .mvp-bulk-dup { font-family: var(--sans); font-size: 10.5px; font-weight: 800; letter-spacing: 0.3px; text-transform: uppercase; color: var(--honey-text); background: var(--honey-soft); border-radius: 6px; padding: 3px 6px; white-space: nowrap; }
   .mvp-bulk-results { margin-top: 14px; }
   .mvp-bulk-fail { font-size: 12.5px; color: var(--red); margin-top: 4px; }
-  .mvp-modal-backdrop { position: fixed; inset: 0; background: rgba(2,6,23,0.6); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 20px; }
-  .mvp-modal { width: 100%; max-width: 340px; background: var(--card); border: 1px solid var(--kraft-line); border-radius: 18px; padding: 26px 22px; text-align: center; box-shadow: 0 16px 48px rgba(0,0,0,0.3); animation: mvp-modal-in 0.15s ease-out; }
+  .mvp-modal-backdrop { position: fixed; inset: 0; background: rgba(16,11,4,0.6); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .mvp-modal { width: 100%; max-width: 340px; background: var(--card); border: 1px solid var(--kraft-line); border-radius: 18px; padding: 26px 22px; text-align: center; box-shadow: 0 16px 48px rgba(16,11,4,0.3); animation: mvp-modal-in 0.15s ease-out; }
   .mvp-modal-title { font-size: 17px; font-weight: 800; color: var(--bottle); margin: 0 0 10px; }
   .mvp-modal-body { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin: 0 0 22px; }
   .mvp-modal-actions { display: flex; gap: 10px; }
@@ -464,7 +463,7 @@ function StockPortal({ onExit, theme, onToggleTheme }) {
               <label className="mvp-label">Bulk import (CSV)</label>
               <p className="mvp-hint">Upload any delivery CSV you already have — we&rsquo;ll work out which column is the product and which is the quantity.</p>
               <div className="mvp-bulk-row">
-                <label className="mvp-bulk-filebtn">Choose CSV file<input type="file" accept=".csv,text/csv" onChange={handleCsvFile} hidden /></label>
+                <label className="mvp-bulk-filebtn">Choose CSV file<input type="file" accept=".csv,text/csv" className="sr-only-input" onChange={handleCsvFile} /></label>
               </div>
               {bulkError && <div className="mvp-status">{bulkError}</div>}
               {bulkRows.length > 0 && (

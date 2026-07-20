@@ -7,7 +7,7 @@ import { stepsForSegment } from "../mock/delivery.js";
 import { DRIVERS } from "../mock/people.js";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const TRUCK_COLOR = { truck_1: "#14B8A6", truck_2: "#F59E0B" };
+const TRUCK_COLOR = { truck_1: "#CC9A3E", truck_2: "#A6455C" };
 const TRUCK_NAME = { truck_1: "Truck 1", truck_2: "Truck 2" };
 const PANEL_H = { mini: "76px", half: "46vh", full: "88vh" };
 const TILE_URL = {
@@ -25,26 +25,26 @@ const C = {
   green: "var(--c-green)", greenSoft: "var(--c-greenSoft)", red: "var(--c-red)",
 };
 const HEX = {
-  dark: { gold: "#14B8A6", green: "#10B981", textDim: "#94A3B8", bg: "#020617" },
-  light: { gold: "#0D9488", green: "#059669", textDim: "#475569", bg: "#F1F5F9" },
+  dark: { gold: "#CC9A3E", green: "#5E9151", textDim: "#C7B999", bg: "#1B1712" },
+  light: { gold: "#A67A2E", green: "#4C7A41", textDim: "#4A3D2A", bg: "#FAF5EA" },
 };
 
 const GLOBAL_CSS = `
   .dp.dark {
     --c-bg: var(--bg); --c-surface: var(--surface); --c-surface2: var(--surface-2);
-    --c-hair: var(--line-soft); --c-hair2: rgba(148,163,184,.06);
+    --c-hair: var(--line-soft); --c-hair2: rgba(244,230,200,.06);
     --c-gold: var(--honey); --c-goldDark: var(--honey-deep); --c-goldSoft: var(--amber-glow);
     --c-text: var(--cream); --c-textDim: var(--cream-dim); --c-textFaint: var(--muted);
     --c-green: var(--green); --c-greenSoft: var(--green-bg); --c-red: var(--red);
-    --c-headerBg: rgba(2,6,23,.88);
+    --c-headerBg: rgba(20,17,13,.88);
   }
   .dp.light {
     --c-bg: var(--bg); --c-surface: var(--surface); --c-surface2: var(--surface-2);
-    --c-hair: var(--line-soft); --c-hair2: rgba(51,65,85,.06);
+    --c-hair: var(--line-soft); --c-hair2: rgba(60,46,26,.06);
     --c-gold: var(--honey); --c-goldDark: var(--honey-deep); --c-goldSoft: var(--amber-glow);
     --c-text: var(--cream); --c-textDim: var(--cream-dim); --c-textFaint: var(--muted);
     --c-green: var(--green); --c-greenSoft: var(--green-bg); --c-red: var(--red);
-    --c-headerBg: rgba(241,245,249,.92);
+    --c-headerBg: rgba(250,245,234,.92);
   }
   .dp * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
   .dp button { transition: transform .12s ease, opacity .12s ease, background .15s ease; cursor: pointer; }
@@ -52,11 +52,11 @@ const GLOBAL_CSS = `
   .dp .panel { transition: height .42s cubic-bezier(.25,.46,.45,.94); overflow: hidden; will-change: height; }
   .dp .panel-scroll::-webkit-scrollbar { width: 0; }
   .dp .panel-dragging { transition: none !important; }
-  .dp.dark  .leaflet-container { background: #0A0F1E; }
-  .dp.light .leaflet-container { background: #E2E8F0; }
+  .dp.dark  .leaflet-container { background: #1B1712; }
+  .dp.light .leaflet-container { background: #F1E9D8; }
   .dp .leaflet-container { font-family: inherit; }
   .dp .leaflet-control-attribution { font-size: 9px; backdrop-filter: blur(4px); border-radius: 6px !important; }
-  .dp .leaflet-tooltip { background: var(--c-surface2); border: 1px solid var(--c-hair); color: var(--c-text); border-radius: 9px; font-size: 12px; font-weight: 600; box-shadow: 0 4px 14px rgba(0,0,0,.18); padding: 5px 10px; }
+  .dp .leaflet-tooltip { background: var(--c-surface2); border: 1px solid var(--c-hair); color: var(--c-text); border-radius: 9px; font-size: 12px; font-weight: 600; box-shadow: 0 4px 14px rgba(16,11,4,.18); padding: 5px 10px; }
   @keyframes pinPulse { 0%,100%{transform:scale(1);opacity:.22}50%{transform:scale(1.4);opacity:0} }
   .dp .pin-pulse > div:first-child { animation: pinPulse 2s ease-in-out infinite; }
   @keyframes sheetUp { from{transform:translateY(14px);opacity:0}to{transform:translateY(0);opacity:1} }
@@ -65,13 +65,13 @@ const GLOBAL_CSS = `
   .dp input:focus { border-color: var(--c-gold) !important; box-shadow: 0 0 0 3px var(--c-goldSoft); outline: none; }
 `;
 
-const F = "'Inter', ui-sans-serif, -apple-system, 'SF Pro Display', Segoe UI, Roboto, sans-serif";
+const F = "'Public Sans', ui-sans-serif, -apple-system, 'SF Pro Display', Segoe UI, Roboto, sans-serif";
 const S = {
   root: { display: "flex", flexDirection: "column", height: "100dvh", background: C.bg, color: C.text, fontFamily: F, overflow: "hidden", WebkitFontSmoothing: "antialiased" },
   center: { display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100dvh", padding: 20, background: C.bg, fontFamily: F },
-  loginCard: { width: "100%", maxWidth: 380, background: C.surface, border: `1px solid ${C.hair}`, borderRadius: 26, padding: "38px 28px", boxShadow: "0 28px 70px rgba(0,0,0,.32)" },
+  loginCard: { width: "100%", maxWidth: 380, background: C.surface, border: `1px solid ${C.hair}`, borderRadius: 26, padding: "38px 28px", boxShadow: "0 28px 70px rgba(16,11,4,.35)" },
   loginSub: { fontSize: 12, color: C.textFaint, marginTop: 6, marginBottom: 28, letterSpacing: ".02em" },
-  btnGold: { width: "100%", padding: "14px", background: `linear-gradient(180deg,${C.gold},var(--c-goldDark,#0F766E))`, color: "#04120F", border: "none", borderRadius: 14, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 24px var(--c-goldSoft)", fontFamily: F, marginBottom: 12 },
+  btnGold: { width: "100%", padding: "14px", background: `linear-gradient(180deg,${C.gold},var(--c-goldDark,#8A6B2C))`, color: "#1B1712", border: "none", borderRadius: 14, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 24px var(--c-goldSoft)", fontFamily: F, marginBottom: 12 },
   header: { height: 52, flexShrink: 0, background: "var(--c-headerBg)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${C.hair}`, display: "flex", alignItems: "center", padding: "0 14px", gap: 10, zIndex: 20 },
   progStrip: { height: 36, flexShrink: 0, background: "var(--c-headerBg)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", borderBottom: `1px solid ${C.hair}`, display: "flex", alignItems: "center", padding: "0 16px", gap: 10, zIndex: 19 },
   hDivider: { width: 1, height: 18, background: C.hair, flexShrink: 0 },
@@ -83,8 +83,8 @@ const S = {
   hProgFill: { height: "100%", borderRadius: 3, transition: "width .45s cubic-bezier(.4,0,.2,1)" },
   iconBtn: { background: "transparent", border: `1px solid ${C.hair}`, borderRadius: 9, padding: "7px 8px", color: C.textDim, fontFamily: F, display: "flex", alignItems: "center", justifyContent: "center" },
   mapWrap: { flex: "1 1 0", minHeight: 0, position: "relative" },
-  locBtn: { position: "absolute", bottom: 16, right: 16, zIndex: 10, width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--c-surface)", border: `1px solid ${C.hair}`, borderRadius: 16, cursor: "pointer", backdropFilter: "blur(10px)", boxShadow: "0 8px 24px rgba(0,0,0,.22)" },
-  panel: { flexShrink: 0, background: C.surface, borderTop: `1px solid ${C.hair}`, borderRadius: "20px 20px 0 0", marginTop: -20, position: "relative", zIndex: 15, boxShadow: "0 -12px 32px rgba(0,0,0,.22)" },
+  locBtn: { position: "absolute", bottom: 16, right: 16, zIndex: 10, width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--c-surface)", border: `1px solid ${C.hair}`, borderRadius: 16, cursor: "pointer", backdropFilter: "blur(10px)", boxShadow: "0 8px 24px rgba(16,11,4,.22)" },
+  panel: { flexShrink: 0, background: C.surface, borderTop: `1px solid ${C.hair}`, borderRadius: "20px 20px 0 0", marginTop: -20, position: "relative", zIndex: 15, boxShadow: "0 -12px 32px rgba(16,11,4,.22)" },
   panelScroll: { overflowY: "auto", height: "calc(100% - 44px)", WebkitOverflowScrolling: "touch" },
   grabberRow: { display: "flex", alignItems: "center", justifyContent: "center", padding: "14px 18px 8px", cursor: "grab", userSelect: "none", touchAction: "none", WebkitUserSelect: "none" },
   grabber: { width: 40, height: 5, borderRadius: 99, background: C.hair2, flexShrink: 0 },
@@ -99,7 +99,7 @@ const S = {
   chipRow: { display: "flex", gap: 7, flexWrap: "wrap", marginBottom: 16 },
   chip: { fontSize: 11, color: C.textDim, background: C.surface2, border: `1px solid ${C.hair2}`, borderRadius: 20, padding: "4px 10px", fontWeight: 500 },
   btnRow: { display: "flex", gap: 10 },
-  markBtn: { flex: 1, padding: "15px", background: `linear-gradient(180deg,${C.gold},var(--c-goldDark,#0F766E))`, color: "#04120F", border: "none", borderRadius: 16, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 22px var(--c-goldSoft)", fontFamily: F },
+  markBtn: { flex: 1, padding: "15px", background: `linear-gradient(180deg,${C.gold},var(--c-goldDark,#8A6B2C))`, color: "#1B1712", border: "none", borderRadius: 16, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 22px var(--c-goldSoft)", fontFamily: F },
   navBtn: { flex: 1, padding: "15px", background: C.surface2, border: `1px solid ${C.hair}`, borderRadius: 16, fontWeight: 600, fontSize: 15, color: C.text, fontFamily: F },
   stepsWrap: { borderTop: `1px solid ${C.hair2}` },
   stepsHdr: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "13px 18px", cursor: "pointer", fontSize: 12.5, color: C.textDim, fontWeight: 600, userSelect: "none" },
@@ -112,18 +112,18 @@ const S = {
   stopCardActive: { borderColor: C.gold },
   stopCardDone: { opacity: .45 },
   stopRow: { display: "flex", alignItems: "center", gap: 10, marginBottom: 8 },
-  seq: { width: 28, height: 28, borderRadius: "50%", background: C.goldSoft, border: `1px solid rgba(20,184,166,.3)`, color: C.gold, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 12.5, flexShrink: 0, fontFamily: "ui-monospace,monospace" },
-  seqDone: { background: C.greenSoft, border: `1px solid rgba(16,185,129,.3)`, color: C.green },
+  seq: { width: 28, height: 28, borderRadius: "50%", background: C.goldSoft, border: `1px solid rgba(204,154,62,.3)`, color: C.gold, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 12.5, flexShrink: 0, fontFamily: "ui-monospace,monospace" },
+  seqDone: { background: C.greenSoft, border: `1px solid rgba(94,145,81,.3)`, color: C.green },
   stopCust: { fontWeight: 600, fontSize: 14.5, flex: 1, letterSpacing: "-.005em" },
   zonePill: { fontFamily: "ui-monospace,monospace", fontWeight: 600, fontSize: 10.5, padding: "3px 9px", borderRadius: 20, background: C.bg, border: `1px solid ${C.hair2}`, color: C.textDim, flexShrink: 0 },
   stopAddr: { fontSize: 12.5, color: C.textDim, marginBottom: 8, lineHeight: 1.45 },
   stopMeta: { display: "flex", gap: 6, fontSize: 11, color: C.textFaint, marginBottom: 12, flexWrap: "wrap" },
   cardBtnRow: { display: "flex", gap: 8 },
   btnGhost: { flex: 1, padding: "10px 12px", borderRadius: 14, fontSize: 13.5, fontWeight: 600, border: `1px solid ${C.hair}`, background: C.surface2, color: C.text, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: F },
-  btnPrimary: { flex: 1, padding: "11px 12px", borderRadius: 14, fontSize: 13.5, fontWeight: 700, border: "none", background: C.gold, color: "#04120F", fontFamily: F },
+  btnPrimary: { flex: 1, padding: "11px 12px", borderRadius: 14, fontSize: 13.5, fontWeight: 700, border: "none", background: C.gold, color: "#1B1712", fontFamily: F },
   delivRow: { display: "flex", alignItems: "center", gap: 8, color: C.green, fontWeight: 600, fontSize: 12.5 },
-  overlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,.55)", backdropFilter: "blur(5px)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 200 },
-  sheet: { background: C.surface, border: `1px solid ${C.hair}`, borderRadius: "26px 26px 0 0", padding: "20px 22px 32px", width: "100%", maxWidth: 520, boxShadow: "0 -20px 50px rgba(0,0,0,.22)" },
+  overlay: { position: "fixed", inset: 0, background: "rgba(16,11,4,.55)", backdropFilter: "blur(5px)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 200 },
+  sheet: { background: C.surface, border: `1px solid ${C.hair}`, borderRadius: "26px 26px 0 0", padding: "20px 22px 32px", width: "100%", maxWidth: 520, boxShadow: "0 -20px 50px rgba(16,11,4,.22)" },
   preview: { width: "100%", borderRadius: 14, marginBottom: 14, border: `1px solid ${C.hair}`, display: "block" },
   stateMsg: { textAlign: "center", padding: "28px 20px", color: C.textDim, fontSize: 14.5, lineHeight: 1.6 },
   linkBtn: { color: C.gold, background: "none", border: "none", cursor: "pointer", fontWeight: 700, fontSize: 14, fontFamily: F },
@@ -138,7 +138,7 @@ function makePinHtml(label, state, truckColor, hex) {
   if (state === "active") {
     return `<div class="pin-pulse" style="position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center">`
       + `<div style="position:absolute;inset:0;border-radius:50%;background:${truckColor};opacity:.25"></div>`
-      + `<div style="width:32px;height:32px;background:${truckColor};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-weight:700;font-size:13px;color:#04120F;box-shadow:0 3px 12px rgba(0,0,0,.5),0 0 0 2px #fff">${label}</div></div>`;
+      + `<div style="width:32px;height:32px;background:${truckColor};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-weight:700;font-size:13px;color:#1B1712;box-shadow:0 3px 12px rgba(0,0,0,.5),0 0 0 2px #fff">${label}</div></div>`;
   }
   return `<div style="width:28px;height:28px;background:#fff;border:2.5px solid ${truckColor};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-weight:700;font-size:12px;color:${truckColor};box-shadow:0 2px 10px rgba(0,0,0,.4),0 0 0 1px rgba(0,0,0,.1)">${label}</div>`;
 }
@@ -168,7 +168,7 @@ function MapView({ stops, truckId, position, segmentIndex, polyline, depot, them
   const tileRef = useRef(null);
   const gpsRef = useRef(null);
   const [mapReady, setMapReady] = useState(false);
-  const color = TRUCK_COLOR[truckId] || "#14B8A6";
+  const color = TRUCK_COLOR[truckId] || "#CC9A3E";
   const hex = HEX[theme] || HEX.dark;
 
   useEffect(() => {
@@ -250,10 +250,10 @@ function TurnSteps({ steps }) {
   if (!steps?.length) return null;
   return (
     <div style={S.stepsWrap}>
-      <div style={S.stepsHdr} onClick={() => setOpen((o) => !o)}>
+      <button type="button" style={{ ...S.stepsHdr, width: "100%", border: 0, background: "transparent", font: "inherit", textAlign: "left" }} aria-expanded={open} onClick={() => setOpen((o) => !o)}>
         <span>Turn-by-turn · {steps.length} steps</span>
         <span style={{ fontSize: 12, color: C.textFaint, display: "inline-block", transition: "transform .2s", transform: open ? "rotate(180deg)" : "none" }}>▾</span>
-      </div>
+      </button>
       {open && (
         <div style={S.stepsList}>
           {steps.map((step, i) => (
@@ -273,7 +273,7 @@ function StopCard({ stop, index, delivered, failed, active, onMarkDelivered, onR
   return (
     <div style={{ ...S.stopCard, ...(active ? S.stopCardActive : {}), ...(delivered ? S.stopCardDone : {}), ...(failed ? { opacity: 0.7 } : {}) }}>
       <div style={S.stopRow}>
-        <div style={{ ...S.seq, ...(delivered ? S.seqDone : {}), ...(failed ? { background: "rgba(239,68,68,.15)", borderColor: C.red } : {}) }}>
+        <div style={{ ...S.seq, ...(delivered ? S.seqDone : {}), ...(failed ? { background: "rgba(177,74,63,.15)", borderColor: C.red } : {}) }}>
           {delivered
             ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.green} strokeWidth="3"><path d="M20 6L9 17l-5-5" /></svg>
             : failed
@@ -308,7 +308,7 @@ function StopCard({ stop, index, delivered, failed, active, onMarkDelivered, onR
 // ─── DriverPortal (the active in-route experience) ──────────────────────────
 function DriverPortal({ truckId, theme, onToggleTheme, onExit }) {
   const { state, actions } = useAppData();
-  const color = TRUCK_COLOR[truckId] || "#14B8A6";
+  const color = TRUCK_COLOR[truckId] || "#CC9A3E";
   const truck = state.delivery.trucks[truckId];
   const ordersById = new Map(state.orders.items.map((o) => [o.id, o]));
   const zoneCentroids = state.delivery.zoneCentroids;
@@ -425,7 +425,7 @@ function DriverPortal({ truckId, theme, onToggleTheme, onExit }) {
       <style>{GLOBAL_CSS}</style>
 
       <div style={S.header}>
-        <div className="sidebar-brand-mark" style={{ width: 26, height: 26, fontSize: 11 }}>MR</div>
+        <div className="sidebar-brand-mark sm">MR</div>
         <div style={S.hDivider} />
         <span style={{ ...S.truckDot, background: color }} />
         <span style={S.hTruckName}>{TRUCK_NAME[truckId]}</span>
@@ -520,7 +520,7 @@ function DriverPortal({ truckId, theme, onToggleTheme, onExit }) {
       <input ref={fileRef} type="file" accept="image/*" capture="environment" style={{ display: "none" }} onChange={onPhotoChange} />
 
       {toast && (
-        <div style={{ position: "fixed", bottom: 96, left: "50%", transform: "translateX(-50%)", zIndex: 9000, background: toast.type === "warn" ? C.red : C.green, color: "#fff", padding: "10px 20px", borderRadius: 24, fontSize: 14, fontWeight: 600, boxShadow: "0 4px 24px rgba(0,0,0,.4)", whiteSpace: "nowrap", pointerEvents: "none" }}>
+        <div style={{ position: "fixed", bottom: 96, left: "50%", transform: "translateX(-50%)", zIndex: 9000, background: toast.type === "warn" ? C.red : C.green, color: "#fff", padding: "10px 20px", borderRadius: 24, fontSize: 14, fontWeight: 600, boxShadow: "0 4px 24px rgba(16,11,4,.4)", whiteSpace: "nowrap", pointerEvents: "none" }}>
           {toast.msg}
         </div>
       )}
@@ -535,7 +535,7 @@ function DriverPortal({ truckId, theme, onToggleTheme, onExit }) {
             {podMode === "fail" ? (
               <>
                 {["Customer not home", "Wrong address", "Refused delivery", "Age verification failed", "Other"].map((r) => (
-                  <button key={r} style={{ ...S.btnGhost, width: "100%", marginBottom: 8, justifyContent: "flex-start", background: failReason === r ? "rgba(239,68,68,.15)" : undefined, border: failReason === r ? `1px solid ${C.red}` : S.btnGhost.border, color: failReason === r ? C.red : C.text }} onClick={() => setFailReason(r)}>{r}</button>
+                  <button key={r} style={{ ...S.btnGhost, width: "100%", marginBottom: 8, justifyContent: "flex-start", background: failReason === r ? "rgba(177,74,63,.15)" : undefined, border: failReason === r ? `1px solid ${C.red}` : S.btnGhost.border, color: failReason === r ? C.red : C.text }} onClick={() => setFailReason(r)}>{r}</button>
                 ))}
                 <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
                   <button style={S.btnGhost} onClick={() => { setPod(null); setFailReason(""); }}>Cancel</button>
@@ -571,7 +571,7 @@ function EnterDemoScreen({ onEnter, theme, onToggleTheme }) {
       <style>{GLOBAL_CSS}</style>
       <div style={{ position: "fixed", top: 16, right: 16 }}><ThemeToggle theme={theme} onToggle={onToggleTheme} /></div>
       <div style={S.loginCard}>
-        <div className="sidebar-brand-mark" style={{ width: 40, height: 40, fontSize: 15, marginBottom: 14 }}>MR</div>
+        <div className="sidebar-brand-mark" style={{ marginBottom: 14 }}>MR</div>
         <div style={{ fontSize: 20, fontWeight: 700 }}>Driver Portal</div>
         <div style={S.loginSub}>Portfolio demo — pick a truck to view its live route</div>
         {DRIVERS.map((d) => (

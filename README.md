@@ -1,6 +1,6 @@
 # Maison Reserve
 
-**v1.0.0** · Command Center for Premium Retail Operations
+**v2.0.0** · Command Center for Premium Retail Operations
 
 A frontend-only portfolio demo: a full retail operations dashboard for a premium wine & spirits
 retailer — orders, inventory, delivery, loyalty, inbox, marketplace channels, and automation —
@@ -48,9 +48,12 @@ sidebar wipes local storage and reseeds from scratch at any time.
 
 ## Design
 
-Dark, high-density "ops" aesthetic — deep slate background, teal/emerald accents for
-live/success states, amber for warnings, red for critical alerts. Tokens live in `src/styles.css`;
-product imagery is generated inline SVG art (`src/components/BottleArt.jsx`), not photography.
+A premium alcohol-marketplace command center: Charcoal (navigation/shell), Oak (content
+surfaces), Amber (primary accent, used sparingly), Cabernet (secondary accent — wine categories,
+conversations, premium status), and Cream (light-mode paper surfaces). Typeset in Fraunces
+(display/headings) and Public Sans (UI/body), with JetBrains Mono for SKUs, timestamps and
+tabular data. Tokens live in `src/styles.css`; product imagery is generated inline SVG art
+(`src/components/BottleArt.jsx`), not photography.
 
 ## Changelog
 

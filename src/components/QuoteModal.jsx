@@ -53,7 +53,7 @@ export default function QuoteModal({ threadId, customerName, onClose }) {
   }
 
   return (
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(2,6,23,0.7)", backdropFilter: "blur(2px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(16,11,4,0.7)", backdropFilter: "blur(2px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
       <div onClick={(e) => e.stopPropagation()} style={{ width: 600, maxWidth: "100%", maxHeight: "88vh", display: "flex", flexDirection: "column", background: "var(--surface)", border: "1px solid var(--rule-strong)", borderRadius: 14, overflow: "hidden", boxShadow: "0 24px 60px rgba(0,0,0,0.45)" }}>
         <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--rule-strong)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
@@ -122,7 +122,7 @@ export default function QuoteModal({ threadId, customerName, onClose }) {
                 <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Note (optional)…" style={{ flex: 2, boxSizing: "border-box", background: "var(--bg)", border: "1px solid var(--rule-strong)", borderRadius: 8, color: "var(--ink)", fontSize: 12.5, padding: "8px 12px", outline: "none", fontFamily: "inherit" }} />
                 <input type="date" value={validUntil} onChange={(e) => setValidUntil(e.target.value)} title="Valid until" style={{ flex: 1, boxSizing: "border-box", background: "var(--bg)", border: "1px solid var(--rule-strong)", borderRadius: 8, color: "var(--ink)", fontSize: 12.5, padding: "8px 10px", outline: "none", fontFamily: "inherit" }} />
               </div>
-              <button className="primary" onClick={send} disabled={!lines.length} style={{ width: "100%", height: 42, display: "flex", alignItems: "center", justifyContent: "center", gap: 7, fontSize: 13 }}>
+              <button className="primary block" onClick={send} disabled={!lines.length}>
                 <Send size={14} /> {lines.length ? `Send Quote · ${SGD(total)}` : "Add items to quote"}
               </button>
             </div>

@@ -35,7 +35,7 @@ export default function RecommendModal({ threadId, customerName, onClose }) {
   }
 
   return (
-    <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(2,6,23,0.7)", backdropFilter: "blur(2px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(16,11,4,0.7)", backdropFilter: "blur(2px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
       <div onClick={(e) => e.stopPropagation()} style={{ width: 560, maxWidth: "100%", maxHeight: "86vh", display: "flex", flexDirection: "column", background: "var(--surface)", border: "1px solid var(--rule-strong)", borderRadius: 14, overflow: "hidden", boxShadow: "0 24px 60px rgba(0,0,0,0.45)" }}>
         <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--rule-strong)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
@@ -93,7 +93,7 @@ export default function RecommendModal({ threadId, customerName, onClose }) {
             <div style={{ padding: "12px 20px 16px", borderTop: "1px solid var(--rule-strong)", background: "var(--surface)" }}>
               <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="Add a short note for the customer (optional)…"
                 style={{ width: "100%", boxSizing: "border-box", marginBottom: 10, background: "var(--bg)", border: "1px solid var(--rule-strong)", borderRadius: 8, color: "var(--ink)", fontSize: 12.5, padding: "8px 12px", outline: "none", fontFamily: "inherit" }} />
-              <button className="primary" onClick={send} disabled={!picked} style={{ width: "100%", height: 42, display: "flex", alignItems: "center", justifyContent: "center", gap: 7, fontSize: 13 }}>
+              <button className="primary block" onClick={send} disabled={!picked}>
                 <Send size={14} /> {picked ? `Recommend ${picked.name.length > 26 ? picked.name.slice(0, 26) + "…" : picked.name}` : "Select a product"}
               </button>
             </div>

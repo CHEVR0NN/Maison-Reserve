@@ -554,7 +554,7 @@ export default function InventoryPanel() {
 
         <div style={{ display: "grid", gap: 20, maxWidth: 540 }}>
           <label>
-            <input type="file" accept=".csv" style={{ display: "none" }} onChange={handleCSV} />
+            <input type="file" accept=".csv" className="sr-only-input" onChange={handleCSV} />
             <div className="inv-drop-zone">
               <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -602,7 +602,7 @@ export default function InventoryPanel() {
 
         <div style={{ display: "grid", gap: 20, maxWidth: 540 }}>
           <label>
-            <input type="file" accept=".csv" style={{ display: "none" }} onChange={handleStockCSV} disabled={adjustBusy} />
+            <input type="file" accept=".csv" className="sr-only-input" onChange={handleStockCSV} disabled={adjustBusy} />
             <div className="inv-drop-zone">
               <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />

@@ -156,13 +156,25 @@ export default function OrdersPage() {
           </thead>
           <tbody>
             {filtered.length === 0 && (
-              <tr><td colSpan={9} style={{ textAlign: "center", padding: "32px 0", color: "var(--muted)", fontSize: 13 }}>No orders found</td></tr>
+              <tr>
+                <td colSpan={9}>
+                  <div className="empty-state" style={{ padding: "32px 0" }}>
+                    <b>No orders match{search ? ` "${search}"` : ""}</b>
+                    <span>{search ? "Try a different order number, customer, or SKU." : "No orders in this status/channel filter yet — try widening it above."}</span>
+                  </div>
+                </td>
+              </tr>
             )}
             {filtered.map((o) => {
               const s = CHANNEL_META[o.channel] || CHANNEL_META["own-site"];
               const first = o.lines[0];
               return (
-                <tr key={o.id} className="clickrow" onClick={() => setActiveOrderId(o.id)}>
+                <tr
+                  key={o.id} className="clickrow" tabIndex={0} role="button"
+                  aria-label={`View order ${o.orderNo}`}
+                  onClick={() => setActiveOrderId(o.id)}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setActiveOrderId(o.id); } }}
+                >
                   <td><span className={`src ${s.cls}`}><i />{s.label}</span></td>
                   <td><span className="mono">{o.orderNo}</span></td>
                   <td><span className="strong">{o.customer.name}</span></td>
@@ -181,7 +193,7 @@ export default function OrdersPage() {
                         <button
                           type="button" title="View proof of delivery"
                           onClick={(e) => { e.stopPropagation(); setPodView(o); }}
-                          style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "var(--positive-soft)", border: "1px solid rgba(16,185,129,0.4)", color: "var(--positive)", borderRadius: 20, padding: "2px 9px", fontSize: 10.5, fontWeight: 700, cursor: "pointer" }}
+                          style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "var(--positive-soft)", border: "1px solid rgba(94,145,81,0.4)", color: "var(--positive)", borderRadius: 20, padding: "2px 9px", fontSize: 10.5, fontWeight: 700, cursor: "pointer" }}
                         >
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <rect x="3" y="7" width="18" height="13" rx="2" /><circle cx="12" cy="13.5" r="3.5" /><path d="M8 7l1.5-2h5L16 7" />
@@ -259,7 +271,7 @@ export default function OrdersPage() {
       </aside>
 
       {podView && (
-        <div onClick={() => setPodView(null)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(2,6,23,0.75)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+        <div onClick={() => setPodView(null)} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(16,11,4,0.75)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
           <div onClick={(e) => e.stopPropagation()} style={{ background: "var(--surface)", border: "1px solid var(--rule-strong)", borderRadius: 14, maxWidth: 420, width: "100%", boxShadow: "var(--shadow)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", borderBottom: "1px solid var(--rule)" }}>
               <span style={{ color: "var(--ink)", fontWeight: 700, fontSize: 14 }}>Proof of Delivery &middot; {podView.orderNo}</span>

@@ -10,7 +10,7 @@ export default function LoginView() {
     <main className="login-shell">
       <div className="login-card">
         <div className="login-brand-zone">
-          <div className="sidebar-brand-mark" style={{ width: 48, height: 48, fontSize: 18 }}>MR</div>
+          <div className="sidebar-brand-mark lg">MR</div>
           <div>
             <div className="brand-name">Maison Reserve</div>
             <div className="brand-sub">Command Center for Premium Retail Operations</div>

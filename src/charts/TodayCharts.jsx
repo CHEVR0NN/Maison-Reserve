@@ -23,24 +23,24 @@ const shift = (base, n) => sgt(new Date(`${base}T00:00:00+08:00`).getTime() + n 
 
 // ── Theme-aware tokens ────────────────────────────────────────────────────────
 const DARK = {
-  honey:     "#14B8A6", honey2:    "#2DD4BF", honeyDeep: "#0F766E",
-  cream:     "#E2E8F0", creamDim:  "#94A3B8",
-  muted:     "#64748B", surface:   "#0F172A", line:      "#1E293B",
-  green:     "#10B981", red:       "#EF4444", orange:    "#F59E0B",
-  grid:      "rgba(148,163,184,0.12)",
-  bar:       "rgba(226,232,240,0.14)", barStroke: "rgba(226,232,240,0.35)",
-  revLine:   "#14B8A6",
-  revFill0:  "rgba(20,184,166,0.28)", revFill1: "rgba(20,184,166,0.00)",
+  honey:     "#CC9A3E", honey2:    "#E8B85A", honeyDeep: "#8A6B2C",
+  cream:     "#F1E7D2", creamDim:  "#C7B999",
+  muted:     "#8E8064", surface:   "#241D15", line:      "#4A3B28",
+  green:     "#5E9151", red:       "#B14A3F", orange:    "#C17A35",
+  grid:      "rgba(244,230,200,0.10)",
+  bar:       "rgba(241,231,210,0.12)", barStroke: "rgba(241,231,210,0.32)",
+  revLine:   "#CC9A3E",
+  revFill0:  "rgba(204,154,62,0.26)", revFill1: "rgba(204,154,62,0.00)",
 };
 const LIGHT = {
-  honey:     "#0D9488", honey2:    "#0F766E", honeyDeep: "#115E59",
-  cream:     "#0F172A", creamDim:  "#475569",
-  muted:     "#64748B", surface:   "#FFFFFF", line:      "#CBD5E1",
-  green:     "#059669", red:       "#DC2626", orange:    "#D97706",
-  grid:      "rgba(51,65,85,0.12)",
-  bar:       "rgba(15,23,42,0.10)",  barStroke: "rgba(15,23,42,0.28)",
-  revLine:   "#0D9488",
-  revFill0:  "rgba(13,148,136,0.22)", revFill1: "rgba(13,148,136,0.00)",
+  honey:     "#A67A2E", honey2:    "#C08F3B", honeyDeep: "#7A5A22",
+  cream:     "#241C12", creamDim:  "#4A3D2A",
+  muted:     "#7A6B50", surface:   "#FDFBF5", line:      "#DCCFB0",
+  green:     "#4C7A41", red:       "#A33B31", orange:    "#A6631E",
+  grid:      "rgba(60,46,26,0.10)",
+  bar:       "rgba(36,28,18,0.08)",  barStroke: "rgba(36,28,18,0.22)",
+  revLine:   "#A67A2E",
+  revFill0:  "rgba(166,122,46,0.20)", revFill1: "rgba(166,122,46,0.00)",
 };
 
 const getT = (theme) => theme === "light" ? LIGHT : DARK;
@@ -48,8 +48,8 @@ const getT = (theme) => theme === "light" ? LIGHT : DARK;
 const STAGE_LABELS = ["Captured", "Packed", "Out for Delivery", "Delivered"];
 
 // Stage colours don't change between themes — they're intentional semantic hues
-const STAGE_COLORS_DARK  = ["#94A3B8", "#F59E0B", "#14B8A6", "#10B981"];
-const STAGE_COLORS_LIGHT = ["#64748B", "#D97706", "#0D9488", "#059669"];
+const STAGE_COLORS_DARK  = ["#8E8064", "#C17A35", "#CC9A3E", "#5E9151"];
+const STAGE_COLORS_LIGHT = ["#7A6B50", "#A6631E", "#A67A2E", "#4C7A41"];
 
 const makeTip = (T) => ({
   backgroundColor: T.surface,
@@ -147,7 +147,7 @@ function RevenueOrdersChart({ labels, revenues, orders, todayIdx, height = 188, 
     if (!chartArea) return "transparent";
     const g = chart.ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
     g.addColorStop(0,   T.revFill0);
-    g.addColorStop(0.65, "rgba(245,181,28,0.04)");
+    g.addColorStop(0.65, "rgba(204,154,62,0.04)");
     g.addColorStop(1,   T.revFill1);
     return g;
   };

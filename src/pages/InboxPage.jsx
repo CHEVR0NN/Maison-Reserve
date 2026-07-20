@@ -6,8 +6,8 @@ import { useAppData } from "../context/AppData.jsx";
 
 const CHANNEL_META = {
   WhatsApp: { icon: <Phone size={11} />, color: "#25d366" },
-  Instagram: { icon: <MessageCircle size={11} />, color: "#e879f9" },
-  "Web Chat": { icon: <Mail size={11} />, color: "#6366f1" },
+  Instagram: { icon: <MessageCircle size={11} />, color: "#C77FB0" },
+  "Web Chat": { icon: <Mail size={11} />, color: "var(--cabernet-2)" },
 };
 
 function timeLabel(iso) {
@@ -37,10 +37,18 @@ function initials(name = "") {
 }
 
 function avatarColor(name = "") {
-  const palette = ["#6366f1", "#8b5cf6", "#f59e0b", "#10b981", "#3b82f6", "#ef4444", "#ec4899", "#14b8a6"];
+  const palette = ["#CC9A3E", "#7C2C40", "#3E5C46", "#A3572E", "#5C7FA0", "#8C4A72", "#B14A3F", "#6B4419"];
   let h = 0;
   for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xffff;
   return palette[h % palette.length];
+}
+
+function ThreadAvatar({ name, size = 36 }) {
+  return (
+    <div className="avatar" style={{ width: size, height: size, background: avatarColor(name), color: "#fff", fontSize: size > 36 ? 13 : 12, flexShrink: 0 }}>
+      {initials(name)}
+    </div>
+  );
 }
 
 export default function InboxPage() {
@@ -94,125 +102,134 @@ export default function InboxPage() {
   const selectedChannel = selected ? (CHANNEL_META[selected.channel] || { icon: <MessageCircle size={11} />, color: "var(--ink-3)" }) : null;
 
   return (
-    <div style={{ display: "flex", height: "100%", overflow: "hidden", background: "var(--bg)" }}>
-      <aside style={{ width: 300, minWidth: 260, flexShrink: 0, display: "flex", flexDirection: "column", borderRight: "1px solid var(--rule-strong)", background: "var(--surface)" }}>
-        <div style={{ padding: "14px 14px 10px", borderBottom: "1px solid var(--rule-strong)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-            <span style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)" }}>Inbox</span>
-            {unreadCount > 0 && <span style={{ background: "#6366f1", color: "#fff", borderRadius: 99, fontSize: 10, fontWeight: 700, padding: "1px 7px", lineHeight: "16px" }}>{unreadCount}</span>}
+    <div className="inbox-shell">
+      <aside className="inbox-list-pane">
+        <div className="inbox-list-head">
+          <div className="inbox-list-title-row">
+            <span className="inbox-list-title">Inbox</span>
+            {unreadCount > 0 && <span className="inbox-unread-badge">{unreadCount}</span>}
           </div>
-          <div style={{ position: "relative" }}>
-            <Search size={12} style={{ position: "absolute", left: 9, top: "50%", transform: "translateY(-50%)", color: "var(--ink-3)", pointerEvents: "none" }} />
+          <div className="inbox-search-wrap">
+            <Search size={12} className="inbox-search-icon" />
             <input
+              className="inbox-search-input"
               value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by name or message…"
-              style={{ width: "100%", boxSizing: "border-box", background: "var(--bg)", border: "1px solid var(--rule-strong)", borderRadius: 6, color: "var(--ink-2)", fontSize: 12, padding: "7px 28px", outline: "none", fontFamily: "inherit" }}
+              aria-label="Search conversations"
             />
-            {search && <button onClick={() => setSearch("")} style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--ink-3)", padding: 0, display: "flex" }}><X size={11} /></button>}
+            {search && (
+              <button type="button" className="inbox-search-clear" onClick={() => setSearch("")} aria-label="Clear search">
+                <X size={11} />
+              </button>
+            )}
           </div>
         </div>
 
-        <div style={{ overflowY: "auto", flex: 1 }}>
+        <div className="inbox-thread-scroll">
           {filtered.length === 0 ? (
-            <p style={{ padding: "24px 14px", color: "var(--muted)", fontSize: 12, textAlign: "center" }}>{search ? "No results" : "No conversations yet"}</p>
+            <div className="empty-state">
+              <MessageCircle size={28} strokeWidth={1.3} />
+              <b>{search ? "No matching conversations" : "No conversations yet"}</b>
+              <span>{search ? `Nothing matches "${search}" — try a different name or keyword.` : "New customer messages will show up here as they come in."}</span>
+            </div>
           ) : filtered.map((t) => {
             const isActive = selectedId === t.id;
             const last = t.messages[t.messages.length - 1];
             const ch = CHANNEL_META[t.channel] || { icon: <MessageCircle size={11} />, color: "var(--ink-3)" };
             return (
-              <div key={t.id} onClick={() => openThread(t)} style={{
-                padding: "11px 14px", cursor: "pointer", borderBottom: "1px solid var(--rule)",
-                background: isActive ? "rgba(99,102,241,0.08)" : "transparent",
-                borderLeft: isActive ? "2px solid #6366f1" : "2px solid transparent", transition: "background 0.1s",
-              }}>
-                <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                  <div style={{ width: 36, height: 36, borderRadius: "50%", flexShrink: 0, background: avatarColor(t.customerName), display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff" }}>
-                    {initials(t.customerName)}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 4 }}>
-                      <span style={{ fontSize: 12, fontWeight: t.unread ? 700 : 500, color: t.unread ? "var(--ink)" : "var(--ink-3)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.customerName}</span>
-                      <span style={{ fontSize: 10, color: "var(--muted)", flexShrink: 0 }}>{timeLabel(t.lastMessageAt)}</span>
+              <button
+                type="button"
+                key={t.id}
+                className={`inbox-thread-row${isActive ? " active" : ""}`}
+                onClick={() => openThread(t)}
+                aria-current={isActive ? "true" : undefined}
+              >
+                <div className="inbox-thread-body">
+                  <ThreadAvatar name={t.customerName} />
+                  <div className="inbox-thread-main">
+                    <div className="inbox-thread-top-row">
+                      <span className={`inbox-thread-name${t.unread ? " unread" : ""}`}>{t.customerName}</span>
+                      <span className="inbox-thread-time">{timeLabel(t.lastMessageAt)}</span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 3 }}>
-                      <span style={{ color: ch.color, display: "flex", flexShrink: 0, opacity: 0.8 }}>{ch.icon}</span>
-                      <span style={{ fontSize: 11, color: t.unread ? "var(--ink-3)" : "var(--muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>{last?.text || "—"}</span>
-                      {t.unread && <span style={{ flexShrink: 0, minWidth: 8, height: 8, borderRadius: 99, background: "#6366f1" }} />}
+                    <div className="inbox-thread-preview-row">
+                      <span className="inbox-thread-channel-icon" style={{ color: ch.color }}>{ch.icon}</span>
+                      <span className={`inbox-thread-preview${t.unread ? " unread" : ""}`}>{last?.text || "—"}</span>
+                      {t.unread && <span className="inbox-unread-dot" />}
                     </div>
                   </div>
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
       </aside>
 
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
+      <div className="inbox-thread-pane">
         {!selected ? (
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, color: "var(--rule-strong)" }}>
+          <div className="empty-state" style={{ flex: 1 }}>
             <MessageCircle size={40} strokeWidth={1.2} />
-            <p style={{ margin: 0, fontSize: 13, color: "var(--muted)" }}>Select a conversation</p>
+            <b>Select a conversation</b>
+            <span>Pick a thread from the list to view messages and reply.</span>
           </div>
         ) : (
           <>
-            <div style={{ padding: "12px 20px", borderBottom: "1px solid var(--rule-strong)", background: "var(--surface)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
-                <div style={{ width: 38, height: 38, borderRadius: "50%", flexShrink: 0, background: avatarColor(selected.customerName), display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "#fff" }}>
-                  {initials(selected.customerName)}
-                </div>
+            <div className="inbox-header">
+              <div className="inbox-header-id">
+                <ThreadAvatar name={selected.customerName} size={38} />
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: "var(--ink)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{selected.customerName}</div>
-                  <div style={{ fontSize: 11, color: "var(--ink-3)", display: "flex", alignItems: "center", gap: 5, marginTop: 2 }}>
-                    <span style={{ color: selectedChannel.color, display: "flex" }}>{selectedChannel.icon}</span>
+                  <div className="inbox-header-name">{selected.customerName}</div>
+                  <div className="inbox-header-channel">
+                    <span style={{ color: selectedChannel.color }}>{selectedChannel.icon}</span>
                     <span style={{ color: selectedChannel.color, fontWeight: 500 }}>{selected.channel}</span>
                   </div>
                 </div>
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-                <button onClick={() => setShowRecommend(true)} title="Recommend a product" style={{ display: "flex", alignItems: "center", gap: 6, height: 30, padding: "0 12px", fontSize: 12, fontWeight: 600, cursor: "pointer", color: "var(--accent-2)", background: "var(--accent-soft)", border: "1px solid var(--accent)", borderRadius: 7, fontFamily: "inherit" }}>
+              <div className="inbox-header-actions">
+                <button type="button" className="inbox-action-btn" onClick={() => setShowRecommend(true)} title="Recommend a product">
                   <Sparkles size={13} /> Recommend
                 </button>
-                <button onClick={() => setShowQuote(true)} title="Build a quote" style={{ display: "flex", alignItems: "center", gap: 6, height: 30, padding: "0 12px", fontSize: 12, fontWeight: 600, cursor: "pointer", color: "var(--accent-2)", background: "var(--accent-soft)", border: "1px solid var(--accent)", borderRadius: 7, fontFamily: "inherit" }}>
+                <button type="button" className="inbox-action-btn" onClick={() => setShowQuote(true)} title="Build a quote">
                   <FileText size={13} /> Quote
                 </button>
               </div>
             </div>
 
-            <div ref={threadRef} style={{ flex: 1, overflowY: "auto", padding: "20px 24px", display: "flex", flexDirection: "column", gap: 3 }}>
+            <div ref={threadRef} className="inbox-messages">
               {groupedMessages.map((item, i) => {
                 if (item.isSep) {
                   return (
-                    <div key={`s${i}`} style={{ display: "flex", alignItems: "center", gap: 10, margin: "14px 0 8px" }}>
-                      <div style={{ flex: 1, height: 1, background: "var(--rule-strong)" }} />
-                      <span style={{ fontSize: 10, color: "var(--muted)", fontWeight: 500, whiteSpace: "nowrap" }}>{item.label}</span>
-                      <div style={{ flex: 1, height: 1, background: "var(--rule-strong)" }} />
+                    <div key={`s${i}`} className="inbox-date-sep">
+                      <div className="inbox-date-sep-line" />
+                      <span className="inbox-date-sep-label">{item.label}</span>
+                      <div className="inbox-date-sep-line" />
                     </div>
                   );
                 }
                 const msg = item.msg;
                 const isOut = msg.from === "staff";
                 return (
-                  <div key={msg.id} style={{ display: "flex", justifyContent: isOut ? "flex-end" : "flex-start", marginBottom: 1 }}>
-                    <div title={new Date(msg.at).toLocaleString("en-SG")} style={{ maxWidth: "68%", padding: "9px 14px", borderRadius: isOut ? "16px 16px 4px 16px" : "16px 16px 16px 4px", background: isOut ? "#6366f1" : "var(--surface-2)", color: isOut ? "#fff" : "var(--ink-2)", fontSize: 13, lineHeight: 1.55, wordBreak: "break-word" }}>
-                      <div style={{ whiteSpace: "pre-wrap" }}>{msg.text}</div>
-                      <div style={{ fontSize: 10, opacity: 0.5, marginTop: 4, textAlign: isOut ? "right" : "left" }}>{timeLabel(msg.at)}</div>
+                  <div key={msg.id} className={`inbox-msg-row ${isOut ? "out" : "in"}`}>
+                    <div title={new Date(msg.at).toLocaleString("en-SG")} className={`inbox-bubble${isOut ? " out" : ""}`}>
+                      <div className="inbox-bubble-text">{msg.text}</div>
+                      <div className="inbox-bubble-time">{timeLabel(msg.at)}</div>
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            <div style={{ padding: "12px 20px 16px", borderTop: "1px solid var(--rule-strong)", background: "var(--surface)" }}>
-              <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
+            <div className="inbox-composer">
+              <div className="inbox-composer-row">
                 <textarea
+                  className="inbox-textarea"
                   value={reply} onChange={(e) => setReply(e.target.value)} onKeyDown={handleKeyDown}
                   placeholder="Write a reply…" rows={3}
-                  style={{ flex: 1, background: "var(--bg)", border: "1px solid var(--rule-strong)", borderRadius: 8, color: "var(--ink)", fontSize: 13, padding: "9px 12px", resize: "none", outline: "none", fontFamily: "inherit", lineHeight: 1.5 }}
+                  aria-label="Reply message"
                 />
-                <button className="primary" onClick={sendReply} disabled={!reply.trim()} style={{ height: 44, padding: "0 18px", display: "flex", alignItems: "center", gap: 6, fontSize: 13, flexShrink: 0 }}>
+                <button className="primary" onClick={sendReply} disabled={!reply.trim()} style={{ height: 44, flexShrink: 0 }}>
                   <Send size={13} /> Send
                 </button>
               </div>
-              <div style={{ marginTop: 6, fontSize: 10, color: "var(--muted)" }}>Enter to send · Shift+Enter for new line</div>
+              <div className="inbox-composer-hint">Enter to send · Shift+Enter for new line</div>
             </div>
           </>
         )}
