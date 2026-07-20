@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { SGD } from "../utils.js";
 import { useAppData } from "../context/AppData.jsx";
 
@@ -6,213 +6,230 @@ const sgtDate = (d) => { try { return new Date(d).toLocaleDateString("en-CA", { 
 const todayStr = () => new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Singapore" });
 const addDays = (yyyyMmDd, n) => sgtDate(new Date(`${yyyyMmDd}T00:00:00+08:00`).getTime() + n * 86400000);
 
-const CHANNEL_LABEL = { "own-site": "Web", lazada: "Lazada", shopee: "Shopee" };
+const CHANNEL_NAME = { "own-site": "Own Website", lazada: "Lazada", shopee: "Shopee" };
 
-const chanCount = (list) => list.reduce((m, o) => { const k = CHANNEL_LABEL[o.channel] || "Other"; m[k] = (m[k] || 0) + 1; return m; }, {});
-
-const pad2 = (n) => String(n).padStart(2, "0");
-
-const RANGE_TABS = [
-  { key: "today",    label: "Today"   },
-  { key: "tomorrow", label: "Pending" },
-  { key: "7d",       label: "7D"      },
-  { key: "30d",      label: "30D"     },
-  { key: "all",      label: "All"     },
-];
+function relTime(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.max(0, Math.round(diff / 60000));
+  if (m < 1) return "just now";
+  if (m < 60) return `${m} minute${m === 1 ? "" : "s"} ago`;
+  const h = Math.round(m / 60);
+  if (h < 24) return `${h} hour${h === 1 ? "" : "s"} ago`;
+  const d = Math.round(h / 24);
+  return `${d} day${d === 1 ? "" : "s"} ago`;
+}
 
 export default function TodayPage({ setTab }) {
   const { state } = useAppData();
-  const [range, setRange] = useState("today");
 
   const ord = state.orders.items;
   const inv = state.inventory.items;
   const members = state.loyalty.members;
   const channels = state.marketplace.channels;
 
-  const today     = todayStr();
+  const today   = todayStr();
   const yesterday = addDays(today, -1);
-  const last7     = Array.from({ length: 7 },  (_, i) => addDays(today, -(6 - i)));
-  const last30    = Array.from({ length: 30 }, (_, i) => addDays(today, -(29 - i)));
+  const todays  = ord.filter((o) => sgtDate(o.placedAt) === today);
+  const yest    = ord.filter((o) => sgtDate(o.placedAt) === yesterday);
+  const pending = ord.filter((o) => o.status !== "delivered" && o.status !== "cancelled");
 
-  const todays    = ord.filter((o) => sgtDate(o.placedAt) === today);
-  const yest      = ord.filter((o) => sgtDate(o.placedAt) === yesterday);
-  const orders7   = ord.filter((o) => last7.includes(sgtDate(o.placedAt)));
-  const orders30  = ord.filter((o) => last30.includes(sgtDate(o.placedAt)));
-  const ordersAll = ord;
-  const pending   = ord.filter((o) => o.status !== "delivered" && o.status !== "cancelled");
-
-  const revenueToday   = todays.reduce((s, o) => s + o.total, 0);
-  const revenueYest    = yest.reduce((s, o) => s + o.total, 0);
-  const revenue7       = orders7.reduce((s, o) => s + o.total, 0);
-  const revenue30      = orders30.reduce((s, o) => s + o.total, 0);
-  const revenueAll     = ordersAll.reduce((s, o) => s + o.total, 0);
-  const pendingRevenue = pending.reduce((s, o) => s + o.total, 0);
-
+  const revenueToday = todays.reduce((s, o) => s + o.total, 0);
+  const revenueYest  = yest.reduce((s, o) => s + o.total, 0);
   const revenueDelta = revenueYest > 0 ? Math.round(((revenueToday - revenueYest) / revenueYest) * 100) : null;
-
-  const truck1 = pending.filter((o) => o.truckId === "truck_1").length;
-  const truck2 = pending.filter((o) => o.truckId === "truck_2").length;
 
   const lowStock = inv.filter((p) => p.minStock > 0 && p.stock <= p.minStock * 2).length;
   const critical = inv.filter((p) => p.minStock > 0 && p.stock <= p.minStock).length;
+  const criticalItems = inv.filter((p) => p.minStock > 0 && p.stock <= p.minStock);
+  const lowItems      = inv.filter((p) => p.minStock > 0 && p.stock > p.minStock && p.stock <= p.minStock * 2);
 
   const totalPoints = members.reduce((s, m) => s + m.pointsBalance, 0);
   const liability = totalPoints * 0.01;
   const expiringMembers = members.filter((m) => m.coinsExpiringSoon);
 
-  // Order-state telemetry — one live count per pipeline stage
-  const cap = ord.filter((o) => o.status === "pending").length;
-  const pck = ord.filter((o) => o.status === "packed").length;
-  const del = ord.filter((o) => o.status === "out_for_delivery").length;
-  const fin = ord.filter((o) => o.status === "delivered").length;
+  const attentionChannels = channels.filter((c) => c.status === "attention");
 
-  const RANGES = {
-    today:    { count: todays.length,    revenue: revenueToday,   noun: "TODAY"          },
-    tomorrow: { count: pending.length,   revenue: pendingRevenue, noun: "IN PIPELINE"    },
-    "7d":     { count: orders7.length,   revenue: revenue7,       noun: "LAST 7 DAYS"    },
-    "30d":    { count: orders30.length,  revenue: revenue30,      noun: "LAST 30 DAYS"   },
-    all:      { count: ordersAll.length, revenue: revenueAll,     noun: "ALL TIME"       },
-  };
-  const rd = RANGES[range];
+  // Order journey — today's orders by stage
+  const received  = todays.filter((o) => o.status === "pending").length;
+  const preparing = todays.filter((o) => o.status === "packed").length;
+  const shipping  = todays.filter((o) => o.status === "out_for_delivery").length;
+  const completed = todays.filter((o) => o.status === "delivered").length;
+  const stages = [
+    { key: "received",  label: "Received",  count: received,  tone: "wait"  },
+    { key: "preparing", label: "Preparing", count: preparing, tone: "gold"  },
+    { key: "shipping",  label: "Shipping",  count: shipping,  tone: "gold2" },
+    { key: "completed", label: "Completed", count: completed, tone: "done"  },
+  ];
+  const journeyTotal = received + preparing + shipping + completed;
 
-  const timeLabel = new Date().toLocaleString("en-GB", { timeZone: "Asia/Singapore", day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).toUpperCase();
+  // ── Business health ─────────────────────────────────────────────────────
+  const healthy = attentionChannels.length === 0 && critical === 0;
+  const healthNote = healthy
+    ? "All channels synchronized"
+    : attentionChannels.length > 0
+      ? `${attentionChannels.length} channel${attentionChannels.length === 1 ? "" : "s"} need review`
+      : `${critical} item${critical === 1 ? "" : "s"} below reorder level`;
 
-  // ── Action ledger rows ──────────────────────────────────────────────────
-  const attn = [];
-  const criticalItems = inv.filter((p) => p.minStock > 0 && p.stock <= p.minStock);
-  const lowItems      = inv.filter((p) => p.minStock > 0 && p.stock > p.minStock && p.stock <= p.minStock * 2);
-  for (const p of criticalItems.slice(0, 2)) {
-    attn.push({ bar: "crit", tag: "CRIT", tab: "Inventory", t: <><b>{p.sku}</b> {p.name} below reorder point</>, x: `On hand ${p.stock} · reorder at ${p.minStock}` });
+  // ── Overview metrics ────────────────────────────────────────────────────
+  const metrics = [
+    { label: "Today's Revenue", value: SGD(revenueToday), accent: true,
+      sub: revenueDelta != null ? `${revenueDelta >= 0 ? "Up" : "Down"} ${Math.abs(revenueDelta)} percent on yesterday` : "Across all channels" },
+    { label: "Orders", value: todays.length,
+      sub: `${completed} completed, ${received + preparing + shipping} in progress` },
+    { label: "Inventory Health", value: lowStock,
+      sub: lowStock === 0 ? "All SKUs above reorder" : `${critical} critical, ${Math.max(0, lowStock - critical)} low` },
+    { label: "Reserve Membership", value: totalPoints.toLocaleString("en-SG"),
+      sub: `${SGD(liability)} liability outstanding` },
+  ];
+
+  // ── Channel operations ──────────────────────────────────────────────────
+  const channelCards = channels.map((c) => ({
+    key: c.id,
+    name: CHANNEL_NAME[c.id] || c.label,
+    ok: c.status === "connected",
+    statusLabel: c.status === "connected" ? "Operational" : "Delayed",
+    primary: c.status === "connected" ? `${c.metrics.ordersToday} orders synchronized` : "Sync issue detected",
+    secondary: `Last sync ${relTime(c.lastSyncAt)}`,
+    tab: "Marketplace",
+  }));
+  channelCards.push({
+    key: "ledger",
+    name: "Inventory Ledger",
+    ok: critical === 0,
+    statusLabel: critical === 0 ? "Reconciled" : "Needs review",
+    primary: `${inv.length.toLocaleString("en-SG")} SKUs tracked`,
+    secondary: critical === 0 ? "One pool across all storefronts" : `${critical} below reorder level`,
+    tab: "Inventory",
+  });
+
+  // ── Priority actions ────────────────────────────────────────────────────
+  const actions = [];
+  if (criticalItems.length > 0) {
+    actions.push({ tier: "critical", label: "Critical",
+      title: `${criticalItems.length} bottle${criticalItems.length === 1 ? "" : "s"} below reorder level`,
+      why: "Restock before these labels sell out across every storefront.",
+      cta: "View Inventory", tab: "Inventory" });
+  }
+  for (const c of attentionChannels) {
+    actions.push({ tier: "attention", label: "Attention",
+      title: `${CHANNEL_NAME[c.id] || c.label} synchronization delayed`,
+      why: "Orders from this channel may not be importing in real time.",
+      cta: "Review Marketplace", tab: "Marketplace" });
   }
   if (lowItems.length > 0) {
-    attn.push({ bar: "warn", tag: "LOW", tab: "Inventory",
-      t: <>{lowItems.slice(0, 2).map((p) => <span key={p.sku}><b>{p.sku}</b> {p.name}{" "}</span>)}{lowItems.length > 2 ? `+${lowItems.length - 2} more` : ""}</>,
-      x: `${lowItems.length} SKU${lowItems.length === 1 ? "" : "s"} under reorder point · supplier PO suggested` });
+    actions.push({ tier: "attention", label: "Attention",
+      title: `${lowItems.length} SKU${lowItems.length === 1 ? "" : "s"} approaching reorder point`,
+      why: "Raise a supplier purchase order before they turn critical.",
+      cta: "View Inventory", tab: "Inventory" });
   }
   if (expiringMembers.length > 0) {
-    attn.push({ bar: "info", tag: "LOYAL", tab: "Loyalty",
-      t: <>{expiringMembers.length} member{expiringMembers.length === 1 ? "" : "s"} have <b>Reserve Points</b> expiring within 45 days</>,
-      x: "Queue an expiry-warning broadcast from the Loyalty page" });
+    actions.push({ tier: "upcoming", label: "Upcoming",
+      title: `${expiringMembers.length} loyalty member${expiringMembers.length === 1 ? "" : "s"} have expiring points`,
+      why: "A gentle reminder keeps Reserve members engaged and returning.",
+      cta: "Notify Members", tab: "Loyalty" });
   }
-  const attentionChannels = channels.filter((c) => c.status === "attention");
-  const attnLabels = new Set(attentionChannels.map((c) => c.label));
-  for (const c of attentionChannels) {
-    attn.push({ bar: "warn", tag: "SYNC", tab: "Marketplace", t: <><b>{c.label}</b> sync is running behind</>, x: "Check the Marketplace page for channel health" });
-  }
-
-  // ── Live ticker feed rows ───────────────────────────────────────────────
-  const todaysByChan = chanCount(todays);
-  const feeds = [
-    { id: "own-site", name: "OWN_SITE", warn: false, meta: <>Live checkout feed &middot; <b>{todaysByChan.Web || 0}</b> ingested today</>, state: `${todaysByChan.Web || 0} today`, tab: "Marketplace" },
-    { id: "lazada",   name: "LAZADA",   warn: attnLabels.has("Lazada"), meta: <><b>{todaysByChan.Lazada || 0}</b> pulled via marketplace sync today</>, state: `${todaysByChan.Lazada || 0} today`, tab: "Marketplace" },
-    { id: "shopee",   name: "SHOPEE",   warn: attnLabels.has("Shopee"), meta: <><b>{todaysByChan.Shopee || 0}</b> pulled via sync &middot; one stock pool</>, state: `${todaysByChan.Shopee || 0} today`, tab: "Marketplace" },
-    { id: "ledger",   name: "INV_LEDGER", warn: (criticalItems.length + lowItems.length) > 0, meta: <><b>{criticalItems.length + lowItems.length}</b> SKUs flagged &middot; one pool stays accurate</>, state: (criticalItems.length + lowItems.length) > 0 ? "flagged" : "reconciled", tab: "Inventory" },
-    { id: "loyalty",  name: "QR_FUNNEL", warn: expiringMembers.length > 0, meta: <><b>{members.length.toLocaleString("en-SG")}</b> members in Reserve programme</>, state: expiringMembers.length > 0 ? "expiring" : "active", tab: "Loyalty" },
-  ];
-
-  const TEL = [
-    { code: "[CAP]", val: cap, sub: "Captured" },
-    { code: "[PCK]", val: pck, sub: "Packed" },
-    { code: "[DEL]", val: del, sub: "Out for delivery" },
-    { code: "[FIN]", val: fin, sub: "Delivered" },
-  ];
 
   return (
-    <div className="console">
-      {/* PANE 1 — Unified Live Ticker Feed */}
-      <section className="console-pane">
-        <div className="console-head">
-          <span className="console-head-title">Live Feed</span>
-          <span className="console-head-note">All channels reconciled</span>
-        </div>
-        <div className="console-body">
-          {feeds.map((f) => (
-            <button type="button" key={f.id} className="tick-row" onClick={() => setTab(f.tab)}>
-              <span className={`tick-badge ${f.warn ? "warn" : "ok"}`}>{f.warn ? "[WARN]" : "[OK]"}</span>
-              <span className="tick-name">{f.name}</span>
-              <span className="tick-meta">{f.meta}</span>
-              <span className="tick-state">{f.state}</span>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* PANE 2 — Inventory & Telemetry Core */}
-      <section className="console-pane">
-        <div className="console-head">
-          <span className="console-head-title">Telemetry Core</span>
-          <span className="console-head-note">{timeLabel} SGT</span>
-        </div>
-        <div className="console-body">
-          <div className="tel-readout">
-            <div className="tel-readout-val">{SGD(rd.revenue)}</div>
-            <div className="tel-readout-sub">
-              {rd.count} ORDER{rd.count === 1 ? "" : "S"} &middot; {rd.noun}
-              {range === "today" && revenueDelta != null && (
-                <> &middot; <span className={`tel-delta ${revenueDelta >= 0 ? "up" : "down"}`}>{revenueDelta >= 0 ? "+" : "-"}{Math.abs(revenueDelta)}% VS YDA</span></>
-              )}
+    <div className="cc">
+      <header className="cc-hero">
+        <div className="cc-hero-head">
+          <div>
+            <div className="cc-eyebrow">Maison Reserve</div>
+            <h1 className="cc-title">Operations Overview</h1>
+          </div>
+          <div className={`cc-health${healthy ? "" : " warn"}`}>
+            <span className="cc-health-dot" />
+            <div>
+              <div className="cc-health-status">{healthy ? "Healthy" : "Attention Required"}</div>
+              <div className="cc-health-note">{healthNote}</div>
             </div>
           </div>
+        </div>
 
-          <div className="tel-tabs" role="tablist" aria-label="Time range">
-            {RANGE_TABS.map(({ key, label }) => {
-              const active = range === key;
-              return (
-                <button key={key} type="button" role="tab" aria-selected={active} className={`tel-tab${active ? " on" : ""}`} onClick={() => setRange(key)}>
-                  {label}
+        <div className="cc-metrics">
+          {metrics.map((m) => (
+            <div className="cc-metric" key={m.label}>
+              <div className="cc-metric-label">{m.label}</div>
+              <div className={`cc-metric-value${m.accent ? " accent" : ""}`}>{m.value}</div>
+              <div className="cc-metric-sub">{m.sub}</div>
+            </div>
+          ))}
+        </div>
+      </header>
+
+      <div className="cc-grid">
+        <div className="cc-col-main">
+          <section className="cc-section">
+            <div className="cc-section-head">
+              <h2 className="cc-section-title">Channel Operations</h2>
+              <span className="cc-section-note">One stock pool, every storefront</span>
+            </div>
+            <div className="cc-channels">
+              {channelCards.map((c) => (
+                <button type="button" className="cc-channel" key={c.key} onClick={() => setTab(c.tab)}>
+                  <div className="cc-channel-top">
+                    <span className="cc-channel-name">{c.name}</span>
+                    <span className={`cc-status ${c.ok ? "ok" : "warn"}`}>
+                      <span className="cc-status-dot" />{c.statusLabel}
+                    </span>
+                  </div>
+                  <div className="cc-channel-primary">{c.primary}</div>
+                  <div className="cc-channel-secondary">{c.secondary}</div>
                 </button>
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          </section>
 
-          <div className="tel-grid">
-            {TEL.map((t) => (
-              <div className="tel-block" key={t.code}>
-                <div className="tel-block-code">{t.code}</div>
-                <div className="tel-block-val">{pad2(t.val)}</div>
-                <div className="tel-block-sub">{t.sub}</div>
+          <section className="cc-section">
+            <div className="cc-section-head">
+              <h2 className="cc-section-title">Business Pulse</h2>
+              <span className="cc-section-note">Today's order journey</span>
+            </div>
+            <div className="cc-pulse">
+              <div className="cc-pulse-total">
+                <span className="cc-pulse-total-val">{todays.length}</span>
+                <span className="cc-pulse-total-label">Orders today</span>
               </div>
-            ))}
-          </div>
+              {journeyTotal > 0 && (
+                <div className="cc-pulse-bar" aria-hidden="true">
+                  {stages.filter((s) => s.count > 0).map((s) => (
+                    <i key={s.key} data-tone={s.tone} style={{ width: `${(s.count / journeyTotal) * 100}%` }} />
+                  ))}
+                </div>
+              )}
+              <ol className="cc-journey">
+                {stages.map((s) => (
+                  <li className="cc-stage" key={s.key} data-tone={s.tone}>
+                    <div className="cc-stage-count">{s.count}</div>
+                    <div className="cc-stage-label">{s.label}</div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </section>
+        </div>
 
-          <div className="tel-foot">
-            <div className="tel-stat">
-              <span className="tel-stat-label">Pending Deliveries</span>
-              <span className="tel-stat-val">{pending.length}<span className="tel-stat-sub"> &middot; T1 {truck1} / T2 {truck2}</span></span>
+        <aside className="cc-col-side">
+          <section className="cc-section">
+            <div className="cc-section-head">
+              <h2 className="cc-section-title">Priority Actions</h2>
+              <span className="cc-section-note">{actions.length} open</span>
             </div>
-            <div className="tel-stat">
-              <span className="tel-stat-label">Low-Stock Alerts</span>
-              <span className="tel-stat-val" style={{ color: critical > 0 ? "var(--red)" : "var(--cream)" }}>{lowStock}<span className="tel-stat-sub"> &middot; {critical} crit</span></span>
+            {actions.length === 0 && (
+              <div className="cc-actions-empty">All clear. No priority actions require your attention right now.</div>
+            )}
+            <div className="cc-actions">
+              {actions.map((a, i) => (
+                <button type="button" className={`cc-action ${a.tier}`} key={i} onClick={() => setTab(a.tab)}>
+                  <div className="cc-action-tier">{a.label}</div>
+                  <div className="cc-action-title">{a.title}</div>
+                  <div className="cc-action-why">{a.why}</div>
+                  <span className="cc-action-cta">{a.cta} <ArrowRight className="cc-arrow" size={14} /></span>
+                </button>
+              ))}
             </div>
-            <div className="tel-stat">
-              <span className="tel-stat-label">Reserve Points</span>
-              <span className="tel-stat-val">{totalPoints.toLocaleString("en-SG")}<span className="tel-stat-sub"> &middot; {SGD(liability)} liab</span></span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* PANE 3 — Action Ledger Matrix */}
-      <section className="console-pane">
-        <div className="console-head">
-          <span className="console-head-title">Action Ledger</span>
-          <span className="console-head-note">{attn.length} open</span>
-        </div>
-        <div className="console-body">
-          {attn.length === 0 && (
-            <div className="ledger-empty">[OK] No stock, delivery, or loyalty alerts right now.</div>
-          )}
-          {attn.map((a, i) => (
-            <button type="button" className="ledger-row" key={i} onClick={() => setTab(a.tab)}>
-              <span className={`ledger-tag ${a.bar}`}>{a.tag}</span>
-              <span>
-                <span className="ledger-msg">{a.t}</span>
-                <span className="ledger-sub">{a.x}</span>
-              </span>
-            </button>
-          ))}
-        </div>
-      </section>
+          </section>
+        </aside>
+      </div>
     </div>
   );
 }
