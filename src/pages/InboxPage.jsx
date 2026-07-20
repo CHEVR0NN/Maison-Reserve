@@ -37,7 +37,7 @@ function initials(name = "") {
 }
 
 function avatarColor(name = "") {
-  const palette = ["#CC9A3E", "#7C2C40", "#3E5C46", "#A3572E", "#5C7FA0", "#8C4A72", "#B14A3F", "#6B4419"];
+  const palette = ["#FFC300", "#7C2C40", "#283B6B", "#703525", "#C9960A", "#6E6553", "#A6455C", "#4A5A3E"];
   let h = 0;
   for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xffff;
   return palette[h % palette.length];

@@ -21,35 +21,38 @@ const sgt   = (d) => { try { return new Date(d).toLocaleDateString("en-CA", { ti
 const nowSG = ()  => new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Singapore" });
 const shift = (base, n) => sgt(new Date(`${base}T00:00:00+08:00`).getTime() + n * 86400000);
 
-// ── Theme-aware tokens ────────────────────────────────────────────────────────
+// ── Theme-aware tokens (kept as literal hex — Chart.js draws to <canvas>,
+//    which can't resolve CSS custom properties, so these mirror styles.css
+//    by hand and must be kept in sync with the :root token values) ───────────
 const DARK = {
-  honey:     "#CC9A3E", honey2:    "#E8B85A", honeyDeep: "#8A6B2C",
-  cream:     "#F1E7D2", creamDim:  "#C7B999",
-  muted:     "#8E8064", surface:   "#241D15", line:      "#4A3B28",
-  green:     "#5E9151", red:       "#B14A3F", orange:    "#C17A35",
-  grid:      "rgba(244,230,200,0.10)",
-  bar:       "rgba(241,231,210,0.12)", barStroke: "rgba(241,231,210,0.32)",
-  revLine:   "#CC9A3E",
-  revFill0:  "rgba(204,154,62,0.26)", revFill1: "rgba(204,154,62,0.00)",
+  honey:     "#FFC300", honey2:    "#FFCF33", honeyDeep: "#C9960A",
+  cream:     "#FFF9E5", creamDim:  "#CFC6B0",
+  muted:     "#A99D89", surface:   "#1E1B15", line:      "#3B352B",
+  green:     "#C9960A", red:       "#F0220F", orange:    "#FFC300",
+  grid:      "rgba(255,249,229,0.08)",
+  bar:       "rgba(255,249,229,0.10)", barStroke: "rgba(255,249,229,0.28)",
+  revLine:   "#FFC300",
+  revFill0:  "rgba(255,195,0,0.22)", revFill1: "rgba(255,195,0,0.00)",
 };
 const LIGHT = {
-  honey:     "#A67A2E", honey2:    "#C08F3B", honeyDeep: "#7A5A22",
+  honey:     "#8A6510", honey2:    "#A67D1E", honeyDeep: "#6B4D0C",
   cream:     "#241C12", creamDim:  "#4A3D2A",
   muted:     "#7A6B50", surface:   "#FDFBF5", line:      "#DCCFB0",
-  green:     "#4C7A41", red:       "#A33B31", orange:    "#A6631E",
+  green:     "#705A12", red:       "#C41D0C", orange:    "#A67D1E",
   grid:      "rgba(60,46,26,0.10)",
   bar:       "rgba(36,28,18,0.08)",  barStroke: "rgba(36,28,18,0.22)",
-  revLine:   "#A67A2E",
-  revFill0:  "rgba(166,122,46,0.20)", revFill1: "rgba(166,122,46,0.00)",
+  revLine:   "#8A6510",
+  revFill0:  "rgba(138,101,16,0.20)", revFill1: "rgba(138,101,16,0.00)",
 };
 
 const getT = (theme) => theme === "light" ? LIGHT : DARK;
 
 const STAGE_LABELS = ["Captured", "Packed", "Out for Delivery", "Delivered"];
 
-// Stage colours don't change between themes — they're intentional semantic hues
-const STAGE_COLORS_DARK  = ["#8E8064", "#C17A35", "#CC9A3E", "#5E9151"];
-const STAGE_COLORS_LIGHT = ["#7A6B50", "#A6631E", "#A67A2E", "#4C7A41"];
+// A 4-step intensity ramp within the one accent hue — not 4 different colors —
+// since the palette gives us gold + iron-red (reserved for critical) only.
+const STAGE_COLORS_DARK  = ["#A99D89", "#C9960A", "#FFC300", "#FFCF33"];
+const STAGE_COLORS_LIGHT = ["#7A6B50", "#6B4D0C", "#8A6510", "#A67D1E"];
 
 const makeTip = (T) => ({
   backgroundColor: T.surface,
@@ -57,8 +60,8 @@ const makeTip = (T) => ({
   borderWidth: 1,
   titleColor: T.cream,
   bodyColor: T.creamDim,
-  padding: 14,
-  cornerRadius: 10,
+  padding: 10,
+  cornerRadius: 0,
   displayColors: true,
   titleFont: { size: 12, weight: "600" },
   bodyFont: { size: 12 },
@@ -124,7 +127,7 @@ function Legend({ items, T }) {
             </svg>
           ) : (
             <div style={{
-              width: 12, height: 12, borderRadius: 3,
+              width: 12, height: 12, borderRadius: 0,
               background: bg ?? color,
               border: `1.5px solid ${stroke ?? color}`,
             }} />
@@ -147,7 +150,7 @@ function RevenueOrdersChart({ labels, revenues, orders, todayIdx, height = 188, 
     if (!chartArea) return "transparent";
     const g = chart.ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
     g.addColorStop(0,   T.revFill0);
-    g.addColorStop(0.65, "rgba(204,154,62,0.04)");
+    g.addColorStop(0.65, "rgba(255,195,0,0.03)");
     g.addColorStop(1,   T.revFill1);
     return g;
   };
@@ -179,7 +182,7 @@ function RevenueOrdersChart({ labels, revenues, orders, todayIdx, height = 188, 
         backgroundColor: T.bar,
         borderColor: T.barStroke,
         borderWidth: 1,
-        borderRadius: 4,
+        borderRadius: 0,
         barPercentage: 0.7,
         categoryPercentage: 0.85,
         yAxisID: "yOrd",
@@ -279,7 +282,7 @@ function PipelineFunnel({ orders, height = 200, theme }) {
       backgroundColor: stageColors.map((c) => c + "2A"),
       borderColor:     stageColors.map((c) => c + "BB"),
       borderWidth: 1.5,
-      borderRadius: 5,
+      borderRadius: 0,
       minBarLength: 6,
       barPercentage: 0.58,
       categoryPercentage: 0.9,
@@ -328,8 +331,9 @@ function PipelineFunnel({ orders, height = 200, theme }) {
   );
 }
 
-// ── Wrapper card ──────────────────────────────────────────────────────────────
-function ChartWrap({ children }) {
+// ── Wrapper card (or a bare, borderless block for editorial layouts) ─────────
+function ChartWrap({ children, bare }) {
+  if (bare) return <div>{children}</div>;
   return (
     <div className="card" style={{ padding: "20px 22px 18px", marginBottom: 18 }}>
       {children}
@@ -338,14 +342,14 @@ function ChartWrap({ children }) {
 }
 
 // ── Root export ───────────────────────────────────────────────────────────────
-export default function TodayCharts({ ord, range, ordReady, theme }) {
+export default function TodayCharts({ ord, range, ordReady, theme, bare }) {
   if (!ordReady) return null;
 
   const today = nowSG();
 
   if (range === "today") {
     return (
-      <ChartWrap>
+      <ChartWrap bare={bare}>
         <PipelineFunnel orders={ord.filter((o) => sgt(o.updatedAt) === today)} theme={theme} />
       </ChartWrap>
     );
@@ -353,7 +357,7 @@ export default function TodayCharts({ ord, range, ordReady, theme }) {
 
   if (range === "tomorrow") {
     return (
-      <ChartWrap>
+      <ChartWrap bare={bare}>
         <PipelineFunnel orders={ord.filter((o) => (o.stage ?? 0) < 3)} theme={theme} />
       </ChartWrap>
     );
@@ -367,7 +371,7 @@ export default function TodayCharts({ ord, range, ordReady, theme }) {
       return { label: fmtDay(d), revenue: list.reduce((s, o) => s + (Number(o.totalValue) || 0), 0), orders: list.length };
     });
     return (
-      <ChartWrap>
+      <ChartWrap bare={bare}>
         <RevenueOrdersChart
           labels={bars.map((b) => b.label)}
           revenues={bars.map((b) => b.revenue)}
@@ -387,7 +391,7 @@ export default function TodayCharts({ ord, range, ordReady, theme }) {
       return { label: fmtDay(d), revenue: list.reduce((s, o) => s + (Number(o.totalValue) || 0), 0), orders: list.length };
     });
     return (
-      <ChartWrap>
+      <ChartWrap bare={bare}>
         <RevenueOrdersChart
           labels={bars.map((b) => b.label)}
           revenues={bars.map((b) => b.revenue)}
@@ -416,7 +420,7 @@ export default function TodayCharts({ ord, range, ordReady, theme }) {
       return new Date(+y, +mo - 1).toLocaleString("en-SG", { month: "short" }) + " '" + y.slice(2);
     };
     return (
-      <ChartWrap>
+      <ChartWrap bare={bare}>
         <RevenueOrdersChart
           labels={months.map(fmtM)}
           revenues={months.map((m) => Math.round(monthMap[m].revenue))}

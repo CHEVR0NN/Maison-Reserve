@@ -6,11 +6,11 @@ import Modal from "../components/ui/Modal.jsx";
 // Presentation config per tier — keyed by name so it stays in sync with
 // mock/loyalty.js#TIERS regardless of threshold/multiplier tuning.
 const TIER_PRESET = {
-  "Cellar Member":   { cls: "worker",  fill: "none",    stroke: "#5a4d28", mltColor: "#8C8266", bday: "S$10 worth",  entry: "None",     raf: "Not eligible" },
-  "Vintner's Circle":{ cls: "soldier", fill: "none",    stroke: "#7a6a3a", mltColor: "#C9BFA6", bday: "S$20 worth",  entry: "500 pts",  raf: "Not eligible" },
-  "Estate Reserve":  { cls: "general", fill: "none",    stroke: "#8A6B2C", mltColor: "#E8B85A", bday: "S$50 worth",  entry: "1000 pts", raf: "0.25× mult" },
-  "Grand Cru":       { cls: "queen",   fill: "#CC9A3E", stroke: "#E8B85A", mltColor: "#1B1712", bday: "S$100 worth", entry: "3000 pts", raf: "0.5× mult" },
-  "Maison Noir":     { cls: "black",   fill: "#0c0a05", stroke: "#F0C36B", mltColor: "#F0C36B", bday: "S$300 worth", entry: "5000 pts", raf: "0.75× mult" },
+  "Cellar Member":   { cls: "worker",  fill: "none",    stroke: "#3B352B", mltColor: "#A99D89", bday: "S$10 worth",  entry: "None",     raf: "Not eligible" },
+  "Vintner's Circle":{ cls: "soldier", fill: "none",    stroke: "#6E6553", mltColor: "#CFC6B0", bday: "S$20 worth",  entry: "500 pts",  raf: "Not eligible" },
+  "Estate Reserve":  { cls: "general", fill: "none",    stroke: "#C9960A", mltColor: "#FFCF33", bday: "S$50 worth",  entry: "1000 pts", raf: "0.25× mult" },
+  "Grand Cru":       { cls: "queen",   fill: "#FFC300", stroke: "#FFCF33", mltColor: "#15130F", bday: "S$100 worth", entry: "3000 pts", raf: "0.5× mult" },
+  "Maison Noir":     { cls: "black",   fill: "#15130F", stroke: "#F0C36B", mltColor: "#F0C36B", bday: "S$300 worth", entry: "5000 pts", raf: "0.75× mult" },
 };
 
 const CHANNELS = ["Email + SMS", "Email", "SMS", "WhatsApp"];

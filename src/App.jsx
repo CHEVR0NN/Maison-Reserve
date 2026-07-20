@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AppDataProvider, useAppData } from "./context/AppData.jsx";
 import { ToastProvider } from "./components/ui/ToastProvider.jsx";
-import Sidebar from "./components/ui/Sidebar.jsx";
-import StatusBar from "./components/ui/StatusBar.jsx";
+import Rail from "./components/ui/Rail.jsx";
 import LoginView from "./pages/LoginView.jsx";
 import TodayPage from "./pages/TodayPage.jsx";
 import OrdersPage from "./pages/OrdersPage.jsx";
@@ -14,17 +13,6 @@ import MarketplacePage from "./pages/MarketplacePage.jsx";
 import AutomationPage from "./pages/AutomationPage.jsx";
 import DriverPortalPage from "./pages/DriverPortalPage.jsx";
 import StockPortalPage from "./pages/StockPortalPage.jsx";
-
-const PAGE_TITLES = {
-  Today: ["Command Center", "Today's operational snapshot"],
-  Orders: ["Orders", "Pipeline across all channels"],
-  Inventory: ["Inventory", "Stock, SKUs & reorder health"],
-  Delivery: ["Delivery", "Live truck manifests & routing"],
-  Loyalty: ["Loyalty", "Members, tiers & campaigns"],
-  Inbox: ["Inbox", "Customer conversations"],
-  Marketplace: ["Marketplace", "Channel performance"],
-  Automation: ["Automation", "Rules & workflow health"],
-};
 
 function MainShell() {
   const { state, actions } = useAppData();
@@ -41,30 +29,25 @@ function MainShell() {
 
   if (state.session.role !== "staff") return <LoginView />;
 
-  const [title, subtitle] = PAGE_TITLES[tab] || [];
-
   return (
-    <div className="app-shell">
-      <Sidebar tab={tab} setTab={setTab} badges={badges} onResetDemo={actions.resetDemoData} />
-      <div className="app-main">
-        <StatusBar
-          theme={state.session.theme}
-          onToggleTheme={actions.session.setTheme}
-          onExitDemo={actions.session.exitDemo}
-          title={title}
-          subtitle={subtitle}
-        />
-        <main className="app-content">
-          {tab === "Today" && <TodayPage setTab={setTab} />}
-          {tab === "Orders" && <OrdersPage />}
-          {tab === "Inventory" && <InventoryPage />}
-          {tab === "Delivery" && <DeliveryPage />}
-          {tab === "Loyalty" && <LoyaltyPage />}
-          {tab === "Inbox" && <InboxPage />}
-          {tab === "Marketplace" && <MarketplacePage />}
-          {tab === "Automation" && <AutomationPage />}
-        </main>
-      </div>
+    <div className="rail-shell">
+      <Rail
+        tab={tab} setTab={setTab} badges={badges}
+        onResetDemo={actions.resetDemoData}
+        theme={state.session.theme}
+        onToggleTheme={actions.session.setTheme}
+        onExitDemo={actions.session.exitDemo}
+      />
+      <main className="rail-content">
+        {tab === "Today" && <TodayPage setTab={setTab} />}
+        {tab === "Orders" && <OrdersPage />}
+        {tab === "Inventory" && <InventoryPage />}
+        {tab === "Delivery" && <DeliveryPage />}
+        {tab === "Loyalty" && <LoyaltyPage />}
+        {tab === "Inbox" && <InboxPage />}
+        {tab === "Marketplace" && <MarketplacePage />}
+        {tab === "Automation" && <AutomationPage />}
+      </main>
     </div>
   );
 }

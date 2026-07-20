@@ -5,8 +5,8 @@ import { SGD } from "../utils.js";
 
 const CHANNEL_META = {
   "own-site": { icon: Globe, color: "var(--honey)" },
-  lazada:     { icon: ShoppingBag, color: "var(--orange)" },
-  shopee:     { icon: Store, color: "var(--blue)" },
+  lazada:     { icon: ShoppingBag, color: "color-mix(in srgb, var(--lazada) 60%, var(--cream))" },
+  shopee:     { icon: Store, color: "color-mix(in srgb, var(--shopee) 60%, var(--cream))" },
 };
 
 function agoLabel(iso) {

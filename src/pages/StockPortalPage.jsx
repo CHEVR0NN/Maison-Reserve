@@ -61,7 +61,7 @@ const GLOBAL_CSS = `
   .mvp-note { width: 100%; font-size: 15px; padding: 13px 14px; border-radius: 12px; border: 1.5px solid var(--kraft-line); background: var(--kraft); color: var(--ink); font-family: inherit; }
   .mvp-submit {
     width: 100%; padding: 17px; border-radius: 14px; border: none; margin-top: 8px;
-    background: var(--honey); color: #1B1712; font-size: 16.5px; font-weight: 800;
+    background: var(--honey); color: #15130F; font-size: 16.5px; font-weight: 800;
     letter-spacing: 0.3px; cursor: pointer;
   }
   .mvp-submit:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -99,7 +99,7 @@ const GLOBAL_CSS = `
   .mvp-slip-edit-note { width: 100%; font-size: 14px; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--kraft-line); background: var(--kraft); color: var(--ink); font-family: inherit; }
   .mvp-slip-edit-note:focus { outline: none; border-color: var(--honey); }
   .mvp-slip-edit-actions { display: flex; gap: 8px; margin-top: 2px; }
-  .mvp-slip-save { font-size: 12.5px; font-weight: 800; color: #1B1712; background: var(--honey); border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+  .mvp-slip-save { font-size: 12.5px; font-weight: 800; color: #15130F; background: var(--honey); border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
   .mvp-slip-cancel { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); background: none; border: 1.5px solid var(--kraft-line); border-radius: 8px; padding: 8px 14px; cursor: pointer; }
   .mvp-empty { text-align: center; padding: 30px 10px; color: var(--ink-faint); font-size: 13.5px; }
   .mvp-login-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
