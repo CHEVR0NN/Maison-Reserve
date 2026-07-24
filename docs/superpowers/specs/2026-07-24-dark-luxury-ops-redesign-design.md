@@ -170,10 +170,16 @@ list than an admin panel:
   `box-shadow` on individual components. The one exception is framing devices that
   genuinely float above content — modals, dropdowns, toasts — which keep a real drop
   shadow because they *are* elevated; regular page content never gets one.
-- **Nav (Rail):** active item indicated by weight + a gold-formerly/now-claret-colored index
-  number and a dotted leader line (menu/table-of-contents convention — items are already a
-  real numbered, ordered list of sections, so numbering them is informational, not
-  decorative), not a rounded card with a left accent bar.
+- **Nav (Rail):** each item keeps its `lucide-react` icon (unchanged from today — dropping
+  icons in an earlier draft of this preview was an oversight, not a decision; icons stay
+  for scannability) followed by the label, then a dotted leader line, then a claret-colored
+  index number for the active item only (menu/table-of-contents convention — items are
+  already a real numbered, ordered list of sections, so numbering them is informational,
+  not decorative). Not a rounded card with a left accent bar.
+- **Nav badges** (Orders pending count, Inbox unread count — from `badges[key]` in
+  `Rail.jsx` today): shown as a small bold numeral in `--orange` (the "needs attention"
+  signal color) directly after the label, before the leader line. Not a filled pill/badge
+  background — same "no pill" rule as status, applied consistently.
 - **Status:** a colored word + small dot, never a pill/badge background fill.
 - **Channel/category tags:** small-caps mono label with a colored underline, never a pill.
 - **KPI hero metrics:** large serif numeral + a short gradient hairline rule beneath it
@@ -185,6 +191,19 @@ list than an admin panel:
   gradient behind the canvas (plus a faint top-down sheen) gives atmosphere without
   `backdrop-filter` blur, which the skill flags as a performance/contrast risk for a
   data-dense tool.
+- **Focus states use `--cream`, never `--claret`.** Every interactive element (nav links,
+  buttons, form fields, the theme toggle) gets a visible `outline: 2px solid var(--cream)`
+  (`outline-offset: 2px`) on `:focus-visible` — accessibility priority-1 per the skill's own
+  rule categories, and non-negotiable regardless of how "quiet" the rest of the UI is. It's
+  deliberately *not* claret: claret is budgeted to exactly 4 roles (see "Claret usage
+  audit") and a focus ring firing on every tab-stop would blow that budget instantly. Cream
+  is high-contrast against every surface in both modes and costs nothing from the budget.
+- **Brand chrome (any monogram/wordmark treatment, if added) uses neutral ink, not
+  claret.** A monogram mark explored during visual review used claret for its ring, which
+  silently broke the "claret appears in exactly 4 places" claim — brand chrome sits outside
+  the four audited roles by definition, so it must stay neutral. Whether a monogram mark
+  ships in the product at all (Rail brand, LoginView, favicon) is still an open question,
+  not decided by this spec — it appeared only in preview-page documentation chrome.
 
 ## Motion
 
