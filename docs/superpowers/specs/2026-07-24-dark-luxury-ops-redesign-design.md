@@ -4,14 +4,20 @@
 **Status:** Approved
 **Version target:** v3.0.0 (README + CHANGELOG)
 
-**Revision:** The original palette (antique gold `--honey` + wine-red `--cabernet` on a
+**Revision 1:** The original palette (antique gold `--honey` + wine-red `--cabernet` on a
 warm near-black oak canvas) was visually reviewed via a live preview and rejected as too
 dark, too brown/muddy, and too close to a generic gold-and-burgundy liquor-store cliché.
-Structure (hairline/typographic component language, dark-primary base, gold/plum-restricted
-rare-accent rule) was kept — only the color family changed, replacing gold/cabernet with
-plum/verdigris on a cooler, lighter charcoal canvas. Token *names* changed accordingly
-(`--honey`→`--plum`, `--cabernet`→`--verdigris`) since keeping the old names pointed at
-unrelated hues would mislead future readers of `src/styles.css`.
+Replaced gold/cabernet with plum/verdigris on a cooler, lighter charcoal canvas.
+
+**Revision 2:** Plum was then rejected — it doesn't read as "wine" at all (too violet,
+closer to beauty/fashion branding) and felt wrong for an operations console. The project's
+priority is that the accent unmistakably signal "wine & spirits brand" first. Plum is
+replaced with **claret** (`#B8304D` dark / `#8C1E3A` light) — a true, clear Bordeaux red,
+distinct from both the muddy oxblood-brown of the first pass and the violet-plum of the
+second. Verdigris (unchanged, wasn't the problem) stays as the workhorse secondary.
+Structure (hairline/typographic component language, dark-primary base, restricted-rare-
+accent rule) has been stable across both revisions — only the accent hue keeps changing.
+Token names: `--honey`→`--plum`→`--claret`, `--cabernet`→`--verdigris` (final).
 
 ## Context
 
@@ -33,16 +39,18 @@ Fira Code/Fira Sans typography — rejected; see Typography below).
 Dark-primary premium operations console for a wine & spirits retailer. Cool graphite
 canvas (not warm oak-brown), elevation via luminance steps (not blur/glassmorphism —
 rejected as performance/contrast-risky for a data-dense tool per the skill's own flags),
-plum (a violet wine-red) used as a genuinely rare high-value accent, verdigris (the
-teal-green patina of aged copper and old cellar ironwork) as the workhorse secondary color
-carrying most of the UI's color needs. Both are wine/spirits-authentic without leaning on
-the gold+burgundy liquor-store cliché the first pass fell into. Light mode is kept as a
-companion theme, not dropped.
+claret (a true, unmistakable Bordeaux wine-red) used as a genuinely rare high-value accent,
+verdigris (the teal-green patina of aged copper and old cellar ironwork) as the workhorse
+secondary color carrying most of the UI's color needs. Claret is deliberately a *clear* red
+with a blue-leaning undertone — not the muddy oxblood-brown of the first pass, not the
+violet-plum of the second — chosen specifically so the accent reads as "wine" at a glance,
+which the project's priority calls for over any other consideration. Light mode is kept as
+a companion theme, not dropped.
 
 ## Color tokens
 
-CSS variable names in current `src/styles.css` are renamed to match the new hues
-(`--honey`→`--plum`, `--cabernet`→`--verdigris`, `--amber-glow`→`--plum-glow`,
+CSS variable names in current `src/styles.css` are renamed to match the final hues
+(`--honey`→`--claret`, `--cabernet`→`--verdigris`, `--amber-glow`→`--claret-glow`,
 `--cabernet-glow`→`--verdigris-glow`) — keeping the old names pointed at unrelated colors
 would mislead anyone reading the CSS. All other token names (`--cream`, `--muted`, `--bg`,
 etc.) are unchanged; only values change on those.
@@ -57,8 +65,8 @@ etc.) are unchanged; only values change on those.
 --line: #454C58            --line-soft: rgba(230,233,230,0.07)
 --border-active: #5A6272
 
---plum: #A85786            --plum-2: #C87CA6         --plum-deep: #6E3660
---plum-glow: rgba(168,87,134,0.24)
+--claret: #B8304D          --claret-2: #D65B76       --claret-deep: #7A1E34
+--claret-glow: rgba(184,48,77,0.24)
 
 --verdigris: #4F9C93       --verdigris-2: #72BAB1    --verdigris-deep: #2E6560
 --verdigris-glow: rgba(79,156,147,0.2)
@@ -87,8 +95,8 @@ etc.) are unchanged; only values change on those.
 --line: #D2D5CC            --line-soft: rgba(30,32,28,0.07)
 --border-active: #B7BBAE
 
---plum: #7A3A62            --plum-2: #954C7A         --plum-deep: #4E2540
---plum-glow: rgba(122,58,98,.12)
+--claret: #8C1E3A          --claret-2: #A8324F       --claret-deep: #5C1226
+--claret-glow: rgba(140,30,58,.12)
 
 --verdigris: #2E6D65       --verdigris-2: #3F877D    --verdigris-deep: #1D4A44
 --verdigris-glow: rgba(46,109,101,.10)
@@ -107,20 +115,20 @@ etc.) are unchanged; only values change on those.
 --shadow-lift: 0 2px 6px rgba(30,32,28,.12), 0 20px 40px -14px rgba(30,32,28,.18)
 ```
 
-Notes on the mode-appropriate accent shift: plum and verdigris are *lighter* in dark mode
+Notes on the mode-appropriate accent shift: claret and verdigris are *lighter* in dark mode
 (need to lift off a dark canvas) and *darker/more saturated* in light mode (need to sit on
 pale paper) — same brand hue, different lightness per the skill's dark-mode-contrast
-guidance. Canvas neutrals are now cool graphite/stone (blue-grey undertone) rather than the
+guidance. Canvas neutrals are cool graphite/stone (blue-grey undertone) rather than the
 first pass's warm oak-brown, which was the direct fix for "too dark and muddy." Signal
-colors (`--green`/`--red`/`--orange`/`--blue`) are unchanged in hue from the first pass and
-stay clearly distinct from both `--plum` (violet-red, not orange-red like `--red`) and
-`--verdigris` (teal, not sage like `--green` or slate like `--blue`) — status must never be
-confused with brand emphasis.
+colors (`--green`/`--red`/`--orange`/`--blue`) are unchanged in hue and stay clearly
+distinct from both `--claret` (deliberately blue-leaning crimson, not the orange-leaning
+`--red`) and `--verdigris` (teal, not sage like `--green` or slate like `--blue`) — status
+must never be confused with brand emphasis, and claret must never read as an alert color.
 
-### Plum usage audit (the "used sparingly" constraint carries over)
+### Claret usage audit (the "used sparingly" constraint carries over)
 
-`--plum`/`--accent` is scoped to exactly these four roles, app-wide — same rule as the
-first pass, just the color changed:
+`--claret`/`--accent` is scoped to exactly these four roles, app-wide — same rule across
+all revisions, only the color changed:
 
 1. Primary CTA buttons (one per view, the single highest-priority action)
 2. The active-nav indicator in the Rail
@@ -136,7 +144,7 @@ progress bars, etc.) gets renamed to `var(--verdigris)`/`var(--verdigris-2)` or 
 change.
 
 Product-category and channel chip colors (8 categories + Shopee/Lazada) draw from the
-verdigris + neutral + signal-color family; none of them use plum.
+verdigris + neutral + signal-color family; none of them use claret.
 
 ## Typography — unchanged
 
@@ -162,18 +170,18 @@ list than an admin panel:
   `box-shadow` on individual components. The one exception is framing devices that
   genuinely float above content — modals, dropdowns, toasts — which keep a real drop
   shadow because they *are* elevated; regular page content never gets one.
-- **Nav (Rail):** active item indicated by weight + a gold-formerly/now-plum-colored index
+- **Nav (Rail):** active item indicated by weight + a gold-formerly/now-claret-colored index
   number and a dotted leader line (menu/table-of-contents convention — items are already a
   real numbered, ordered list of sections, so numbering them is informational, not
   decorative), not a rounded card with a left accent bar.
 - **Status:** a colored word + small dot, never a pill/badge background fill.
 - **Channel/category tags:** small-caps mono label with a colored underline, never a pill.
 - **KPI hero metrics:** large serif numeral + a short gradient hairline rule beneath it
-  (`--plum-deep` → transparent), not a boxed stat card.
+  (`--claret-deep` → transparent), not a boxed stat card.
 - **Loyalty tiers:** one ledger row divided by hairlines (`border-left: 1px solid --line`
   between columns), not five separate boxed cards. The top tier is marked by a 2px
-  `--plum` rule across just that column, not a gradient-filled box.
-- **Ambient glow, not glassmorphism:** a soft `--plum-glow`/`--verdigris-glow` radial
+  `--claret` rule across just that column, not a gradient-filled box.
+- **Ambient glow, not glassmorphism:** a soft `--claret-glow`/`--verdigris-glow` radial
   gradient behind the canvas (plus a faint top-down sheen) gives atmosphere without
   `backdrop-filter` blur, which the skill flags as a performance/contrast risk for a
   data-dense tool.
@@ -206,8 +214,8 @@ icon-set change needed.
 Full app, per user decision:
 
 - `src/styles.css` — token source of truth, full `:root` + `body[data-theme="light"]`
-  rewrite (including the `--honey`/`--cabernet` → `--plum`/`--verdigris` rename), plus the
-  hairline/no-card component rules and the motion utility rules.
+  rewrite (including the `--honey`/`--cabernet` → `--claret`/`--verdigris` rename), plus
+  the hairline/no-card component rules and the motion utility rules.
 - `src/components/ui/Rail.jsx` (nav) and `src/pages/LoginView.jsx`
 - All 8 main pages: `TodayPage`, `OrdersPage`, `InventoryPage`, `DeliveryPage`,
   `LoyaltyPage`, `InboxPage`, `MarketplacePage`, `AutomationPage`
@@ -219,7 +227,7 @@ Full app, per user decision:
   hardcoded hex only) and `StockPortalPage` (has its own inline `GLOBAL_CSS` block with
   `--kraft`/`--ink` variables — reconcile with the shared token set during implementation)
 - `index.html` — manifest `theme-color` and favicon gradient, updated to the new
-  plum-restricted/verdigris-forward system
+  claret-restricted/verdigris-forward system
 - `README.md` (Design section) and `CHANGELOG.md` — new **v3.0.0** entry, per this
   project's versioning-discipline rule (`.claude/CLAUDE.md`)
 
