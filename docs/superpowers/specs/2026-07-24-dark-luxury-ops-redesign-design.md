@@ -68,14 +68,14 @@ etc.) are unchanged; only values change on those.
 --claret: #B8304D          --claret-2: #D65B76       --claret-deep: #7A1E34
 --claret-glow: rgba(184,48,77,0.24)
 
---verdigris: #4F9C93       --verdigris-2: #72BAB1    --verdigris-deep: #2E6560
---verdigris-glow: rgba(79,156,147,0.2)
+--verdigris: #3F9C7E       --verdigris-2: #63BC9C    --verdigris-deep: #256B54
+--verdigris-glow: rgba(63,156,126,0.2)
 
 --cream: #EBEDE9           --cream-dim: #B4B7B1
 --muted: #888C90           --muted-2: #5C6064
 
 --green: #6FA35C   --green-bg: rgba(111,163,92,.18)
---red: #C4483B     --red-bg: rgba(196,72,59,.18)
+--red: #CD5237     --red-bg: rgba(205,82,55,.18)
 --orange: #C98A3E  --orange-bg: rgba(201,138,62,.18)
 --blue: #7C89A6    --blue-bg: rgba(124,137,166,.17)
 
@@ -98,14 +98,14 @@ etc.) are unchanged; only values change on those.
 --claret: #8C1E3A          --claret-2: #A8324F       --claret-deep: #5C1226
 --claret-glow: rgba(140,30,58,.12)
 
---verdigris: #2E6D65       --verdigris-2: #3F877D    --verdigris-deep: #1D4A44
---verdigris-glow: rgba(46,109,101,.10)
+--verdigris: #1A5C46       --verdigris-2: #2A7862    --verdigris-deep: #123D2F
+--verdigris-glow: rgba(26,92,70,.10)
 
 --cream: #202422           --cream-dim: #454A44
 --muted: #6C716A           --muted-2: #9A9E92
 
 --green: #5C7742   --green-bg: rgba(92,119,66,.14)
---red: #A83A2D     --red-bg: rgba(168,58,45,.12)
+--red: #A83E26     --red-bg: rgba(168,62,38,.12)
 --orange: #A9772C  --orange-bg: rgba(169,119,44,.14)
 --blue: #5A6A85    --blue-bg: rgba(90,106,133,.12)
 
@@ -119,11 +119,20 @@ Notes on the mode-appropriate accent shift: claret and verdigris are *lighter* i
 (need to lift off a dark canvas) and *darker/more saturated* in light mode (need to sit on
 pale paper) — same brand hue, different lightness per the skill's dark-mode-contrast
 guidance. Canvas neutrals are cool graphite/stone (blue-grey undertone) rather than the
-first pass's warm oak-brown, which was the direct fix for "too dark and muddy." Signal
-colors (`--green`/`--red`/`--orange`/`--blue`) are unchanged in hue and stay clearly
-distinct from both `--claret` (deliberately blue-leaning crimson, not the orange-leaning
-`--red`) and `--verdigris` (teal, not sage like `--green` or slate like `--blue`) — status
-must never be confused with brand emphasis, and claret must never read as an alert color.
+first pass's warm oak-brown, which was the direct fix for "too dark and muddy."
+
+**Revision 3:** A live screenshot caught `--red` (`#C4483B`, hue ≈6°) reading as
+effectively the same color as `--claret` (`#B8304D`, hue ≈347°) — only ~19° apart at
+similar saturation, so every "Delayed" status was silently reading as another claret hit,
+which broke the "claret is used sparingly" promise in practice even though it was true in
+the CSS. `--red` is retuned to a warmer, more vermillion hue (`#CD5237` dark / `#A83E26`
+light, hue ≈11°) — now ~24° from claret *and* visibly warmer/more orange, vs. claret's
+cooler magenta-leaning crimson. `--orange` (attention, hue ≈33°) still sits comfortably
+past it. `--shopee` sits close to `--red` in raw hue but was left alone: it only ever
+appears in the Channel column labeled "Shopee," never adjacent to a status word, so there's
+no realistic confusion in context — colors need to be unambiguous *in use*, not maximally
+separated in the abstract. `--verdigris` was also nudged ~13° greener (hue ≈173°→≈160°) —
+it was reading more "cool blue" than "aged-copper-patina green" on screen.
 
 ### Claret usage audit (the "used sparingly" constraint carries over)
 
