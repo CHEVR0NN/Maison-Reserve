@@ -55,6 +55,8 @@ export default function Rail({ tab, setTab, badges = {}, onResetDemo, theme, onT
                     type="button"
                     className={`rail-link${active ? " active" : ""}`}
                     aria-current={active ? "page" : undefined}
+                    aria-label={label}
+                    title={label}
                     onClick={() => setTab(key)}
                   >
                     <Icon size={18} />
@@ -71,24 +73,29 @@ export default function Rail({ tab, setTab, badges = {}, onResetDemo, theme, onT
       </nav>
 
       <div className="rail-foot">
-        <a className="rail-link" href="/driver-portal">
+        <a className="rail-link" href="/driver-portal" aria-label="Driver Portal" title="Driver Portal">
           <Car size={17} />
           <span className="rail-link-label">Driver Portal</span>
         </a>
-        <a className="rail-link" href="/stock-portal">
+        <a className="rail-link" href="/stock-portal" aria-label="Stock Portal" title="Stock Portal">
           <Boxes size={17} />
           <span className="rail-link-label">Stock Portal</span>
         </a>
-        <button type="button" className="rail-link" onClick={() => onToggleTheme(theme === "dark" ? "light" : "dark")}>
+        <button
+          type="button" className="rail-link"
+          aria-label={theme === "dark" ? "Switch to Daylight Cellar" : "Switch to Night Cellar"}
+          title={theme === "dark" ? "Daylight Cellar" : "Night Cellar"}
+          onClick={() => onToggleTheme(theme === "dark" ? "light" : "dark")}
+        >
           {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
           <span className="rail-link-label">{theme === "dark" ? "Daylight Cellar" : "Night Cellar"}</span>
         </button>
-        <button type="button" className="rail-link" onClick={onResetDemo}>
+        <button type="button" className="rail-link" aria-label="Reset Data" title="Reset Data" onClick={onResetDemo}>
           <RotateCcw size={16} />
           <span className="rail-link-label">Reset Data</span>
         </button>
         {onExitDemo && (
-          <button type="button" className="rail-link" onClick={onExitDemo}>
+          <button type="button" className="rail-link" aria-label="Sign Out" title="Sign Out" onClick={onExitDemo}>
             <LogOut size={17} />
             <span className="rail-link-label">Sign Out</span>
           </button>

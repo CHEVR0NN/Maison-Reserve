@@ -102,7 +102,12 @@ const GLOBAL_CSS = `
   .mvp-slip-save { font-size: 12.5px; font-weight: 800; color: var(--on-verdigris); background: var(--verdigris); border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
   .mvp-slip-cancel { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); background: none; border: 1.5px solid var(--kraft-line); border-radius: 8px; padding: 8px 14px; cursor: pointer; }
   .mvp-empty { text-align: center; padding: 30px 10px; color: var(--ink-faint); font-size: 13.5px; }
-  .mvp-login-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .mvp-login-shell {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
+    background:
+      radial-gradient(900px 560px at 88% -10%, color-mix(in srgb, var(--verdigris) 12%, transparent), transparent 60%),
+      radial-gradient(700px 440px at 6% 108%, color-mix(in srgb, var(--claret) 10%, transparent), transparent 55%);
+  }
   .mvp-login-card { width: 100%; max-width: 340px; background: var(--card); border: 1px solid var(--kraft-line); border-radius: 20px; padding: 32px 26px; text-align: center; }
   .mvp-login-card b { display: block; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--honey-text); margin-bottom: 6px; }
   .mvp-login-title { font-size: 21px; font-weight: 800; color: var(--bottle); margin: 0 0 22px; }

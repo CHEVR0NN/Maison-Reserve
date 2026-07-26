@@ -36,8 +36,10 @@ function initials(name = "") {
   return name.trim().split(/\s+/).map((w) => w[0] || "").join("").slice(0, 2).toUpperCase() || "?";
 }
 
+// Claret is budgeted to exactly four roles elsewhere in the product (see
+// DESIGN.md) — avatars stay on verdigris/neutral so they never spend it.
 function avatarColor(name = "") {
-  const palette = ["#1C4A3A", "#2E3A4A", "#4A3E2E", "#2E4A3A", "#2E4040", "#3E4A2E", "#3A4A50", "#2A3038"];
+  const palette = ["var(--verdigris-deep)", "var(--surface-3)", "var(--muted-2)"];
   let h = 0;
   for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xffff;
   return palette[h % palette.length];
@@ -165,10 +167,17 @@ export default function InboxPage() {
 
       <div className="inbox-thread-pane">
         {!selected ? (
-          <div className="empty-state" style={{ flex: 1 }}>
-            <MessageCircle size={40} strokeWidth={1.2} />
-            <b>Select a conversation</b>
-            <span>Pick a thread from the list to view messages and reply.</span>
+          <div className="inbox-pane-empty">
+            <div className="empty-state">
+              <MessageCircle size={40} strokeWidth={1.2} />
+              <b>Select a conversation</b>
+              <span>Pick a thread from the list to view messages and reply.</span>
+            </div>
+            <div className="inbox-pane-empty-stats">
+              <div><b>{threads.length}</b><label>Conversations</label></div>
+              <div><b>{unreadCount}</b><label>Unread</label></div>
+              <div><b>{threads.filter((t) => t.messages.some((m) => m.from === "staff")).length}</b><label>Replied</label></div>
+            </div>
           </div>
         ) : (
           <>

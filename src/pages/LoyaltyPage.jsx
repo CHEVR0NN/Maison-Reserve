@@ -112,28 +112,34 @@ export default function LoyaltyPage() {
 
       {tab === "members" && (
         <>
-          <div className="tier-grid">
+          <div className="tier-ledger" role="list">
             {tiers.map((tier) => {
               const preset = TIER_PRESET[tier.name] || TIER_PRESET["Cellar Member"];
               const stat = tierStats.get(tier.name) || { members: 0, points: 0 };
+              const isTop = preset.cls === "black";
               return (
-                <button type="button" className={`tier-card ${preset.cls}${filterTier === tier.name ? " tier-card-active" : ""}`} key={tier.name}
-                  aria-pressed={filterTier === tier.name}
+                <button type="button" className={`tier-row ${preset.cls}${filterTier === tier.name ? " tier-row-active" : ""}${isTop ? " tier-row-top" : ""}`} key={tier.name}
+                  role="listitem" aria-pressed={filterTier === tier.name}
                   onClick={() => setFilterTier(filterTier === tier.name ? null : tier.name)}>
-                  <div className="tier-hex">
+                  <span className="tier-row-cell tier-row-id">
                     <GemIcon fill={preset.fill} stroke={preset.stroke} />
-                    <span className="mlt" style={{ color: preset.mltColor }}>{tier.mult.toFixed(1)}×</span>
-                  </div>
-                  <div className="tn">{tier.name}</div>
-                  <div className="thr">{tierThreshold(tier)}</div>
-                  <div className="mc">{stat.members}</div>
-                  <div className="mcl">members</div>
-                  <div className="pts">{fmtN(stat.points)} pts</div>
-                  <div className="tier-details" style={{ marginTop: 12, borderTop: "1px solid var(--line-soft)", paddingTop: 8, textAlign: "left", fontSize: 10.5 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}><span className="dim">Bday Voucher:</span><span className="strong">{preset.bday}</span></div>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}><span className="dim">Entry Reward:</span><span className="strong">{preset.entry}</span></div>
-                    <div style={{ display: "flex", justifyContent: "space-between" }}><span className="dim">Referral Bonus:</span><span className="strong">{preset.raf}</span></div>
-                  </div>
+                    <span className="tier-row-mult" style={{ color: preset.mltColor }}>{tier.mult.toFixed(1)}×</span>
+                  </span>
+                  <span className="tier-row-cell tier-row-name">
+                    <span className="tn">{tier.name}</span>
+                    <span className="thr">{tierThreshold(tier)}</span>
+                  </span>
+                  <span className="tier-row-cell tier-row-stat">
+                    <b>{stat.members}</b><label>members</label>
+                  </span>
+                  <span className="tier-row-cell tier-row-stat">
+                    <b>{fmtN(stat.points)}</b><label>pts</label>
+                  </span>
+                  <span className="tier-row-cell tier-row-perks">
+                    <span><label>Bday Voucher</label><b>{preset.bday}</b></span>
+                    <span><label>Entry Reward</label><b>{preset.entry}</b></span>
+                    <span><label>Referral Bonus</label><b>{preset.raf}</b></span>
+                  </span>
                 </button>
               );
             })}
@@ -270,7 +276,7 @@ export default function LoyaltyPage() {
                   <div className="seg"><b>Segment:</b> {c.audience}</div>
                 </div>
                 <div className="camp-meta">
-                  <div className="chan-chips"><span className="cc em">{c.channel}</span></div>
+                  <div className="camp-chan-chips"><span className="chan-tag em">{c.channel}</span></div>
                   <span className={`bc-status ${c.status === "sent" ? "sent" : c.status === "scheduled" ? "sched" : "draft"}`}>
                     {c.status === "sent" ? `Sent · ${Math.round((c.stats.opened / c.stats.sent) * 100)}% opened` : c.status === "scheduled" ? "Scheduled" : "Draft"}
                   </span>
