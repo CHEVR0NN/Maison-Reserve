@@ -71,7 +71,10 @@ const GLOBAL_CSS = `
 const F = "'Public Sans', ui-sans-serif, -apple-system, 'SF Pro Display', Segoe UI, Roboto, sans-serif";
 const S = {
   root: { display: "flex", flexDirection: "column", height: "100dvh", background: C.bg, color: C.text, fontFamily: F, overflow: "hidden", WebkitFontSmoothing: "antialiased" },
-  center: { display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100dvh", padding: 20, background: C.bg, fontFamily: F },
+  center: {
+    display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100dvh", padding: 20, fontFamily: F,
+    background: `radial-gradient(1000px 600px at 82% -10%, ${C.goldSoft}, transparent 60%), radial-gradient(780px 460px at 4% 108%, ${C.claretSoft}, transparent 55%), ${C.bg}`,
+  },
   loginCard: { width: "100%", maxWidth: 380, background: C.surface, border: `1px solid ${C.hair}`, borderRadius: 26, padding: "38px 28px", boxShadow: "0 28px 70px rgba(16,11,4,.35)" },
   loginSub: { fontSize: 12, color: C.textFaint, marginTop: 6, marginBottom: 28, letterSpacing: ".02em" },
   btnGold: { width: "100%", padding: "14px", background: `linear-gradient(180deg,${C.claret},var(--c-claretDark,#7A1E34))`, color: C.onClaret, border: "none", borderRadius: 14, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 24px var(--c-claretSoft)", fontFamily: F, marginBottom: 12 },

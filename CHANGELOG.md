@@ -2,6 +2,58 @@
 
 All notable changes to this project are recorded here.
 
+## v3.1.0 — 2026-07-26
+
+Layout and depth refinement pass across the Twilight Cellar rebrand — same tokens and identity,
+fixing a real layout bug plus several places where execution drifted from the v3.0.0 design spec.
+
+- **Fixed a layout-breaking bug:** two unrelated CSS rules both used the class name `.cc` (a
+  Loyalty channel-chip badge and the Command Center page container). The container inherited the
+  chip's `display: flex; align-items: center` declarations, turning the whole Command Center into
+  a single centered flex row instead of a stacked page — this was the direct cause of the large
+  dead space and reflowed headings reported. Renamed the chip class to `.chan-tag`.
+- Replaced flat single-tone `--surface` fills on Command Center tiles, panel cards, and Inventory
+  category cards with a subtle stepped-luminance gradient (`--surface-2` → `--surface`), so depth
+  reads from lit-plate shading rather than a uniform boxed fill — no `box-shadow` added to content,
+  per the existing no-card-elevation rule.
+- Rebuilt the Loyalty tier display from five boxed cards (one filled solid claret) into the single
+  hairline-divided ledger row the v3.0.0 spec called for; the top tier now reads via a 2px claret
+  rule on its identity column only, restoring the Claret Budget Rule the boxed version had broken.
+- Replaced the Inventory category strip's eight-color rainbow of hardcoded off-palette hex accents
+  (leftover from the pre-rebrand palette) with the restrained verdigris/neutral system; category
+  identity now lives in the mono label instead of a border-color per card.
+- Recolored the ambient canvas background glow, which was still using hardcoded gold/cabernet RGB
+  values from the pre-Twilight-Cellar palette, to the current claret/verdigris tokens via
+  `color-mix()` so it stays correct across theme and future token changes; strengthened it slightly
+  so the atmosphere the spec calls for is actually visible.
+- Gave the Driver Portal and Stock Portal entry screens (previously a flat, opaque `--bg` fill) the
+  same ambient glow treatment as the main app shell, so they no longer read as an empty void around
+  a floating card.
+- Replaced the Inbox avatar hash-palette (muddy off-brand browns/blues) with verdigris/neutral
+  tones, and gave the "no conversation selected" empty state real content (conversation/unread/
+  replied counts) instead of leaving most of the pane blank.
+- Fixed a second, lower-impact instance of the same duplicate-class pattern: `.chan-chips` was
+  defined twice (Marketplace legend, Loyalty campaign chips); the Loyalty one is now
+  `.camp-chan-chips`.
+- **Fixed a second layout-breaking bug, in the responsive nav:** below 1024px the Rail collapses
+  from a sidebar into a horizontal bar, but `.rail-brand` kept its desktop `width: 100%` rule
+  (the breakpoint override never reset it), so the brand button alone claimed the full bar width
+  and pushed all 8 nav links + 5 footer links off-screen into an effectively invisible
+  horizontal-scroll void — this was the "navbar is scrollable and empty" bug reported. Fixed
+  `.rail-brand` to `width: auto` at this breakpoint, and rebuilt the compact bar as an icon-only
+  strip (labels move to `title`/`aria-label`) instead of a horizontally-scrolling text nav, since
+  13 full-text links were never going to fit a tablet-width bar regardless of the sizing bug.
+- **Fixed a third layout-breaking bug:** `.loy-grid`, `.deliv-grid`, and `.inv-grid` used plain
+  `Nfr` grid tracks, so a wide child (the Loyalty members table's `min-width: 760px`) forced its
+  column past its `fr` share and pushed the sibling column off the edge of the viewport at
+  intermediate widths (~768–1000px) — the Automation Feed panel was getting silently clipped.
+  Switched to the `minmax(0, Nfr)` pattern already used correctly by `.cc-grid`. Also had to fix
+  this at its *second* definition: this file keeps a documented "late responsive overrides"
+  section (~line 1671) that re-declares these same grid classes after their base rules specifically
+  because an earlier duplicate-declaration bug forced that workaround — that late block had its
+  own un-fixed `1fr 1fr` for `.loy-grid` and was winning the cascade, silently reverting the fix
+  made at the base rule.
+
 ## v3.0.0 — 2026-07-26
 
 Full visual rebrand ("Dark Luxury Ops" / "Twilight Cellar") per

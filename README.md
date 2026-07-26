@@ -1,6 +1,6 @@
 # Maison Reserve
 
-**v3.0.0** · Command Center for Premium Retail Operations
+**v3.1.0** · Command Center for Premium Retail Operations
 
 A frontend-only portfolio demo: a full retail operations dashboard for a premium wine & spirits
 retailer — orders, inventory, delivery, loyalty, inbox, marketplace channels, and automation —

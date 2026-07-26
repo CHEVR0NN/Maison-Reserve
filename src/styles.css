@@ -171,8 +171,9 @@ body[data-theme="light"] {
 html { background: var(--bg); scroll-behavior: smooth; }
 body {
   background:
-    radial-gradient(1100px 620px at 84% -10%, rgba(198,161,91,0.05), transparent 60%),
-    radial-gradient(820px 480px at 2% 104%, rgba(156,58,72,0.06), transparent 55%),
+    radial-gradient(1200px 680px at 86% -12%, color-mix(in srgb, var(--verdigris) 13%, transparent), transparent 62%),
+    radial-gradient(900px 560px at 0% 106%, color-mix(in srgb, var(--claret) 12%, transparent), transparent 58%),
+    linear-gradient(180deg, color-mix(in srgb, var(--cream) 3%, transparent), transparent 320px),
     var(--bg);
   color: var(--cream);
   font-family: var(--sans);
@@ -321,9 +322,10 @@ h1 {
 .panel-grid          { display: grid; gap: var(--sp-3); }
 .panel-grid.three    { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
 
-/* base panel */
+/* base panel — stepped-luminance sheen instead of a flat fill, so the surface
+   reads as a lit plate rather than a boxed card (no box-shadow on content) */
 .panel {
-  background: var(--surface);
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 45%);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   padding: var(--sp-4);
@@ -889,18 +891,15 @@ input:focus { border-color: var(--cream); box-shadow: 0 0 0 3px var(--cream-glow
   padding: 16px 18px 14px;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
-  background: var(--bg-2);
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--bg-2) 60%);
   display: grid;
   gap: 8px;
+  transition: border-color .15s;
 }
-.inv-cat-card-beer   { border-top: 3px solid #B8862E; }
-.inv-cat-card-brandy { border-top: 3px solid #A3572E; }
-.inv-cat-card-whisky { border-top: 3px solid var(--accent); }
-.inv-cat-card-wine   { border-top: 3px solid var(--verdigris-2); }
-.inv-cat-card-vodka  { border-top: 3px solid #5C7A54; }
-.inv-cat-card-liqueur{ border-top: 3px solid #8C4A72; }
-.inv-cat-card-rum    { border-top: 3px solid #8F5A24; }
-.inv-cat-card-mixers { border-top: 3px solid #4C8066; }
+.inv-cat-card:hover { border-color: var(--border-active); }
+/* Category identity lives in the mono label, not a rainbow of card accents —
+   restraint over decoration, verdigris is the one workhorse tint. */
+.inv-cat-card-label { font-family: var(--mono); }
 .inv-cat-card-label {
   font-size: 10px;
   font-weight: 600;
@@ -1091,7 +1090,6 @@ input:focus { border-color: var(--cream); box-shadow: 0 0 0 3px var(--cream-glow
 @media (max-width: 1100px) {
   .deliv-grid        { grid-template-columns: 1fr; }
   .panel-grid.three  { grid-template-columns: 1fr; }
-  .tier-grid         { grid-template-columns: repeat(3, 1fr); }
   .today-grid        { grid-template-columns: 1fr; }
   .loy-grid          { grid-template-columns: 1fr 1fr; }
   .inv-grid          { grid-template-columns: 1fr; }
@@ -1119,9 +1117,6 @@ input:focus { border-color: var(--cream); box-shadow: 0 0 0 3px var(--cream-glow
   .inv-tbl-wrap th:nth-child(4), .inv-tbl-wrap td:nth-child(4),
   .inv-tbl-wrap th:nth-child(7), .inv-tbl-wrap td:nth-child(7) { display: none; }
 
-  /* Today page */
-  .tier-grid { grid-template-columns: repeat(2, 1fr); }
-
   /* Broadcasts */
   .camp { grid-template-columns: 1fr auto; gap: 12px; }
   .camp-date { width: 54px; }
@@ -1142,7 +1137,6 @@ input:focus { border-color: var(--cream); box-shadow: 0 0 0 3px var(--cream-glow
 /* ─── Responsive — 480px ─────────────────────────────────────────────────── */
 @media (max-width: 480px) {
   .kpi-strip  { grid-template-columns: 1fr; }
-  .tier-grid  { grid-template-columns: 1fr; }
   .camp       { grid-template-columns: 1fr; }
   .camp-date  { display: none; }              /* hide date badge, name stays readable */
 }
@@ -1216,7 +1210,7 @@ td .dim { color: var(--muted); font-size: 12px; }
 .deliv-banner svg { width: 24px; height: 24px; flex: none; }
 .deliv-banner .bt { font-size: 13.5px; line-height: 1.45; text-align: left; }
 .deliv-banner .bt b { color: var(--verdigris-2); }
-.deliv-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 18px; align-items: start; }
+.deliv-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 18px; align-items: start; }
 .routes-col { display: flex; flex-direction: column; gap: 16px; }
 .route-card { overflow: hidden; }
 .route-top { padding: 16px 18px; display: flex; align-items: center; gap: 13px; border-bottom: 1px solid var(--line); text-align: left; }
@@ -1251,58 +1245,52 @@ td .dim { color: var(--muted); font-size: 12px; }
 .map-legend span { font-size: 11.5px; color: var(--cream-dim); display: flex; align-items: center; gap: 7px; }
 .map-legend i { width: 16px; height: 4px; border-radius: 0; }
 
-/* Loyalty */
-.tier-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 13px; margin-bottom: 22px; }
-.tier-card {
-  position: relative; width: 100%; padding: 20px 16px 18px; border-radius: var(--r);
-  appearance: none; font: inherit; color: inherit; cursor: pointer;
-  background: var(--surface);
-  border: 1px solid var(--line); text-align: center; overflow: hidden;
-  transition: border-color .14s, background .14s;
+/* Loyalty — one ledger, five rows divided by hairlines. Not five boxed cards:
+   the top tier earns exactly one of claret's four budgeted roles (a 2px rule
+   on its identity column), everything else stays on verdigris/neutral. */
+.tier-ledger { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; margin-bottom: 22px; }
+.tier-row {
+  position: relative; width: 100%; appearance: none; font: inherit; color: inherit; cursor: pointer;
+  display: grid; grid-template-columns: 64px minmax(150px, 1fr) 84px 108px minmax(0, 1.8fr);
+  align-items: center; text-align: left;
+  background: var(--bg-2);
+  border: none; border-bottom: 1px solid var(--line);
+  transition: background .14s;
 }
-.tier-card:hover { border-color: var(--border-active); background: var(--surface-2); }
-.tier-card:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
-.tier-card:active { background: var(--surface-3); }
-.tier-card-active { box-shadow: inset 0 0 0 1px var(--verdigris); border-color: var(--verdigris); }
-.tier-hex { width: 46px; height: 52px; margin: 0 auto 12px; display: grid; place-items: center; position: relative; }
-.tier-hex svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.tier-hex .mlt { position: relative; font-family: var(--serif); font-weight: 800; font-size: 15px; }
-.tier-card .tn { font-size: 13.5px; font-weight: 700; }
-.tier-card .thr { font-size: 10.5px; color: var(--muted); margin-top: 2px; }
-.tier-card .mc { font-family: var(--serif); font-size: 26px; font-weight: 700; margin-top: 12px; }
-.tier-card .mcl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; }
-.tier-card .pts { font-size: 11px; color: var(--cream-dim); margin-top: 9px; font-family: var(--mono); }
-.tier-card.worker { border-color: var(--line); }
-.tier-card.worker:hover { border-color: var(--border-active); }
-.tier-card.soldier:hover { border-color: rgba(63,156,126,.5); }
-.tier-card.general:hover { border-color: var(--verdigris-deep); }
-.tier-card.queen { border-color: var(--verdigris-deep); background: linear-gradient(165deg, rgba(63,156,126,0.10), var(--surface)); }
-.tier-card.queen:hover { border-color: var(--verdigris); }
-/* Maison Noir is always "premium dark" — never inherits light-mode surface colours */
+.tier-row:last-child { border-bottom: none; }
+.tier-row:hover { background: var(--surface-2); }
+.tier-row:focus-visible { outline: 2px solid var(--cream); outline-offset: -2px; }
+.tier-row-active { background: var(--verdigris-glow); }
+.tier-row-cell { padding: 13px 16px; border-left: 1px solid var(--line); min-width: 0; }
+.tier-row-cell:first-child { border-left: none; }
+.tier-row-id { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 8px; }
+.tier-row-id svg { width: 22px; height: 25px; }
+.tier-row-mult { font-family: var(--serif); font-weight: 800; font-size: 12px; }
+.tier-row-name { display: flex; flex-direction: column; gap: 2px; }
+.tier-row-name .tn { font-size: 14px; font-weight: 700; color: var(--cream); }
+.tier-row-name .thr { font-size: 11px; color: var(--muted); }
+.tier-row-stat { text-align: right; }
+.tier-row-stat b { display: block; font-family: var(--serif); font-size: 21px; font-weight: 700; color: var(--cream); line-height: 1.1; }
+.tier-row-stat label { font-size: 9.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; }
+.tier-row-perks { display: flex; gap: 22px; flex-wrap: wrap; }
+.tier-row-perks span { display: flex; flex-direction: column; gap: 2px; }
+.tier-row-perks label { font-size: 9.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; }
+.tier-row-perks b { font-size: 12px; font-weight: 600; color: var(--cream-dim); white-space: nowrap; }
 /* Maison Noir — the top loyalty tier only. One of claret's exactly four
    budgeted roles app-wide (see DESIGN.md's Claret Budget Rule). */
-.tier-card.black {
-  border-color: var(--claret-deep);
-  background: var(--claret-deep);
-  color: var(--on-claret);
+.tier-row-top .tier-row-id { border-top: 2px solid var(--claret); }
+.tier-row-top .tier-row-mult { color: var(--claret-2); }
+.tier-row-top .tier-row-stat b { color: var(--claret-2); }
+@media (max-width: 860px) {
+  .tier-row { grid-template-columns: 56px minmax(120px, 1fr) 70px 90px; }
+  .tier-row-perks { display: none; }
 }
-.tier-card.black:hover { border-color: var(--claret); }
-.tier-card.black .tn   { color: var(--on-claret); }
-.tier-card.black .thr  { color: rgba(244,243,240,.65); }
-.tier-card.black .mc   { color: var(--claret-2); }
-.tier-card.black .mcl  { color: rgba(244,243,240,.65); }
-.tier-card.black .pts  { color: rgba(244,243,240,.8); }
-.tier-details > div { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; margin-bottom: 3px; }
-.tier-details .dim  { white-space: nowrap; flex-shrink: 0; }
-.tier-details .strong { text-align: right; min-width: 0; word-break: break-word; }
+@media (max-width: 560px) {
+  .tier-row { grid-template-columns: 48px 1fr 64px; }
+  .tier-row-stat:nth-of-type(3) { display: none; }
+}
 
-/* Override inline style={{ color:"var(--cream)" }} which flips in light mode —
-   this card's background stays claret-deep in both themes, so its text stays fixed-light. */
-.tier-card.black .tier-details .strong { color: var(--on-claret) !important; }
-.tier-card.black .tier-details .dim    { color: rgba(244,243,240,.65); }
-.tier-card.black .tier-details         { border-top-color: rgba(244,243,240,.15) !important; }
-
-.loy-grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 18px; align-items: start; }
+.loy-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 18px; align-items: start; }
 .auto-feed { padding: 4px 0 6px; }
 .af-head { padding: 16px 20px 12px; border-bottom: 1px solid var(--line-soft); font-family: var(--serif); font-size: 17px; display: flex; align-items: center; gap: 9px; }
 .af-row { display: flex; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--line-soft); align-items: flex-start; }
@@ -1344,10 +1332,10 @@ td .dim { color: var(--muted); font-size: 12px; }
 .camp-main .seg { font-size: 12px; color: var(--muted); margin-top: 4px; }
 .camp-main .seg b { color: var(--cream-dim); font-weight: 600; }
 .camp-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-.chan-chips { display: flex; gap: 6px; }
-.cc { font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 0; display: flex; align-items: center; gap: 5px; }
-.cc.wa { background: var(--green-bg); color: var(--green); }
-.cc.em { background: var(--blue-bg); color: var(--blue); }
+.camp-chan-chips { display: flex; gap: 6px; }
+.chan-tag { font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 0; display: flex; align-items: center; gap: 5px; }
+.chan-tag.wa { background: var(--green-bg); color: var(--green); }
+.chan-tag.em { background: var(--blue-bg); color: var(--blue); }
 .bc-status { font-size: 11px; font-weight: 700; padding: 4px 11px; border-radius: 0; }
 .bc-status.sched { background: var(--verdigris-glow); color: var(--verdigris-2); }
 .bc-status.sent { background: var(--green-bg); color: var(--green); }
@@ -1444,7 +1432,7 @@ td .dim { color: var(--muted); font-size: 12px; }
 .pod .lab { position: absolute; bottom: 5px; left: 7px; font-size: 9px; color: var(--cream-dim); font-family: var(--mono); }
 
 /* Inventory list + ledger side-by-side */
-.inv-grid { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
+.inv-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 20px; align-items: start; }
 
 /* Ledger feed */
 .ledger-feed { padding: 4px 0 6px; }
@@ -1681,14 +1669,13 @@ td .dim { color: var(--muted); font-size: 12px; }
 }
 
 /* ─── Late responsive overrides ─────────────────────────────────────────────
-   Must come AFTER all base component definitions. Base styles for .tier-grid,
-   .loy-grid, .kpi-strip, .inv-grid, .toolbar, .chip-row, .af-row, .af-head
+   Must come AFTER all base component definitions. Base styles for .loy-grid,
+   .kpi-strip, .inv-grid, .toolbar, .chip-row, .af-row, .af-head
    are all defined after the earlier @media blocks (~line 1875), so those
    earlier breakpoints are silently overridden. These rules restore them. */
 
 @media (max-width: 1100px) {
-  .tier-grid { grid-template-columns: repeat(3, 1fr); }
-  .loy-grid  { grid-template-columns: 1fr 1fr; }
+  .loy-grid  { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .inv-grid  { grid-template-columns: 1fr; }
 }
 
@@ -1701,7 +1688,6 @@ td .dim { color: var(--muted); font-size: 12px; }
 @media (max-width: 768px) {
   .kpi-strip { grid-template-columns: repeat(2, 1fr); }
   .kpi-strip .kpi-hero { grid-column: 1 / -1; }
-  .tier-grid { grid-template-columns: repeat(2, 1fr); }
   .loy-grid  { grid-template-columns: 1fr; }
   .af-row    { padding: 10px 14px; }
   .af-head   { padding: 14px 14px 10px; }
@@ -1715,7 +1701,6 @@ td .dim { color: var(--muted); font-size: 12px; }
 
 @media (max-width: 480px) {
   .kpi-strip { grid-template-columns: 1fr; }
-  .tier-grid { grid-template-columns: 1fr; }
 }
 
 /* ─── Loyalty table: sortable column headers ─────────────────────────────── */
@@ -1890,7 +1875,7 @@ td .dim { color: var(--muted); font-size: 12px; }
 .cc-health {
   display: flex; align-items: center; gap: 13px;
   padding: 13px 20px; border: 1px solid var(--line);
-  border-radius: var(--r); background: var(--surface);
+  border-radius: var(--r); background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 55%);
 }
 .cc-health-dot {
   width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
@@ -1908,7 +1893,7 @@ td .dim { color: var(--muted); font-size: 12px; }
 }
 .cc-metric {
   display: block; width: 100%; text-align: left; font: inherit;
-  padding: 20px 22px; border: none; background: var(--surface); cursor: pointer;
+  padding: 20px 22px; border: none; background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 70%); cursor: pointer;
   transition: background .15s;
 }
 .cc-metric:hover { background: var(--surface-2); }
@@ -1941,7 +1926,7 @@ td .dim { color: var(--muted); font-size: 12px; }
 .cc-channel {
   display: block; width: 100%; text-align: left;
   padding: 18px 20px; border: 1px solid var(--line); border-radius: var(--r);
-  background: var(--surface); cursor: pointer;
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 55%); cursor: pointer;
   transition: border-color .15s, background .15s;
 }
 .cc-channel:hover { border-color: var(--border-active); background: var(--surface-2); }
@@ -1956,7 +1941,7 @@ td .dim { color: var(--muted); font-size: 12px; }
 .cc-channel-secondary { font-size: 12.5px; color: var(--muted); margin-top: 5px; }
 
 /* Business Pulse — order journey */
-.cc-pulse { padding: 22px 24px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+.cc-pulse { padding: 22px 24px; border: 1px solid var(--line); border-radius: var(--r); background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 40%); }
 .cc-pulse-total { display: flex; align-items: baseline; gap: 13px; margin-bottom: 18px; }
 .cc-pulse-total-val { font-family: var(--serif); font-weight: 560; font-size: 46px; line-height: .9; color: var(--cream); letter-spacing: -1.2px; }
 .cc-pulse-total-label { font-size: 12px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); font-weight: 600; }
@@ -1980,7 +1965,7 @@ td .dim { color: var(--muted); font-size: 12px; }
 .cc-action {
   display: block; width: 100%; text-align: left;
   padding: 16px 18px; border: 1px solid var(--line);
-  border-radius: var(--r); background: var(--surface); cursor: pointer;
+  border-radius: var(--r); background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 55%); cursor: pointer;
   transition: border-color .15s, background .15s;
 }
 .cc-action:hover { background: var(--surface-2); border-color: var(--border-active); }
@@ -2008,30 +1993,50 @@ td .dim { color: var(--muted); font-size: 12px; }
 }
 
 @media (max-width: 1024px) {
+  /* Icon-only compact bar, not a horizontally-scrolling text nav: with 8 primary
+     + 5 secondary links, full labels never fit this width without one item
+     crowding out the rest (see CHANGELOG v3.1.0). Labels move to title/aria-label. */
   .rail-shell { flex-direction: column; }
   .rail {
     width: 100%; height: auto; position: static;
-    flex-direction: row; align-items: center; padding: 10px 14px; gap: 8px;
+    flex-direction: row; align-items: center; padding: 8px 12px; gap: 6px;
     overflow-x: auto;
   }
   .rail-brand {
-    flex-direction: row; align-items: center; gap: 8px;
+    width: auto; flex-direction: row; align-items: center; gap: 8px;
     padding: 0 12px 0 4px; margin: 0; flex-shrink: 0;
     border-bottom: 0; border-right: 1px solid var(--shell-border);
   }
   .rail-brand-sub { display: none; }
   .rail-live { position: static; }
-  .rail-nav { flex-direction: row; flex: 1; gap: 4px; overflow-x: auto; }
-  .rail-group { margin: 0; display: flex; align-items: center; gap: 4px; }
+  .rail-nav { flex-direction: row; flex: 0 0 auto; gap: 2px; overflow: visible; }
+  .rail-group { margin: 0; display: flex; align-items: center; gap: 2px; }
   .rail-group-label { display: none; }
-  .rail-link { width: auto; white-space: nowrap; padding: 8px 12px; }
-  .rail-link.active { border-bottom: 2px solid var(--claret); }
-  .rail-link-leader, .rail-link-index { display: none; }
-  .rail-foot {
-    flex-direction: row; gap: 2px; margin: 0;
-    border-top: 0; border-left: 1px solid var(--shell-border);
-    padding: 0 0 0 10px;
+  .rail-link {
+    width: 40px; height: 40px; flex-shrink: 0; padding: 0;
+    justify-content: center; gap: 0; border-radius: var(--r-sm);
   }
+  .rail-link:hover { background: var(--surface-2); }
+  .rail-link.active { background: var(--surface-2); border-bottom: 2px solid var(--claret); }
+  .rail-link-label, .rail-link-leader, .rail-link-index { display: none; }
+  .rail-badge {
+    position: absolute; top: 4px; right: 4px; font-size: 9px;
+    background: var(--bg-2); line-height: 1; padding: 1px 3px;
+  }
+  .rail-foot {
+    flex-direction: row; gap: 2px; margin: 0; flex-shrink: 0;
+    border-top: 0; border-left: 1px solid var(--shell-border);
+    padding: 0 0 0 8px;
+  }
+  .rail-foot .rail-link { width: 36px; height: 36px; }
+}
+
+@media (max-width: 560px) {
+  .rail {
+    justify-content: space-between;
+    mask-image: linear-gradient(90deg, black calc(100% - 28px), transparent);
+  }
+  .rail-brand-mark { font-size: 16px; }
 }
 
 /* ─── Shared UI primitives (components/ui/*.jsx) ─────────────────────────── */
@@ -2258,6 +2263,14 @@ td .dim { color: var(--muted); font-size: 12px; }
 .inbox-unread-dot { flex-shrink: 0; min-width: 8px; height: 8px; border-radius: 0; background: var(--verdigris-2); }
 
 .inbox-thread-pane { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.inbox-pane-empty {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px;
+  background: radial-gradient(560px 360px at 50% 42%, color-mix(in srgb, var(--verdigris) 5%, transparent), transparent 70%);
+}
+.inbox-pane-empty-stats { display: flex; gap: 36px; padding-top: 28px; border-top: 1px solid var(--line); }
+.inbox-pane-empty-stats div { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.inbox-pane-empty-stats b { font-family: var(--serif); font-size: 26px; font-weight: 600; color: var(--cream); line-height: 1; }
+.inbox-pane-empty-stats label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 
 .inbox-header {
   padding: 12px 20px; border-bottom: 1px solid var(--rule-strong); background: var(--surface);
