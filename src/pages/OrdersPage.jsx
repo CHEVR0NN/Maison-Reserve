@@ -184,7 +184,7 @@ export default function OrdersPage() {
                   </td>
                   <td><span className="dim" style={{ fontSize: "11.5px", whiteSpace: "nowrap" }}>{fmtDate(o.placedAt)}</span></td>
                   <td><span className="zone">{o.zone}</span></td>
-                  <td><span className="mono" style={{ color: "var(--honey-2)" }}>{SGD(o.total)}</span></td>
+                  <td><span className="mono" style={{ color: "var(--verdigris-2)" }}>{SGD(o.total)}</span></td>
                   <td>{pipeDots(STATUS_TO_STAGE[o.status])}</td>
                   <td>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -229,7 +229,7 @@ export default function OrdersPage() {
                 <div><div className="k">Order Date</div><div className="v">{fmtDate(selectedOrder.placedAt)}</div></div>
                 <div><div className="k">Zone</div><div className="v">{selectedOrder.zone} &middot; {zoneName(selectedOrder.zone)}</div></div>
                 <div><div className="k">Status</div><div className="v">{selectedOrder.status === "cancelled" ? "Cancelled" : STAGES[STATUS_TO_STAGE[selectedOrder.status]]}</div></div>
-                <div><div className="k">Order Total</div><div className="v" style={{ color: "var(--honey-2)" }}>{SGD(selectedOrder.total)}</div></div>
+                <div><div className="k">Order Total</div><div className="v" style={{ color: "var(--verdigris-2)" }}>{SGD(selectedOrder.total)}</div></div>
               </div>
 
               <div className="card-title">Line Items</div>
@@ -237,7 +237,7 @@ export default function OrdersPage() {
                 {selectedOrder.lines.map((it, idx) => (
                   <div className="di-line" key={idx}>
                     <div>
-                      <span style={{ fontFamily: "var(--mono)", fontSize: "11px", color: "var(--honey)" }}>{it.sku}</span>{" "}
+                      <span style={{ fontFamily: "var(--mono)", fontSize: "11px", color: "var(--verdigris)" }}>{it.sku}</span>{" "}
                       &middot; {it.name}
                     </div>
                     <div>

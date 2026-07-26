@@ -1,6 +1,6 @@
 # Maison Reserve
 
-**v2.0.0** · Command Center for Premium Retail Operations
+**v3.0.0** · Command Center for Premium Retail Operations
 
 A frontend-only portfolio demo: a full retail operations dashboard for a premium wine & spirits
 retailer — orders, inventory, delivery, loyalty, inbox, marketplace channels, and automation —
@@ -48,11 +48,14 @@ sidebar wipes local storage and reseeds from scratch at any time.
 
 ## Design
 
-A premium alcohol-marketplace command center: Charcoal (navigation/shell), Oak (content
-surfaces), Amber (primary accent, used sparingly), Cabernet (secondary accent — wine categories,
-conversations, premium status), and Cream (light-mode paper surfaces). Typeset in Fraunces
-(display/headings) and Public Sans (UI/body), with JetBrains Mono for SKUs, timestamps and
-tabular data. Tokens live in `src/styles.css`; product imagery is generated inline SVG art
+"Twilight Cellar" — a dark-primary premium operations console for a wine & spirits retailer,
+closer to a cellar ledger than an admin panel. Cool graphite canvas, hairline rules and stepped
+surface luminance carry hierarchy instead of cards and shadows. Claret (a true Bordeaux red) is
+a genuinely rare accent budgeted to exactly four roles app-wide; verdigris (aged-copper patina)
+carries the rest of the UI's color needs. "Daylight Cellar" is the light-mode companion theme.
+Typeset in Fraunces (display/headings) and Public Sans (UI/body), with JetBrains Mono for SKUs,
+timestamps and tabular data. Tokens live in `src/styles.css` and are documented in
+[DESIGN.md](./DESIGN.md); product imagery is generated inline SVG art
 (`src/components/BottleArt.jsx`), not photography.
 
 ## Changelog

@@ -25,24 +25,24 @@ const shift = (base, n) => sgt(new Date(`${base}T00:00:00+08:00`).getTime() + n 
 //    which can't resolve CSS custom properties, so these mirror styles.css
 //    by hand and must be kept in sync with the :root token values) ───────────
 const DARK = {
-  honey:     "#FFC300", honey2:    "#FFCF33", honeyDeep: "#C9960A",
-  cream:     "#FFF9E5", creamDim:  "#CFC6B0",
-  muted:     "#A99D89", surface:   "#1E1B15", line:      "#3B352B",
-  green:     "#C9960A", red:       "#F0220F", orange:    "#FFC300",
-  grid:      "rgba(255,249,229,0.08)",
-  bar:       "rgba(255,249,229,0.10)", barStroke: "rgba(255,249,229,0.28)",
-  revLine:   "#FFC300",
-  revFill0:  "rgba(255,195,0,0.22)", revFill1: "rgba(255,195,0,0.00)",
+  honey:     "#3F9C7E", honey2:    "#63BC9C", honeyDeep: "#256B54",
+  cream:     "#EBEDE9", creamDim:  "#B4B7B1",
+  muted:     "#888C90", surface:   "#21252C", line:      "#454C58",
+  green:     "#6FA35C", red:       "#CD5237", orange:    "#C98A3E",
+  grid:      "rgba(235,237,233,0.08)",
+  bar:       "rgba(235,237,233,0.10)", barStroke: "rgba(235,237,233,0.28)",
+  revLine:   "#3F9C7E",
+  revFill0:  "rgba(63,156,126,0.22)", revFill1: "rgba(63,156,126,0.00)",
 };
 const LIGHT = {
-  honey:     "#8A6510", honey2:    "#A67D1E", honeyDeep: "#6B4D0C",
-  cream:     "#241C12", creamDim:  "#4A3D2A",
-  muted:     "#7A6B50", surface:   "#FDFBF5", line:      "#DCCFB0",
-  green:     "#705A12", red:       "#C41D0C", orange:    "#A67D1E",
-  grid:      "rgba(60,46,26,0.10)",
-  bar:       "rgba(36,28,18,0.08)",  barStroke: "rgba(36,28,18,0.22)",
-  revLine:   "#8A6510",
-  revFill0:  "rgba(138,101,16,0.20)", revFill1: "rgba(138,101,16,0.00)",
+  honey:     "#1A5C46", honey2:    "#2A7862", honeyDeep: "#123D2F",
+  cream:     "#202422", creamDim:  "#454A44",
+  muted:     "#6C716A", surface:   "#F7F8F5", line:      "#D2D5CC",
+  green:     "#5C7742", red:       "#A83E26", orange:    "#A9772C",
+  grid:      "rgba(32,36,34,0.10)",
+  bar:       "rgba(32,36,34,0.08)",  barStroke: "rgba(32,36,34,0.22)",
+  revLine:   "#1A5C46",
+  revFill0:  "rgba(26,92,70,0.20)", revFill1: "rgba(26,92,70,0.00)",
 };
 
 const getT = (theme) => theme === "light" ? LIGHT : DARK;
@@ -51,8 +51,8 @@ const STAGE_LABELS = ["Captured", "Packed", "Out for Delivery", "Delivered"];
 
 // A 4-step intensity ramp within the one accent hue — not 4 different colors —
 // since the palette gives us gold + iron-red (reserved for critical) only.
-const STAGE_COLORS_DARK  = ["#A99D89", "#C9960A", "#FFC300", "#FFCF33"];
-const STAGE_COLORS_LIGHT = ["#7A6B50", "#6B4D0C", "#8A6510", "#A67D1E"];
+const STAGE_COLORS_DARK  = ["#888C90", "#256B54", "#3F9C7E", "#63BC9C"];
+const STAGE_COLORS_LIGHT = ["#6C716A", "#123D2F", "#1A5C46", "#2A7862"];
 
 const makeTip = (T) => ({
   backgroundColor: T.surface,

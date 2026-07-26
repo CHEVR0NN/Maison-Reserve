@@ -7,7 +7,7 @@ import { useAppData } from "../context/AppData.jsx";
 const CHANNEL_META = {
   WhatsApp: { icon: <Phone size={11} />, color: "#25d366" },
   Instagram: { icon: <MessageCircle size={11} />, color: "#C77FB0" },
-  "Web Chat": { icon: <Mail size={11} />, color: "var(--cabernet-2)" },
+  "Web Chat": { icon: <Mail size={11} />, color: "var(--verdigris-2)" },
 };
 
 function timeLabel(iso) {
@@ -37,7 +37,7 @@ function initials(name = "") {
 }
 
 function avatarColor(name = "") {
-  const palette = ["#FFC300", "#7C2C40", "#283B6B", "#703525", "#C9960A", "#6E6553", "#A6455C", "#4A5A3E"];
+  const palette = ["#1C4A3A", "#2E3A4A", "#4A3E2E", "#2E4A3A", "#2E4040", "#3E4A2E", "#3A4A50", "#2A3038"];
   let h = 0;
   for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xffff;
   return palette[h % palette.length];

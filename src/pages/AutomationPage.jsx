@@ -5,7 +5,7 @@ import Toggle from "../components/ui/Toggle.jsx";
 import Badge from "../components/ui/Badge.jsx";
 
 const DOMAIN_META = {
-  inventory:   { label: "Inventory",   icon: Package, color: "var(--honey)" },
+  inventory:   { label: "Inventory",   icon: Package, color: "var(--verdigris)" },
   loyalty:     { label: "Loyalty",     icon: Gem, color: "var(--blue)" },
   marketplace: { label: "Marketplace", icon: Store, color: "var(--orange)" },
   delivery:    { label: "Delivery",    icon: Truck, color: "var(--positive)" },

@@ -62,22 +62,24 @@ export default function TodayPage({ setTab }) {
   const journeyTotal = received + preparing + shipping + completed;
 
   // ── Business health ─────────────────────────────────────────────────────
-  const healthy = attentionChannels.length === 0 && critical === 0;
+  const healthy = attentionChannels.length === 0 && critical === 0 && lowStock === 0;
   const healthNote = healthy
     ? "All channels synchronized"
     : attentionChannels.length > 0
       ? `${attentionChannels.length} channel${attentionChannels.length === 1 ? "" : "s"} need review`
-      : `${critical} item${critical === 1 ? "" : "s"} below reorder level`;
+      : critical > 0
+        ? `${critical} item${critical === 1 ? "" : "s"} below reorder level`
+        : `${lowStock} item${lowStock === 1 ? "" : "s"} approaching reorder level`;
 
   // ── Overview metrics ────────────────────────────────────────────────────
   const metrics = [
-    { label: "Today's Revenue", value: SGD(revenueToday), accent: true,
+    { label: "Today's Revenue", value: SGD(revenueToday), accent: true, tab: "Orders",
       sub: revenueDelta != null ? `${revenueDelta >= 0 ? "Up" : "Down"} ${Math.abs(revenueDelta)} percent on yesterday` : "Across all channels" },
-    { label: "Orders", value: todays.length,
+    { label: "Orders", value: todays.length, tab: "Orders",
       sub: `${completed} completed, ${received + preparing + shipping} in progress` },
-    { label: "Inventory Health", value: lowStock,
+    { label: "Inventory Health", value: lowStock, tab: "Inventory",
       sub: lowStock === 0 ? "All SKUs above reorder" : `${critical} critical, ${Math.max(0, lowStock - critical)} low` },
-    { label: "Reserve Membership", value: totalPoints.toLocaleString("en-SG"),
+    { label: "Reserve Membership", value: totalPoints.toLocaleString("en-SG"), tab: "Loyalty",
       sub: `${SGD(liability)} liability outstanding` },
   ];
 
@@ -125,7 +127,7 @@ export default function TodayPage({ setTab }) {
     actions.push({ tier: "upcoming", label: "Upcoming",
       title: `${expiringMembers.length} loyalty member${expiringMembers.length === 1 ? "" : "s"} have expiring points`,
       why: "A gentle reminder keeps Reserve members engaged and returning.",
-      cta: "Notify Members", tab: "Loyalty" });
+      cta: "Review Members", tab: "Loyalty" });
   }
 
   return (
@@ -147,11 +149,11 @@ export default function TodayPage({ setTab }) {
 
         <div className="cc-metrics">
           {metrics.map((m) => (
-            <div className="cc-metric" key={m.label}>
+            <button type="button" className="cc-metric" key={m.label} onClick={() => setTab(m.tab)}>
               <div className="cc-metric-label">{m.label}</div>
               <div className={`cc-metric-value${m.accent ? " accent" : ""}`}>{m.value}</div>
               <div className="cc-metric-sub">{m.sub}</div>
-            </div>
+            </button>
           ))}
         </div>
       </header>

@@ -4,7 +4,7 @@ import { useToast } from "../components/ui/ToastProvider.jsx";
 import { SGD } from "../utils.js";
 
 const CHANNEL_META = {
-  "own-site": { icon: Globe, color: "var(--honey)" },
+  "own-site": { icon: Globe, color: "var(--verdigris)" },
   lazada:     { icon: ShoppingBag, color: "color-mix(in srgb, var(--lazada) 60%, var(--cream))" },
   shopee:     { icon: Store, color: "color-mix(in srgb, var(--shopee) 60%, var(--cream))" },
 };
@@ -68,7 +68,7 @@ export default function MarketplacePage() {
                   </div>
                   <div>
                     <div style={{ fontSize: 10, letterSpacing: ".1em", textTransform: "uppercase", color: "var(--ink-3)" }}>Revenue today</div>
-                    <div style={{ fontFamily: "var(--serif)", fontSize: 26, marginTop: 4, color: "var(--honey-2)" }}>{SGD(revenueByChannel[c.id] || 0)}</div>
+                    <div style={{ fontFamily: "var(--serif)", fontSize: 26, marginTop: 4, color: "var(--verdigris-2)" }}>{SGD(revenueByChannel[c.id] || 0)}</div>
                   </div>
                 </div>
                 <button type="button" className="btn" style={{ width: "100%", justifyContent: "center" }} onClick={() => resync(c.id, c.label)}>

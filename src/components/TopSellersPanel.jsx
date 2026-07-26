@@ -64,7 +64,7 @@ function SellerRow({ s, max, by }) {
     <div className={`ts-row${lead ? " ts-row-lead" : ""}${low ? " ts-row-low" : ""}`}>
       <span className="ts-rank mono">{String(s.rank).padStart(2, "0")}</span>
       <div className="ts-bar-wrap">
-        <div className="ts-bar" style={{ width: `${pct}%` }} />
+        <div className="ts-bar" style={{ transform: `scaleX(${pct / 100})` }} />
         <div className="ts-row-content">
           <div className="ts-id">
             <span className="ts-name">{s.name}</span>

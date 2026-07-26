@@ -7,7 +7,7 @@ import { stepsForSegment } from "../mock/delivery.js";
 import { DRIVERS } from "../mock/people.js";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const TRUCK_COLOR = { truck_1: "#FFC300", truck_2: "#A6455C" };
+const TRUCK_COLOR = { truck_1: "#3F9C7E", truck_2: "#7C89A6" };
 const TRUCK_NAME = { truck_1: "Truck 1", truck_2: "Truck 2" };
 const PANEL_H = { mini: "76px", half: "46vh", full: "88vh" };
 const TILE_URL = {
@@ -21,30 +21,33 @@ const TILE_URL = {
 const C = {
   bg: "var(--c-bg)", surface: "var(--c-surface)", surface2: "var(--c-surface2)",
   hair: "var(--c-hair)", hair2: "var(--c-hair2)", gold: "var(--c-gold)", goldSoft: "var(--c-goldSoft)",
+  claret: "var(--c-claret)", claretDark: "var(--c-claretDark)", claretSoft: "var(--c-claretSoft)", onClaret: "var(--on-claret)",
   text: "var(--c-text)", textDim: "var(--c-textDim)", textFaint: "var(--c-textFaint)",
   green: "var(--c-green)", greenSoft: "var(--c-greenSoft)", red: "var(--c-red)",
 };
 const HEX = {
-  dark: { gold: "#FFC300", green: "#C9960A", textDim: "#CFC6B0", bg: "#15130F" },
-  light: { gold: "#8A6510", green: "#705A12", textDim: "#4A3D2A", bg: "#FAF5EA" },
+  dark: { gold: "#3F9C7E", green: "#6FA35C", textDim: "#B4B7B1", bg: "#101216" },
+  light: { gold: "#1A5C46", green: "#5C7742", textDim: "#454A44", bg: "#F7F8F5" },
 };
 
 const GLOBAL_CSS = `
   .dp.dark {
     --c-bg: var(--bg); --c-surface: var(--surface); --c-surface2: var(--surface-2);
-    --c-hair: var(--line-soft); --c-hair2: rgba(244,230,200,.06);
-    --c-gold: var(--honey); --c-goldDark: var(--honey-deep); --c-goldSoft: var(--amber-glow);
+    --c-hair: var(--line-soft); --c-hair2: rgba(230,233,230,.06);
+    --c-gold: var(--verdigris); --c-goldDark: var(--verdigris-deep); --c-goldSoft: var(--verdigris-glow);
+    --c-claret: var(--claret); --c-claretDark: var(--claret-deep); --c-claretSoft: var(--claret-glow);
     --c-text: var(--cream); --c-textDim: var(--cream-dim); --c-textFaint: var(--muted);
     --c-green: var(--green); --c-greenSoft: var(--green-bg); --c-red: var(--red);
-    --c-headerBg: rgba(20,17,13,.88);
+    --c-headerBg: rgba(16,18,22,.88);
   }
   .dp.light {
     --c-bg: var(--bg); --c-surface: var(--surface); --c-surface2: var(--surface-2);
-    --c-hair: var(--line-soft); --c-hair2: rgba(60,46,26,.06);
-    --c-gold: var(--honey); --c-goldDark: var(--honey-deep); --c-goldSoft: var(--amber-glow);
+    --c-hair: var(--line-soft); --c-hair2: rgba(30,32,28,.06);
+    --c-gold: var(--verdigris); --c-goldDark: var(--verdigris-deep); --c-goldSoft: var(--verdigris-glow);
+    --c-claret: var(--claret); --c-claretDark: var(--claret-deep); --c-claretSoft: var(--claret-glow);
     --c-text: var(--cream); --c-textDim: var(--cream-dim); --c-textFaint: var(--muted);
     --c-green: var(--green); --c-greenSoft: var(--green-bg); --c-red: var(--red);
-    --c-headerBg: rgba(250,245,234,.92);
+    --c-headerBg: rgba(237,238,234,.92);
   }
   .dp * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
   .dp button { transition: transform .12s ease, opacity .12s ease, background .15s ease; cursor: pointer; }
@@ -52,8 +55,8 @@ const GLOBAL_CSS = `
   .dp .panel { transition: height .42s cubic-bezier(.25,.46,.45,.94); overflow: hidden; will-change: height; }
   .dp .panel-scroll::-webkit-scrollbar { width: 0; }
   .dp .panel-dragging { transition: none !important; }
-  .dp.dark  .leaflet-container { background: #15130F; }
-  .dp.light .leaflet-container { background: #F1E9D8; }
+  .dp.dark  .leaflet-container { background: #101216; }
+  .dp.light .leaflet-container { background: #F7F8F5; }
   .dp .leaflet-container { font-family: inherit; }
   .dp .leaflet-control-attribution { font-size: 9px; backdrop-filter: blur(4px); border-radius: 6px !important; }
   .dp .leaflet-tooltip { background: var(--c-surface2); border: 1px solid var(--c-hair); color: var(--c-text); border-radius: 9px; font-size: 12px; font-weight: 600; box-shadow: 0 4px 14px rgba(16,11,4,.18); padding: 5px 10px; }
@@ -71,7 +74,7 @@ const S = {
   center: { display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100dvh", padding: 20, background: C.bg, fontFamily: F },
   loginCard: { width: "100%", maxWidth: 380, background: C.surface, border: `1px solid ${C.hair}`, borderRadius: 26, padding: "38px 28px", boxShadow: "0 28px 70px rgba(16,11,4,.35)" },
   loginSub: { fontSize: 12, color: C.textFaint, marginTop: 6, marginBottom: 28, letterSpacing: ".02em" },
-  btnGold: { width: "100%", padding: "14px", background: `linear-gradient(180deg,${C.gold},var(--c-goldDark,#C9960A))`, color: "#15130F", border: "none", borderRadius: 14, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 24px var(--c-goldSoft)", fontFamily: F, marginBottom: 12 },
+  btnGold: { width: "100%", padding: "14px", background: `linear-gradient(180deg,${C.claret},var(--c-claretDark,#7A1E34))`, color: C.onClaret, border: "none", borderRadius: 14, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 24px var(--c-claretSoft)", fontFamily: F, marginBottom: 12 },
   header: { height: 52, flexShrink: 0, background: "var(--c-headerBg)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${C.hair}`, display: "flex", alignItems: "center", padding: "0 14px", gap: 10, zIndex: 20 },
   progStrip: { height: 36, flexShrink: 0, background: "var(--c-headerBg)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", borderBottom: `1px solid ${C.hair}`, display: "flex", alignItems: "center", padding: "0 16px", gap: 10, zIndex: 19 },
   hDivider: { width: 1, height: 18, background: C.hair, flexShrink: 0 },
@@ -80,7 +83,7 @@ const S = {
   hTruckSep: { color: C.hair, fontSize: 13, fontWeight: 300, margin: "0 2px" },
   hTruckUser: { fontSize: 12, color: C.textDim },
   hProgTrack: { flex: 1, height: 6, borderRadius: 3, background: C.hair, overflow: "hidden" },
-  hProgFill: { height: "100%", borderRadius: 3, transition: "width .45s cubic-bezier(.4,0,.2,1)" },
+  hProgFill: { height: "100%", width: "100%", borderRadius: 3, transformOrigin: "left", transition: "transform .45s cubic-bezier(.4,0,.2,1)" },
   iconBtn: { background: "transparent", border: `1px solid ${C.hair}`, borderRadius: 9, padding: "7px 8px", color: C.textDim, fontFamily: F, display: "flex", alignItems: "center", justifyContent: "center" },
   mapWrap: { flex: "1 1 0", minHeight: 0, position: "relative" },
   locBtn: { position: "absolute", bottom: 16, right: 16, zIndex: 10, width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--c-surface)", border: `1px solid ${C.hair}`, borderRadius: 16, cursor: "pointer", backdropFilter: "blur(10px)", boxShadow: "0 8px 24px rgba(16,11,4,.22)" },
@@ -99,7 +102,7 @@ const S = {
   chipRow: { display: "flex", gap: 7, flexWrap: "wrap", marginBottom: 16 },
   chip: { fontSize: 11, color: C.textDim, background: C.surface2, border: `1px solid ${C.hair2}`, borderRadius: 20, padding: "4px 10px", fontWeight: 500 },
   btnRow: { display: "flex", gap: 10 },
-  markBtn: { flex: 1, padding: "15px", background: `linear-gradient(180deg,${C.gold},var(--c-goldDark,#C9960A))`, color: "#15130F", border: "none", borderRadius: 16, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 22px var(--c-goldSoft)", fontFamily: F },
+  markBtn: { flex: 1, padding: "15px", background: `linear-gradient(180deg,${C.claret},var(--c-claretDark,#7A1E34))`, color: C.onClaret, border: "none", borderRadius: 16, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 22px var(--c-claretSoft)", fontFamily: F },
   navBtn: { flex: 1, padding: "15px", background: C.surface2, border: `1px solid ${C.hair}`, borderRadius: 16, fontWeight: 600, fontSize: 15, color: C.text, fontFamily: F },
   stepsWrap: { borderTop: `1px solid ${C.hair2}` },
   stepsHdr: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "13px 18px", cursor: "pointer", fontSize: 12.5, color: C.textDim, fontWeight: 600, userSelect: "none" },
@@ -112,7 +115,7 @@ const S = {
   stopCardActive: { borderColor: C.gold },
   stopCardDone: { opacity: .45 },
   stopRow: { display: "flex", alignItems: "center", gap: 10, marginBottom: 8 },
-  seq: { width: 28, height: 28, borderRadius: "50%", background: C.goldSoft, border: `1px solid rgba(204,154,62,.3)`, color: C.gold, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 12.5, flexShrink: 0, fontFamily: "ui-monospace,monospace" },
+  seq: { width: 28, height: 28, borderRadius: "50%", background: C.goldSoft, border: `1px solid rgba(63,156,126,.3)`, color: C.gold, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 12.5, flexShrink: 0, fontFamily: "ui-monospace,monospace" },
   seqDone: { background: C.greenSoft, border: `1px solid rgba(94,145,81,.3)`, color: C.green },
   stopCust: { fontWeight: 600, fontSize: 14.5, flex: 1, letterSpacing: "-.005em" },
   zonePill: { fontFamily: "ui-monospace,monospace", fontWeight: 600, fontSize: 10.5, padding: "3px 9px", borderRadius: 20, background: C.bg, border: `1px solid ${C.hair2}`, color: C.textDim, flexShrink: 0 },
@@ -120,7 +123,7 @@ const S = {
   stopMeta: { display: "flex", gap: 6, fontSize: 11, color: C.textFaint, marginBottom: 12, flexWrap: "wrap" },
   cardBtnRow: { display: "flex", gap: 8 },
   btnGhost: { flex: 1, padding: "10px 12px", borderRadius: 14, fontSize: 13.5, fontWeight: 600, border: `1px solid ${C.hair}`, background: C.surface2, color: C.text, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: F },
-  btnPrimary: { flex: 1, padding: "11px 12px", borderRadius: 14, fontSize: 13.5, fontWeight: 700, border: "none", background: C.gold, color: "#15130F", fontFamily: F },
+  btnPrimary: { flex: 1, padding: "11px 12px", borderRadius: 14, fontSize: 13.5, fontWeight: 700, border: "none", background: C.claret, color: C.onClaret, fontFamily: F },
   delivRow: { display: "flex", alignItems: "center", gap: 8, color: C.green, fontWeight: 600, fontSize: 12.5 },
   overlay: { position: "fixed", inset: 0, background: "rgba(16,11,4,.55)", backdropFilter: "blur(5px)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 200 },
   sheet: { background: C.surface, border: `1px solid ${C.hair}`, borderRadius: "26px 26px 0 0", padding: "20px 22px 32px", width: "100%", maxWidth: 520, boxShadow: "0 -20px 50px rgba(16,11,4,.22)" },
@@ -138,7 +141,7 @@ function makePinHtml(label, state, truckColor, hex) {
   if (state === "active") {
     return `<div class="pin-pulse" style="position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center">`
       + `<div style="position:absolute;inset:0;border-radius:50%;background:${truckColor};opacity:.25"></div>`
-      + `<div style="width:32px;height:32px;background:${truckColor};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-weight:700;font-size:13px;color:#15130F;box-shadow:0 3px 12px rgba(0,0,0,.5),0 0 0 2px #fff">${label}</div></div>`;
+      + `<div style="width:32px;height:32px;background:${truckColor};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-weight:700;font-size:13px;color:#101216;box-shadow:0 3px 12px rgba(0,0,0,.5),0 0 0 2px #fff">${label}</div></div>`;
   }
   return `<div style="width:28px;height:28px;background:#fff;border:2.5px solid ${truckColor};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-weight:700;font-size:12px;color:${truckColor};box-shadow:0 2px 10px rgba(0,0,0,.4),0 0 0 1px rgba(0,0,0,.1)">${label}</div>`;
 }
@@ -168,7 +171,7 @@ function MapView({ stops, truckId, position, segmentIndex, polyline, depot, them
   const tileRef = useRef(null);
   const gpsRef = useRef(null);
   const [mapReady, setMapReady] = useState(false);
-  const color = TRUCK_COLOR[truckId] || "#FFC300";
+  const color = TRUCK_COLOR[truckId] || "#3F9C7E";
   const hex = HEX[theme] || HEX.dark;
 
   useEffect(() => {
@@ -308,7 +311,7 @@ function StopCard({ stop, index, delivered, failed, active, onMarkDelivered, onR
 // ─── DriverPortal (the active in-route experience) ──────────────────────────
 function DriverPortal({ truckId, theme, onToggleTheme, onExit }) {
   const { state, actions } = useAppData();
-  const color = TRUCK_COLOR[truckId] || "#FFC300";
+  const color = TRUCK_COLOR[truckId] || "#3F9C7E";
   const truck = state.delivery.trucks[truckId];
   const ordersById = new Map(state.orders.items.map((o) => [o.id, o]));
   const zoneCentroids = state.delivery.zoneCentroids;
@@ -439,7 +442,7 @@ function DriverPortal({ truckId, theme, onToggleTheme, onExit }) {
       </div>
 
       <div style={S.progStrip}>
-        <div style={S.hProgTrack}><div style={{ ...S.hProgFill, width: stops.length ? `${(doneCount / stops.length) * 100}%` : "0%", background: color }} /></div>
+        <div style={S.hProgTrack}><div style={{ ...S.hProgFill, transform: `scaleX(${stops.length ? doneCount / stops.length : 0})`, background: color }} /></div>
         <span style={{ fontSize: 12.5, fontWeight: 600, color, fontVariantNumeric: "tabular-nums", flexShrink: 0 }}>
           {doneCount} / {stops.length}
           {failCount > 0 && <span style={{ color: C.red, fontSize: 11, marginLeft: 5 }}>· {failCount} failed</span>}
