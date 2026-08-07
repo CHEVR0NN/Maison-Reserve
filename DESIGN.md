@@ -1,5 +1,5 @@
 <!-- v3.0.0 established via docs/superpowers/specs/2026-07-24-dark-luxury-ops-redesign-design.md.
-     v3.1.0 (2026-08-07): retired Fraunces (serif) in favor of a single Public Sans system with
+     v4.1.0 (2026-08-07): retired Fraunces (serif) in favor of a single Public Sans system with
      tabular-nums on digits, retired the nav dotted-leader/index-number convention, and dropped
      hairline borders from card/grid/metric surfaces in favor of background elevation + spacing.
      Directly edited in src/styles.css — re-run /impeccable document to re-sync token values if
@@ -59,7 +59,7 @@ templated-SaaS after a live-preview review), no glassmorphism/backdrop-filter bl
 and contrast risk on a data-dense tool), no gold-and-burgundy liquor-store palette, no violet/
 plum accent, no Fira Code/Fira Sans typography (rejected as generic-technical-dashboard).
 
-**v3.1.0 revision:** the editorial-serif display face (Fraunces) and the nav dotted-leader/
+**v4.1.0 revision:** the editorial-serif display face (Fraunces) and the nav dotted-leader/
 index-number convention were retired — both read as decorative rather than functional once
 audited against a stricter "no ornament without a job" bar. Public Sans now carries every role
 (headings, card titles, KPI/metric digits) with `font-variant-numeric: tabular-nums` on numeric
@@ -97,7 +97,7 @@ pale paper).
   `:focus-visible` outline color on every interactive element — deliberately never claret, so a
   focus ring firing on every tab-stop doesn't blow the four-role claret budget.
 - **Surface steps** (`--surface` → `--surface-2` → `--surface-3`): stepped luminance is the
-  primary way depth is conveyed — instead of box-shadow *and*, as of v3.1.0, instead of hairline
+  primary way depth is conveyed — instead of box-shadow *and*, as of v4.1.0, instead of hairline
   borders on card/grid/metric surfaces too.
 - **Line** (`#454C58` dark / `#D2D5CC` light): reserved for functional dividers only — table
   rows, form fields, framing devices (modals/dropdowns/toasts). No longer used to outline card,
@@ -119,13 +119,12 @@ monogram/wordmark) stays neutral ink; it sits outside the four audited roles by 
 
 **The No-Pill Rule.** Status, channel/category tags, and nav badges are never a filled pill
 background. Status is a colored word + small dot. Channel/category tags are a small-caps mono
-label with a colored underline. Nav badges are a bold numeral in `--orange` before the leader
-line.
+label with a colored underline. Nav badges are a bold numeral in `--orange` after the label.
 
 ## Typography
 
 **Display/Body Font:** Public Sans (with system-ui fallback) — one sans system for everything,
-as of v3.1.0. Fraunces (editorial serif) was retired: it read as decoration rather than a
+as of v4.1.0. Fraunces (editorial serif) was retired: it read as decoration rather than a
 functional signal once audited, and its removal also let numeric displays go tabular.
 **Label/Mono Font:** JetBrains Mono (SKUs, timestamps, tabular data)
 
@@ -149,7 +148,7 @@ their order) stays as-is; only the visual system carrying that composition chang
 
 **The Stepped-Luminance Rule.** No card-and-shadow elevation for regular page content. Depth
 comes from `--surface` → `--surface-2` → `--surface-3` luminance steps and spacing alone —
-never `box-shadow`, and as of v3.1.0, never a hairline border either, on card/grid/metric
+never `box-shadow`, and as of v4.1.0, never a hairline border either, on card/grid/metric
 surfaces. Hairlines survive only where they do real functional work: table rows, form-field
 edges, and the framing devices below. The one exception to "no shadow": framing devices that
 are genuinely elevated above content — modals, dropdowns, toasts — keep a real drop shadow,
@@ -181,7 +180,7 @@ set that read as a stock SaaS-dashboard template regardless of its custom colors
 
 ### Navigation (Rail)
 - Each item: `lucide-react` icon (kept for scannability — dropping icons was an earlier-draft
-  oversight, not a decision) + label. **v3.1.0:** the dotted leader line and claret-colored
+  oversight, not a decision) + label. **v4.1.0:** the dotted leader line and claret-colored
   index number were removed — audited as decoration, not information (nav items are a fixed,
   memorized list; a running index number didn't help wayfinding). The active-nav indicator (one
   of pine's four budgeted roles) now colors the icon+label directly instead of the index number.
@@ -199,7 +198,7 @@ Large sans numeral (Public Sans, `tabular-nums`) + a short gradient hairline rul
 (`--claret-deep` → transparent). Not a boxed stat card — no border, background-elevated only.
 
 ### Loyalty tier list
-Flat elevated rows with real spacing between them (v3.1.0: previously hairline-divided within
+Flat elevated rows with real spacing between them (v4.1.0: previously hairline-divided within
 one bordered ledger). Top tier marked by a 2px `--claret` rule across just that column — part
 of the four-role claret budget — not a gradient-filled box.
 
@@ -225,4 +224,4 @@ of the four-role claret budget — not a gradient-filled box.
 - **Don't** use overshoot/`back.out` easing on table-row or list animations — plain opacity
   fade on load only.
 - **Don't** reintroduce Fraunces, a nav dotted-leader/index convention, or Fira Code/Fira Sans —
-  all three were evaluated and retired (v3.1.0 for the first two).
+  all three were evaluated and retired (v4.1.0 for the first two).

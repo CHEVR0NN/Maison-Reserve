@@ -2,6 +2,35 @@
 
 All notable changes to this project are recorded here.
 
+## v4.1.0 — 2026-08-07
+
+Design-system revision: retired the last two decorative holdovers the "AI slop" audits kept
+flagging, plus a genuine card-container border sweep this time (prior passes stopped short of
+touching typography, nav chrome, or the hairline-grid technique itself).
+
+- **Typography: dropped Fraunces app-wide.** Every selector that used the editorial serif
+  display face (headings, card titles, KPI/metric digits, the sidebar brand mark) now uses
+  Public Sans. Removed the `--serif` token, removed Fraunces from the Google Fonts request in
+  `index.html`. Added `font-variant-numeric: tabular-nums` to every selector that displays a
+  number (14 in `styles.css` plus 3 inline styles) so digits no longer jitter in width as they
+  change.
+- **Sidebar nav: removed the dotted leader line and claret index numbers** (`Rail.jsx`,
+  `.rail-link-leader`/`.rail-link-index`). The active-nav indicator (one of the accent's four
+  budgeted roles) now colors the icon+label directly instead of living on the index number.
+- **Card/grid/metric surfaces: dropped hairline borders app-wide**, converting the
+  background+1px-gap "hairline grid" technique (`.cc-metrics`, `.cc-channels`, `.cc-journey`,
+  `.inv-cat-strip`, `.mkt-channels`) and bordered single cards (`.card`, `.panel`, `.cc-health`,
+  `.cc-pulse`, `.cc-actions`, `.tier-ledger`, `.camp`) to real spacing + background-elevation
+  only. Left hairlines in place where they do real functional work — table rows, form fields,
+  and framing devices (modals/dropdowns/toasts) — since those aren't the "boxed card" pattern
+  being removed.
+- **Inventory toolbar consolidated:** sort-field and asc/desc controls merged into one select;
+  Bulk Upload / Stock Adjustment / Export CSV moved into an "Actions" dropdown; "+ Add Product"
+  is now the view's one primary CTA.
+- Updated `DESIGN.md` and `PRODUCT.md` to record these as deliberate replacements of the prior
+  Fraunces/hairline/nav-leader commitments, not regressions — future work should not reintroduce
+  them without an explicit new decision.
+
 ## v4.0.1 — 2026-08-07
 
 - **Fixed a sixth layout-breaking bug: the Inventory category strip left a visible empty gap in
