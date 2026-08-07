@@ -314,19 +314,19 @@ export default function DeliveryPage() {
               </radialGradient>
             </defs>
             <path d="M30,150 Q20,90 80,80 Q130,70 150,120 Q160,170 120,200 Q60,220 40,190 Z" fill="url(#zg)" stroke="#5C5445" strokeWidth="1.5" />
-            <text x="80" y="135" fill="#B8B2A4" fontSize="13" fontFamily="Fraunces, Georgia, serif" fontWeight="700">WEST</text>
+            <text x="80" y="135" fill="#B8B2A4" fontSize="13" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">WEST</text>
             <text x="62" y="152" fill="#A6A092" fontSize="10" fontFamily="monospace">W1 W2 W3</text>
             <path d="M160,170 Q150,120 200,115 Q250,110 255,160 Q258,205 215,215 Q170,218 160,190 Z" fill="url(#zg)" stroke="#5C5445" strokeWidth="1.5" />
-            <text x="190" y="165" fill="#B8B2A4" fontSize="12" fontFamily="Fraunces, Georgia, serif" fontWeight="700">CENTRAL</text>
+            <text x="190" y="165" fill="#B8B2A4" fontSize="12" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">CENTRAL</text>
             <text x="182" y="182" fill="#A6A092" fontSize="10" fontFamily="monospace">C1 C2 C3</text>
             <path d="M180,60 Q230,30 290,55 Q320,75 300,115 Q270,140 220,120 Q180,105 180,60 Z" fill="url(#zg)" stroke="#5C5445" strokeWidth="1.5" />
-            <text x="225" y="80" fill="#B8B2A4" fontSize="13" fontFamily="Fraunces, Georgia, serif" fontWeight="700">NORTH</text>
+            <text x="225" y="80" fill="#B8B2A4" fontSize="13" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">NORTH</text>
             <text x="210" y="97" fill="#A6A092" fontSize="10" fontFamily="monospace">N1 N2 N3</text>
             <path d="M300,75 Q360,55 405,95 Q430,130 400,165 Q360,185 320,160 Q295,130 300,75 Z" fill="url(#zg)" stroke="#5C5445" strokeWidth="1.5" />
-            <text x="335" y="115" fill="#B8B2A4" fontSize="11" fontFamily="Fraunces, Georgia, serif" fontWeight="700">NE</text>
+            <text x="335" y="115" fill="#B8B2A4" fontSize="11" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">NE</text>
             <text x="322" y="132" fill="#A6A092" fontSize="9" fontFamily="monospace">NE1 NE2 NE3</text>
             <path d="M280,200 Q340,180 400,210 Q435,235 405,275 Q355,300 300,275 Q270,245 280,200 Z" fill="url(#zg)" stroke="#5C5445" strokeWidth="1.5" />
-            <text x="330" y="245" fill="#B8B2A4" fontSize="13" fontFamily="Fraunces, Georgia, serif" fontWeight="700">EAST</text>
+            <text x="330" y="245" fill="#B8B2A4" fontSize="13" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">EAST</text>
             <text x="312" y="262" fill="#A6A092" fontSize="10" fontFamily="monospace">E1 E2 E3</text>
 
             {truckList.map((truck, ti) => {

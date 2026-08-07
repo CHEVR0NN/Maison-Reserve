@@ -64,11 +64,11 @@ export default function MarketplacePage() {
                 <div style={{ display: "flex", gap: 18, margin: "14px 0" }}>
                   <div>
                     <div style={{ fontSize: 10, letterSpacing: ".1em", textTransform: "uppercase", color: "var(--ink-3)" }}>Orders today</div>
-                    <div style={{ fontFamily: "var(--serif)", fontSize: 26, marginTop: 4 }}>{ordersByChannel[c.id] || 0}</div>
+                    <div style={{ fontFamily: "var(--sans)", fontVariantNumeric: "tabular-nums", fontSize: 26, marginTop: 4 }}>{ordersByChannel[c.id] || 0}</div>
                   </div>
                   <div>
                     <div style={{ fontSize: 10, letterSpacing: ".1em", textTransform: "uppercase", color: "var(--ink-3)" }}>Revenue today</div>
-                    <div style={{ fontFamily: "var(--serif)", fontSize: 26, marginTop: 4, color: "var(--amber-2)" }}>{SGD(revenueByChannel[c.id] || 0)}</div>
+                    <div style={{ fontFamily: "var(--sans)", fontVariantNumeric: "tabular-nums", fontSize: 26, marginTop: 4, color: "var(--amber-2)" }}>{SGD(revenueByChannel[c.id] || 0)}</div>
                   </div>
                 </div>
                 <button type="button" className="btn" style={{ width: "100%", justifyContent: "center" }} onClick={() => resync(c.id, c.label)}>

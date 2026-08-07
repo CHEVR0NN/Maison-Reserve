@@ -206,7 +206,7 @@ export default function LoyaltyPage() {
                 <div className="raf-stat">
                   <span className="n">{referrals.count}</span>
                   <span className="l">successful referrals</span>
-                  <span style={{ marginLeft: "auto", fontFamily: "var(--serif)", fontSize: 18, color: "var(--cream)" }}>{fmtN(referrals.points)}</span>
+                  <span style={{ marginLeft: "auto", fontFamily: "var(--sans)", fontVariantNumeric: "tabular-nums", fontSize: 18, color: "var(--cream)" }}>{fmtN(referrals.points)}</span>
                   <span className="l">points awarded</span>
                 </div>
                 <div className="raf-bar"><i style={{ width: `${rafPct}%` }} /></div>
