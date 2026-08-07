@@ -19,8 +19,8 @@ const GLOBAL_CSS = `
   .mvp.dark, .mvp.light {
     --kraft: var(--bg); --kraft-line: var(--line-soft); --card: var(--surface);
     --ink: var(--cream); --ink-soft: var(--cream-dim); --ink-faint: var(--muted);
-    --honey-soft: var(--verdigris-glow); --honey-text: var(--verdigris-2);
-    --bottle: var(--verdigris-2); --red-soft: var(--red-bg);
+    --honey-soft: var(--amber-glow); --honey-text: var(--amber-2);
+    --bottle: var(--amber-2); --red-soft: var(--red-bg);
   }
   .mvp * { box-sizing: border-box; }
   .mvp-shell { max-width: 480px; margin: 0 auto; padding: 22px 18px 60px; }
@@ -29,7 +29,7 @@ const GLOBAL_CSS = `
   .mvp-history { min-width: 0; }
   .mvp-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 22px; }
   .mvp-brand { display: flex; align-items: center; gap: 10px; }
-  .mvp-brand .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--verdigris); }
+  .mvp-brand .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--amber); }
   .mvp-brand b { font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink-soft); }
   .mvp-signout {
     font-size: 12.5px; font-weight: 700; color: var(--ink-soft);
@@ -48,20 +48,20 @@ const GLOBAL_CSS = `
     border: 1.5px solid var(--kraft-line); background: var(--kraft); color: var(--ink);
     font-family: var(--sans); outline: none;
   }
-  .mvp-search input:focus { border-color: var(--verdigris); background: var(--card); }
+  .mvp-search input:focus { border-color: var(--amber); background: var(--card); }
   .mvp-results { margin-top: 8px; display: flex; flex-direction: column; gap: 8px; max-height: 260px; overflow-y: auto; }
   .mvp-result {
     display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
     padding: 10px 12px; border-radius: 12px; border: 1.5px solid var(--kraft-line);
     background: var(--kraft); cursor: pointer; font-family: inherit;
   }
-  .mvp-result:hover, .mvp-result:focus-visible { border-color: var(--verdigris); }
+  .mvp-result:hover, .mvp-result:focus-visible { border-color: var(--amber); }
   .mvp-result-name { font-size: 14.5px; font-weight: 700; color: var(--ink); line-height: 1.3; }
   .mvp-result-sub { font-size: 12px; color: var(--ink-faint); font-family: var(--mono); }
   .mvp-note { width: 100%; font-size: 15px; padding: 13px 14px; border-radius: 12px; border: 1.5px solid var(--kraft-line); background: var(--kraft); color: var(--ink); font-family: inherit; }
   .mvp-submit {
     width: 100%; padding: 17px; border-radius: 14px; border: none; margin-top: 8px;
-    background: var(--claret); color: var(--on-claret); font-size: 16.5px; font-weight: 800;
+    background: var(--pine); color: var(--on-pine); font-size: 16.5px; font-weight: 800;
     letter-spacing: 0.3px; cursor: pointer;
   }
   .mvp-submit:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -88,25 +88,25 @@ const GLOBAL_CSS = `
     font-size: 12px; font-weight: 700; color: var(--bottle); background: var(--kraft);
     border: 1.5px solid transparent; border-radius: 8px; cursor: pointer; padding: 7px 12px;
   }
-  .mvp-slip-edit-btn:hover { border-color: var(--verdigris); }
+  .mvp-slip-edit-btn:hover { border-color: var(--amber); }
   .mvp-slip-edit-qtygroup { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
   .mvp-slip-edit-qty {
     width: 46px; font-family: var(--mono); font-size: 16px; font-weight: 800; text-align: center;
-    padding: 5px 2px; border-radius: 8px; border: 1.5px solid var(--verdigris); background: var(--kraft); color: var(--bottle);
+    padding: 5px 2px; border-radius: 8px; border: 1.5px solid var(--amber); background: var(--kraft); color: var(--bottle);
   }
   .mvp-slip-edit { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
   .mvp-slip-edit-notelabel { font-size: 11px; font-weight: 800; letter-spacing: 0.4px; text-transform: uppercase; color: var(--ink-faint); }
   .mvp-slip-edit-note { width: 100%; font-size: 14px; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--kraft-line); background: var(--kraft); color: var(--ink); font-family: inherit; }
-  .mvp-slip-edit-note:focus { outline: none; border-color: var(--verdigris); }
+  .mvp-slip-edit-note:focus { outline: none; border-color: var(--amber); }
   .mvp-slip-edit-actions { display: flex; gap: 8px; margin-top: 2px; }
-  .mvp-slip-save { font-size: 12.5px; font-weight: 800; color: var(--on-verdigris); background: var(--verdigris); border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+  .mvp-slip-save { font-size: 12.5px; font-weight: 800; color: var(--on-amber); background: var(--amber); border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer; }
   .mvp-slip-cancel { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); background: none; border: 1.5px solid var(--kraft-line); border-radius: 8px; padding: 8px 14px; cursor: pointer; }
   .mvp-empty { text-align: center; padding: 30px 10px; color: var(--ink-faint); font-size: 13.5px; }
   .mvp-login-shell {
     min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
     background:
-      radial-gradient(900px 560px at 88% -10%, color-mix(in srgb, var(--verdigris) 12%, transparent), transparent 60%),
-      radial-gradient(700px 440px at 6% 108%, color-mix(in srgb, var(--claret) 10%, transparent), transparent 55%);
+      radial-gradient(900px 560px at 88% -10%, color-mix(in srgb, var(--amber) 12%, transparent), transparent 60%),
+      radial-gradient(700px 440px at 6% 108%, color-mix(in srgb, var(--pine) 10%, transparent), transparent 55%);
   }
   .mvp-login-card { width: 100%; max-width: 340px; background: var(--card); border: 1px solid var(--kraft-line); border-radius: 20px; padding: 32px 26px; text-align: center; }
   .mvp-login-card b { display: block; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--honey-text); margin-bottom: 6px; }
@@ -118,15 +118,15 @@ const GLOBAL_CSS = `
   .mvp-cart-name { flex: 1; font-size: 14px; font-weight: 700; color: var(--ink); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .mvp-cart-step { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
   .mvp-cart-stepbtn { width: 28px; height: 28px; border-radius: 8px; border: 1.5px solid var(--kraft-line); background: var(--card); font-size: 15px; font-weight: 800; color: var(--bottle); cursor: pointer; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
-  .mvp-cart-stepbtn:hover { border-color: var(--verdigris); }
+  .mvp-cart-stepbtn:hover { border-color: var(--amber); }
   .mvp-cart-qty { font-family: var(--mono); font-size: 15px; font-weight: 800; color: var(--bottle); width: 38px; text-align: center; border: 1.5px solid var(--kraft-line); border-radius: 8px; background: var(--card); padding: 5px 2px; }
   .mvp-cart-remove { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid transparent; background: transparent; color: var(--red); font-size: 18px; line-height: 1; cursor: pointer; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; }
   .mvp-cart-remove:hover { background: var(--red-soft); border-color: var(--red); }
   .mvp-cart-empty { font-size: 13px; color: var(--ink-faint); padding: 4px 2px; }
   .mvp-bulk-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
   .mvp-bulk-filebtn { display: inline-flex; align-items: center; padding: 10px 16px; border-radius: 10px; border: 1.5px dashed var(--kraft-line); background: var(--kraft); color: var(--ink-soft); font-size: 13.5px; font-weight: 700; cursor: pointer; }
-  .mvp-bulk-filebtn:hover { border-color: var(--verdigris); color: var(--ink); }
-  .mvp-bulk-filebtn:focus-within { outline: 2px solid var(--verdigris); outline-offset: 2px; }
+  .mvp-bulk-filebtn:hover { border-color: var(--amber); color: var(--ink); }
+  .mvp-bulk-filebtn:focus-within { outline: 2px solid var(--amber); outline-offset: 2px; }
   .mvp-bulk-preview { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; max-height: 200px; overflow-y: auto; }
   .mvp-bulk-preview-row { display: flex; justify-content: space-between; gap: 10px; font-size: 13px; padding: 6px 10px; border-radius: 8px; background: var(--kraft); font-family: var(--mono); }
   .mvp-bulk-preview-right { display: flex; align-items: center; gap: 8px; }

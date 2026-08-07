@@ -7,7 +7,7 @@ import { stepsForSegment } from "../mock/delivery.js";
 import { DRIVERS } from "../mock/people.js";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const TRUCK_COLOR = { truck_1: "#3F9C7E", truck_2: "#7C89A6" };
+const TRUCK_COLOR = { truck_1: "#BE7F3B", truck_2: "#7C89A6" };
 const TRUCK_NAME = { truck_1: "Truck 1", truck_2: "Truck 2" };
 const PANEL_H = { mini: "76px", half: "46vh", full: "88vh" };
 const TILE_URL = {
@@ -21,21 +21,21 @@ const TILE_URL = {
 const C = {
   bg: "var(--c-bg)", surface: "var(--c-surface)", surface2: "var(--c-surface2)",
   hair: "var(--c-hair)", hair2: "var(--c-hair2)", gold: "var(--c-gold)", goldSoft: "var(--c-goldSoft)",
-  claret: "var(--c-claret)", claretDark: "var(--c-claretDark)", claretSoft: "var(--c-claretSoft)", onClaret: "var(--on-claret)",
+  pine: "var(--c-pine)", pineDark: "var(--c-pineDark)", pineSoft: "var(--c-pineSoft)", onPine: "var(--on-pine)",
   text: "var(--c-text)", textDim: "var(--c-textDim)", textFaint: "var(--c-textFaint)",
   green: "var(--c-green)", greenSoft: "var(--c-greenSoft)", red: "var(--c-red)",
 };
 const HEX = {
-  dark: { gold: "#3F9C7E", green: "#6FA35C", textDim: "#B4B7B1", bg: "#101216" },
-  light: { gold: "#1A5C46", green: "#5C7742", textDim: "#454A44", bg: "#F7F8F5" },
+  dark: { gold: "#BE7F3B", green: "#6FA35C", textDim: "#B8B2A4", bg: "#1C1916" },
+  light: { gold: "#7C4A1E", green: "#5C7742", textDim: "#4A4438", bg: "#E8E2D4" },
 };
 
 const GLOBAL_CSS = `
   .dp.dark {
     --c-bg: var(--bg); --c-surface: var(--surface); --c-surface2: var(--surface-2);
     --c-hair: var(--line-soft); --c-hair2: rgba(230,233,230,.06);
-    --c-gold: var(--verdigris); --c-goldDark: var(--verdigris-deep); --c-goldSoft: var(--verdigris-glow);
-    --c-claret: var(--claret); --c-claretDark: var(--claret-deep); --c-claretSoft: var(--claret-glow);
+    --c-gold: var(--amber); --c-goldDark: var(--amber-deep); --c-goldSoft: var(--amber-glow);
+    --c-pine: var(--pine); --c-pineDark: var(--pine-deep); --c-pineSoft: var(--pine-glow);
     --c-text: var(--cream); --c-textDim: var(--cream-dim); --c-textFaint: var(--muted);
     --c-green: var(--green); --c-greenSoft: var(--green-bg); --c-red: var(--red);
     --c-headerBg: rgba(16,18,22,.88);
@@ -43,8 +43,8 @@ const GLOBAL_CSS = `
   .dp.light {
     --c-bg: var(--bg); --c-surface: var(--surface); --c-surface2: var(--surface-2);
     --c-hair: var(--line-soft); --c-hair2: rgba(30,32,28,.06);
-    --c-gold: var(--verdigris); --c-goldDark: var(--verdigris-deep); --c-goldSoft: var(--verdigris-glow);
-    --c-claret: var(--claret); --c-claretDark: var(--claret-deep); --c-claretSoft: var(--claret-glow);
+    --c-gold: var(--amber); --c-goldDark: var(--amber-deep); --c-goldSoft: var(--amber-glow);
+    --c-pine: var(--pine); --c-pineDark: var(--pine-deep); --c-pineSoft: var(--pine-glow);
     --c-text: var(--cream); --c-textDim: var(--cream-dim); --c-textFaint: var(--muted);
     --c-green: var(--green); --c-greenSoft: var(--green-bg); --c-red: var(--red);
     --c-headerBg: rgba(237,238,234,.92);
@@ -55,8 +55,8 @@ const GLOBAL_CSS = `
   .dp .panel { transition: height .42s cubic-bezier(.25,.46,.45,.94); overflow: hidden; will-change: height; }
   .dp .panel-scroll::-webkit-scrollbar { width: 0; }
   .dp .panel-dragging { transition: none !important; }
-  .dp.dark  .leaflet-container { background: #101216; }
-  .dp.light .leaflet-container { background: #F7F8F5; }
+  .dp.dark  .leaflet-container { background: #1C1916; }
+  .dp.light .leaflet-container { background: #E8E2D4; }
   .dp .leaflet-container { font-family: inherit; }
   .dp .leaflet-control-attribution { font-size: 9px; backdrop-filter: blur(4px); border-radius: 6px !important; }
   .dp .leaflet-tooltip { background: var(--c-surface2); border: 1px solid var(--c-hair); color: var(--c-text); border-radius: 9px; font-size: 12px; font-weight: 600; box-shadow: 0 4px 14px rgba(16,11,4,.18); padding: 5px 10px; }
@@ -73,11 +73,11 @@ const S = {
   root: { display: "flex", flexDirection: "column", height: "100dvh", background: C.bg, color: C.text, fontFamily: F, overflow: "hidden", WebkitFontSmoothing: "antialiased" },
   center: {
     display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100dvh", padding: 20, fontFamily: F,
-    background: `radial-gradient(1000px 600px at 82% -10%, ${C.goldSoft}, transparent 60%), radial-gradient(780px 460px at 4% 108%, ${C.claretSoft}, transparent 55%), ${C.bg}`,
+    background: `radial-gradient(1000px 600px at 82% -10%, ${C.goldSoft}, transparent 60%), radial-gradient(780px 460px at 4% 108%, ${C.pineSoft}, transparent 55%), ${C.bg}`,
   },
   loginCard: { width: "100%", maxWidth: 380, background: C.surface, border: `1px solid ${C.hair}`, borderRadius: 26, padding: "38px 28px", boxShadow: "0 28px 70px rgba(16,11,4,.35)" },
   loginSub: { fontSize: 12, color: C.textFaint, marginTop: 6, marginBottom: 28, letterSpacing: ".02em" },
-  btnGold: { width: "100%", padding: "14px", background: `linear-gradient(180deg,${C.claret},var(--c-claretDark,#7A1E34))`, color: C.onClaret, border: "none", borderRadius: 14, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 24px var(--c-claretSoft)", fontFamily: F, marginBottom: 12 },
+  btnGold: { width: "100%", padding: "14px", background: `linear-gradient(180deg,${C.pine},var(--c-pineDark,#1F3D2C))`, color: C.onPine, border: "none", borderRadius: 14, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 24px var(--c-pineSoft)", fontFamily: F, marginBottom: 12 },
   header: { height: 52, flexShrink: 0, background: "var(--c-headerBg)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${C.hair}`, display: "flex", alignItems: "center", padding: "0 14px", gap: 10, zIndex: 20 },
   progStrip: { height: 36, flexShrink: 0, background: "var(--c-headerBg)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", borderBottom: `1px solid ${C.hair}`, display: "flex", alignItems: "center", padding: "0 16px", gap: 10, zIndex: 19 },
   hDivider: { width: 1, height: 18, background: C.hair, flexShrink: 0 },
@@ -105,7 +105,7 @@ const S = {
   chipRow: { display: "flex", gap: 7, flexWrap: "wrap", marginBottom: 16 },
   chip: { fontSize: 11, color: C.textDim, background: C.surface2, border: `1px solid ${C.hair2}`, borderRadius: 20, padding: "4px 10px", fontWeight: 500 },
   btnRow: { display: "flex", gap: 10 },
-  markBtn: { flex: 1, padding: "15px", background: `linear-gradient(180deg,${C.claret},var(--c-claretDark,#7A1E34))`, color: C.onClaret, border: "none", borderRadius: 16, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 22px var(--c-claretSoft)", fontFamily: F },
+  markBtn: { flex: 1, padding: "15px", background: `linear-gradient(180deg,${C.pine},var(--c-pineDark,#1F3D2C))`, color: C.onPine, border: "none", borderRadius: 16, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 22px var(--c-pineSoft)", fontFamily: F },
   navBtn: { flex: 1, padding: "15px", background: C.surface2, border: `1px solid ${C.hair}`, borderRadius: 16, fontWeight: 600, fontSize: 15, color: C.text, fontFamily: F },
   stepsWrap: { borderTop: `1px solid ${C.hair2}` },
   stepsHdr: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "13px 18px", cursor: "pointer", fontSize: 12.5, color: C.textDim, fontWeight: 600, userSelect: "none" },
@@ -126,7 +126,7 @@ const S = {
   stopMeta: { display: "flex", gap: 6, fontSize: 11, color: C.textFaint, marginBottom: 12, flexWrap: "wrap" },
   cardBtnRow: { display: "flex", gap: 8 },
   btnGhost: { flex: 1, padding: "10px 12px", borderRadius: 14, fontSize: 13.5, fontWeight: 600, border: `1px solid ${C.hair}`, background: C.surface2, color: C.text, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: F },
-  btnPrimary: { flex: 1, padding: "11px 12px", borderRadius: 14, fontSize: 13.5, fontWeight: 700, border: "none", background: C.claret, color: C.onClaret, fontFamily: F },
+  btnPrimary: { flex: 1, padding: "11px 12px", borderRadius: 14, fontSize: 13.5, fontWeight: 700, border: "none", background: C.pine, color: C.onPine, fontFamily: F },
   delivRow: { display: "flex", alignItems: "center", gap: 8, color: C.green, fontWeight: 600, fontSize: 12.5 },
   overlay: { position: "fixed", inset: 0, background: "rgba(16,11,4,.55)", backdropFilter: "blur(5px)", display: "flex", alignItems: "flex-end", justifyContent: "center", zIndex: 200 },
   sheet: { background: C.surface, border: `1px solid ${C.hair}`, borderRadius: "26px 26px 0 0", padding: "20px 22px 32px", width: "100%", maxWidth: 520, boxShadow: "0 -20px 50px rgba(16,11,4,.22)" },
@@ -144,7 +144,7 @@ function makePinHtml(label, state, truckColor, hex) {
   if (state === "active") {
     return `<div class="pin-pulse" style="position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center">`
       + `<div style="position:absolute;inset:0;border-radius:50%;background:${truckColor};opacity:.25"></div>`
-      + `<div style="width:32px;height:32px;background:${truckColor};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-weight:700;font-size:13px;color:#101216;box-shadow:0 3px 12px rgba(0,0,0,.5),0 0 0 2px #fff">${label}</div></div>`;
+      + `<div style="width:32px;height:32px;background:${truckColor};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-weight:700;font-size:13px;color:#1C1916;box-shadow:0 3px 12px rgba(0,0,0,.5),0 0 0 2px #fff">${label}</div></div>`;
   }
   return `<div style="width:28px;height:28px;background:#fff;border:2.5px solid ${truckColor};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-weight:700;font-size:12px;color:${truckColor};box-shadow:0 2px 10px rgba(0,0,0,.4),0 0 0 1px rgba(0,0,0,.1)">${label}</div>`;
 }
@@ -174,7 +174,7 @@ function MapView({ stops, truckId, position, segmentIndex, polyline, depot, them
   const tileRef = useRef(null);
   const gpsRef = useRef(null);
   const [mapReady, setMapReady] = useState(false);
-  const color = TRUCK_COLOR[truckId] || "#3F9C7E";
+  const color = TRUCK_COLOR[truckId] || "#BE7F3B";
   const hex = HEX[theme] || HEX.dark;
 
   useEffect(() => {
@@ -314,7 +314,7 @@ function StopCard({ stop, index, delivered, failed, active, onMarkDelivered, onR
 // ─── DriverPortal (the active in-route experience) ──────────────────────────
 function DriverPortal({ truckId, theme, onToggleTheme, onExit }) {
   const { state, actions } = useAppData();
-  const color = TRUCK_COLOR[truckId] || "#3F9C7E";
+  const color = TRUCK_COLOR[truckId] || "#BE7F3B";
   const truck = state.delivery.trucks[truckId];
   const ordersById = new Map(state.orders.items.map((o) => [o.id, o]));
   const zoneCentroids = state.delivery.zoneCentroids;

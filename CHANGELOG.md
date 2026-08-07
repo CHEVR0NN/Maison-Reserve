@@ -2,6 +2,138 @@
 
 All notable changes to this project are recorded here.
 
+## v4.0.1 — 2026-08-07
+
+- **Fixed a sixth layout-breaking bug: the Inventory category strip left a visible empty gap in
+  its last row at wide viewports** (reported at a screenshot showing 5 columns fit, 8 categories
+  wrap to a 5+3 split, leaving 2 empty cells rendered as a solid block in the grid's divider
+  color). This is a different failure mode than the `auto-fill` phantom-track bug fixed in
+  v3.2.0: `auto-fit` only collapses a track that's *entirely* unused, and here row 1 uses all 5
+  tracks, so they all stay — the gap is a partial last row, which no auto-fit/auto-fill setting
+  can fix. Since the category count is fixed (always exactly 8), switched `.inv-cat-strip` to a
+  pinned `repeat(4, 1fr)` (2 always-full rows) with breakpoints to 2 and 1 columns, instead of
+  leaving the column count to "however many happen to fit."
+- Audited every other `auto-fit`/`auto-fill` grid for the same risk. `.mkt-channels` (3 fixed
+  marketplace channels) had the same latent bug at mid-narrow widths where 2 columns fit but not
+  3 — pinned to `repeat(3, 1fr)` with a single-column breakpoint.
+- Removed `.panel-grid` / `.panel-grid.three`, dead CSS left over from the v3.2.0 Marketplace
+  de-boxify pass — zero remaining usages in any `.jsx` file, and it carried the same broken
+  `auto-fill` pattern.
+
+## v4.0.0 — 2026-08-07
+
+Full palette rebrand: replaced claret + verdigris ("Twilight Cellar") with pine + amber
+("Cellar Stone"). User explicitly rejected the retune-only path from v3.3.0 as still reading
+as "AI-generated slop" — a fair call: near-black canvas + one saturated accent + hairlines +
+ambient glow is exactly the "dark terminal with a neon accent" cluster the impeccable skill's
+own calibration notes name as an AI-interface tell, and the ambient glow + decorative grid-line
+texture were the most literal match for it.
+
+- **New hues, real materials, not a re-skin of the same formula.** Pine — a deep, desaturated
+  bottle-glass green — replaces claret as the 4-role rare accent (primary CTA, active-nav index,
+  top loyalty tier, one hero KPI). Amber — cognac/cask amber — replaces verdigris as the workhorse
+  secondary. Chosen because they're literally true to the product (wine bottle glass, spirits
+  cask) rather than an arbitrary hue swap, and neither reads as the red-accent or mint-accent
+  variants of the same near-black-terminal cluster.
+- **Warmed the base off "cool graphite terminal."** Dark mode shifted from a cool blue-gray
+  (`#1B1E23`) to a warm cellar-stone charcoal (`#211E1A`); light mode from a cool pale sage
+  (`#E2E4DC`) to a warm limestone/putty tone (`#DDD6C8`) — breaking the "cool near-black canvas"
+  half of the AI-terminal signature, not just the accent color.
+- **Removed the ambient glow and the decorative grid-line background** (`body`/`body::before`) —
+  two large soft radial-gradient color washes plus a 64px hairline grid texture behind the whole
+  shell. This was the most literal match for the calibration's named "near-black + glowing accent"
+  and "codex-grid-background" signatures (the latter had already been flagged, twice, by the
+  design-quality hook in earlier turns and dismissed as intentional; the user's explicit rejection
+  of the palette overrides that earlier call). Depth now comes only from the existing stepped
+  `--surface` luminance system, no glow layer behind it.
+- **Renamed every `--claret*`/`--verdigris*` CSS custom property to `--pine*`/`--amber*`**
+  throughout `styles.css` and all JSX (mechanical rename, ~140+ call sites) so the token names
+  describe what they now hold, instead of a green token permanently named after a red wine.
+- **Found and fixed a second wave of hardcoded hex** bypassing the token system entirely — the
+  same class of bug the 2026-07-24 critique flagged ("~74 hardcoded hex values") and that this
+  rebrand's own first pass initially missed, because a plain-text search for "claret"/"verdigris"
+  can't find a literal `#3F9C7E`. Found by grepping for the *old palette's actual hex values*
+  across `src/`, not just the token names: `TodayCharts.jsx`'s Chart.js theme mirror (canvas can't
+  resolve CSS custom properties, so it hand-mirrors the tokens), the Delivery page's Leaflet truck
+  markers and hand-drawn zone-coverage SVG, and Driver Portal's standalone `HEX` fallback object
+  and inline gradient fallbacks — all still carrying the old red/green values after the token
+  rename, confirmed by re-screenshotting the Loyalty page and spotting the top tier still
+  rendering pink.
+
+## v3.3.0 — 2026-08-07
+
+Retuned the achromatic token ramp (Fraunces/Public Sans/JetBrains Mono and the claret/verdigris
+brand hues are unchanged — kept per settled `PRODUCT.md` commitments, confirmed after evaluating
+and re-rolling a full-rebrand direction and choosing to retune instead) and finished de-boxifying
+Automation, the last page still nesting cards inside a card:
+
+- **Dark mode was too dark, light mode was too light.** Lifted the whole dark-mode `--bg`/
+  `--surface`/`--line` ramp off near-black (`#15171B` → `#1B1E23` base) and dimmed the light-mode
+  ramp off near-white (`#EDEEEA` → `#E2E4DC` base), narrowing both themes into a less extreme
+  luminance band while keeping the same hue family.
+- **Caught a real pre-existing contrast failure while retuning, in both themes.** `--muted` text
+  in dark mode measured ~2.9:1 against `--surface-2` (computed via WCAG relative luminance, well
+  below the 4.5:1 AA floor for normal text) — lightened `#888C90` → `#A0A5AE`, now ~4.8:1+ against
+  every surface step. Light-mode `--muted` was a borderline 4.67:1 before this pass; dimming
+  `--surface` per the point above would have dropped it under 4.5:1, so `#6C716A` → `#5C6158`
+  darkened it in the same edit to hold AA against the new, less-washed-out surface.
+- **Automation was four separate `.card` panels (one per rule domain) nested inside the page's
+  own `.panel` frame** — cards inside a card, the same anti-pattern already fixed elsewhere.
+  Merged into one ledger (`.automation-list`) with domain groups as in-list section breaks
+  (`.automation-domain`, hairline `border-top` between groups) instead of each domain getting its
+  own bordered box.
+- Evaluated a full visual rebrand (new palette + new typography) via the impeccable skill's
+  direction-roll process at the user's request, including a re-roll; user chose to keep the
+  current fonts (already Google Fonts: Fraunces/Public Sans/JetBrains Mono) and retune rather than
+  replace the identity a fourth time.
+
+## v3.2.0 — 2026-08-07
+
+De-boxified three repeated card grids that still violated DESIGN.md's own Stepped-Luminance
+Rule and No-Pill-style card ban ("no card-and-shadow elevation... anywhere in the product"),
+reported as looking generic/templated ("boxy," "AI-generated"):
+
+- **Command Center — Channel Operations:** four individually bordered `.cc-channel` cards
+  merged into one hairline-divided plate (`.cc-channels`), matching the grid-with-1px-gap
+  pattern already used correctly by `.cc-metrics`.
+- **Command Center — Priority Actions:** the stacked list of individually boxed `.cc-action`
+  cards merged into one bordered panel with hairline `border-bottom` row dividers, matching the
+  `.tier-ledger` / `.tier-row` convention used on the Loyalty page.
+- **Inventory — category health strip:** eight boxed `.inv-cat-card` tiles merged into one
+  hairline-divided plate (`.inv-cat-strip`), same grid-with-1px-gap pattern.
+- **Marketplace — channel cards:** three `article.panel` cards nested inside an outer `.panel`
+  (a literal card-inside-a-card) replaced with a dedicated `.mkt-channels` / `.mkt-channel`
+  hairline-divided plate; `MarketplacePage.jsx` no longer reuses the generic `.panel-grid.three`
+  scaffold for this section.
+- Switched the new grid-with-gap plates from `auto-fill` to `auto-fit` on their column tracks —
+  `auto-fill` left a visible empty track (rendered as a solid block in the container's divider
+  color) whenever the item count didn't exactly fill a row at the viewport's column count.
+- Fixed a regression caught in the same pass: the Priority Actions rows are `<button>` elements,
+  and moving their background gradient onto the shared `.cc-actions` parent let the browser's
+  default button background paint over it — the gradient now lives on `.cc-action` itself, per
+  the same fix already applied correctly to `.cc-channel`.
+- **Fixed a fourth layout-breaking bug, in the responsive nav, recurring below the tablet
+  breakpoint the v3.1.0 fix covered:** the icon-only compact bar (`.rail` at `max-width: 1024px`)
+  had `overflow-x: auto` as a safety net, but at phone widths (≤640px) the 13 nav/footer icons
+  genuinely don't fit one row — confirmed by measuring `scrollWidth` vs `clientWidth` in a
+  headless browser (724px of content in a 375px bar). That safety net was silently scrolling the
+  theme toggle, Reset Data, and Sign Out controls off-screen with no visible scrollbar or
+  affordance — the "navbar is scrollable" bug reported. Replaced the horizontal-scroll fallback
+  with `flex-wrap: wrap` on `.rail`, `.rail-nav`, `.rail-group`, and `.rail-foot`, so the bar
+  grows to two rows at narrow widths instead of hiding controls; removed the now-obsolete
+  scroll-fade `mask-image` at the `max-width: 560px` breakpoint.
+- **Fixed a fifth scrollable-nav case: the desktop vertical sidebar itself**, reported separately
+  after the horizontal-bar fix above — at viewport heights below ~770px, `.rail-nav`'s
+  `overflow-y: auto` kicked in because the 8 nav items + 5 footer items + brand block didn't fit,
+  and the resulting scroll used the bare OS scrollbar (grey, with up/down arrow buttons),
+  which read as an unstyled system widget against the rest of the hairline dark-luxury system.
+  Tightened `.rail`/`.rail-brand`/`.rail-link`/`.rail-group`/`.rail-foot` vertical padding and
+  gaps so the sidebar now fits without scrolling down to ~650px (confirmed by measuring
+  `scrollHeight` vs `clientHeight` in a headless browser at several heights); added a global thin,
+  theme-matched scrollbar (`scrollbar-color`/`::-webkit-scrollbar`) for the remaining case of
+  genuinely short viewports, and for every other internally-scrolling region in the app (inbox
+  thread list, data tables, modals) that was also using the unstyled default.
+
 ## v3.1.0 — 2026-07-26
 
 Layout and depth refinement pass across the Twilight Cellar rebrand — same tokens and identity,

@@ -25,24 +25,24 @@ const shift = (base, n) => sgt(new Date(`${base}T00:00:00+08:00`).getTime() + n 
 //    which can't resolve CSS custom properties, so these mirror styles.css
 //    by hand and must be kept in sync with the :root token values) ───────────
 const DARK = {
-  honey:     "#3F9C7E", honey2:    "#63BC9C", honeyDeep: "#256B54",
-  cream:     "#EBEDE9", creamDim:  "#B4B7B1",
-  muted:     "#888C90", surface:   "#21252C", line:      "#454C58",
+  honey:     "#BE7F3B", honey2:    "#D89F5F", honeyDeep: "#7C531F",
+  cream:     "#EDEAE2", creamDim:  "#B8B2A4",
+  muted:     "#A6A092", surface:   "#2C2822", line:      "#5C5445",
   green:     "#6FA35C", red:       "#CD5237", orange:    "#C98A3E",
-  grid:      "rgba(235,237,233,0.08)",
-  bar:       "rgba(235,237,233,0.10)", barStroke: "rgba(235,237,233,0.28)",
-  revLine:   "#3F9C7E",
-  revFill0:  "rgba(63,156,126,0.22)", revFill1: "rgba(63,156,126,0.00)",
+  grid:      "rgba(237,234,226,0.08)",
+  bar:       "rgba(237,234,226,0.10)", barStroke: "rgba(237,234,226,0.28)",
+  revLine:   "#BE7F3B",
+  revFill0:  "rgba(190,127,59,0.22)", revFill1: "rgba(190,127,59,0.00)",
 };
 const LIGHT = {
-  honey:     "#1A5C46", honey2:    "#2A7862", honeyDeep: "#123D2F",
-  cream:     "#202422", creamDim:  "#454A44",
-  muted:     "#6C716A", surface:   "#F7F8F5", line:      "#D2D5CC",
+  honey:     "#7C4A1E", honey2:    "#96602E", honeyDeep: "#572F0F",
+  cream:     "#211E19", creamDim:  "#4A4438",
+  muted:     "#625A48", surface:   "#E8E2D4", line:      "#B8AF98",
   green:     "#5C7742", red:       "#A83E26", orange:    "#A9772C",
-  grid:      "rgba(32,36,34,0.10)",
-  bar:       "rgba(32,36,34,0.08)",  barStroke: "rgba(32,36,34,0.22)",
-  revLine:   "#1A5C46",
-  revFill0:  "rgba(26,92,70,0.20)", revFill1: "rgba(26,92,70,0.00)",
+  grid:      "rgba(33,30,25,0.10)",
+  bar:       "rgba(33,30,25,0.08)",  barStroke: "rgba(33,30,25,0.22)",
+  revLine:   "#7C4A1E",
+  revFill0:  "rgba(124,74,30,0.20)", revFill1: "rgba(124,74,30,0.00)",
 };
 
 const getT = (theme) => theme === "light" ? LIGHT : DARK;
@@ -51,8 +51,8 @@ const STAGE_LABELS = ["Captured", "Packed", "Out for Delivery", "Delivered"];
 
 // A 4-step intensity ramp within the one accent hue — not 4 different colors —
 // since the palette gives us gold + iron-red (reserved for critical) only.
-const STAGE_COLORS_DARK  = ["#888C90", "#256B54", "#3F9C7E", "#63BC9C"];
-const STAGE_COLORS_LIGHT = ["#6C716A", "#123D2F", "#1A5C46", "#2A7862"];
+const STAGE_COLORS_DARK  = ["#A6A092", "#7C531F", "#BE7F3B", "#D89F5F"];
+const STAGE_COLORS_LIGHT = ["#625A48", "#572F0F", "#7C4A1E", "#96602E"];
 
 const makeTip = (T) => ({
   backgroundColor: T.surface,

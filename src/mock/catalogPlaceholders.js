@@ -2,7 +2,7 @@
 // Colors are drawn from the Maison Reserve palette family (styles.css tokens)
 // instead of an arbitrary rainbow, so the catalog reads as one material world
 // while staying scannable category-to-category. Wine and liqueur are kept out
-// of claret's and plum's hue ranges specifically — claret is budgeted to four
+// of pine's and plum's hue ranges specifically — pine is budgeted to four
 // exact roles app-wide (see DESIGN.md) and plum was rejected as a direction.
 export const CATEGORY_COLORS = {
   "wine-champagne": { base: "#242C38", accent: "#8B99B8", shape: "wine",   label: "Wine & Champagne" },

@@ -6,11 +6,11 @@ import Modal from "../components/ui/Modal.jsx";
 // Presentation config per tier — keyed by name so it stays in sync with
 // mock/loyalty.js#TIERS regardless of threshold/multiplier tuning.
 const TIER_PRESET = {
-  "Cellar Member":   { cls: "worker",  fill: "none",    stroke: "#454C58", mltColor: "#888C90", bday: "S$10 worth",  entry: "None",     raf: "Not eligible" },
-  "Vintner's Circle":{ cls: "soldier", fill: "none",    stroke: "#5A6272", mltColor: "#B4B7B1", bday: "S$20 worth",  entry: "500 pts",  raf: "Not eligible" },
-  "Estate Reserve":  { cls: "general", fill: "none",    stroke: "#3F9C7E", mltColor: "#63BC9C", bday: "S$50 worth",  entry: "1000 pts", raf: "0.25× mult" },
-  "Grand Cru":       { cls: "queen",   fill: "#256B54", stroke: "#3F9C7E", mltColor: "#EBEDE9", bday: "S$100 worth", entry: "3000 pts", raf: "0.5× mult" },
-  "Maison Noir":     { cls: "black",   fill: "#15171B", stroke: "#B8304D", mltColor: "#D65B76", bday: "S$300 worth", entry: "5000 pts", raf: "0.75× mult" },
+  "Cellar Member":   { cls: "worker",  fill: "none",    stroke: "#5C5445", mltColor: "#A6A092", bday: "S$10 worth",  entry: "None",     raf: "Not eligible" },
+  "Vintner's Circle":{ cls: "soldier", fill: "none",    stroke: "#756B57", mltColor: "#B8B2A4", bday: "S$20 worth",  entry: "500 pts",  raf: "Not eligible" },
+  "Estate Reserve":  { cls: "general", fill: "none",    stroke: "#BE7F3B", mltColor: "#D89F5F", bday: "S$50 worth",  entry: "1000 pts", raf: "0.25× mult" },
+  "Grand Cru":       { cls: "queen",   fill: "#7C531F", stroke: "#BE7F3B", mltColor: "#EDEAE2", bday: "S$100 worth", entry: "3000 pts", raf: "0.5× mult" },
+  "Maison Noir":     { cls: "black",   fill: "#1C1916", stroke: "#3D6F51", mltColor: "#5C9174", bday: "S$300 worth", entry: "5000 pts", raf: "0.75× mult" },
 };
 
 const CHANNELS = ["Email + SMS", "Email", "SMS", "WhatsApp"];
@@ -192,7 +192,7 @@ export default function LoyaltyPage() {
                         <td><span className="strong">{m.name}</span></td>
                         <td><span className={`tier-badge tier-${(TIER_PRESET[m.tier] || {}).cls || "general"}`}>{m.tier}</span></td>
                         <td className="mono">S${fmtN(m.spend13mo)}</td>
-                        <td className="mono" style={{ color: "var(--verdigris-2)" }}>{fmtN(m.pointsBalance)}</td>
+                        <td className="mono" style={{ color: "var(--amber-2)" }}>{fmtN(m.pointsBalance)}</td>
                         <td>{m.coinsExpiringSoon ? <span style={{ color: "var(--orange)", fontFamily: "var(--mono)", fontSize: 12 }}>{fmtN(m.pointsBalance)} in {m.expiringInDays}d</span> : <span className="dim">-</span>}</td>
                       </tr>
                     ))}
@@ -233,7 +233,7 @@ export default function LoyaltyPage() {
                   )}
                   {referrals.count > 0 && (
                     <div className="af-row">
-                      <div className="af-ico honey"><svg viewBox="0 0 24 24" fill="none" stroke="var(--verdigris)" strokeWidth="2"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L12 14.3 7.2 16.8l.9-5.3L4.2 7.7l5.4-.8z" /></svg></div>
+                      <div className="af-ico honey"><svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" strokeWidth="2"><path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.3L12 14.3 7.2 16.8l.9-5.3L4.2 7.7l5.4-.8z" /></svg></div>
                       <div className="af-main"><div className="t"><b>Refer-a-Friend</b> — {referrals.count} successful referrals this month</div><div className="m">{fmtN(referrals.points)} points awarded</div></div>
                     </div>
                   )}

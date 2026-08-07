@@ -7,7 +7,7 @@ import { useAppData } from "../context/AppData.jsx";
 const CHANNEL_META = {
   WhatsApp: { icon: <Phone size={11} />, color: "#25d366" },
   Instagram: { icon: <MessageCircle size={11} />, color: "#C77FB0" },
-  "Web Chat": { icon: <Mail size={11} />, color: "var(--verdigris-2)" },
+  "Web Chat": { icon: <Mail size={11} />, color: "var(--amber-2)" },
 };
 
 function timeLabel(iso) {
@@ -36,10 +36,10 @@ function initials(name = "") {
   return name.trim().split(/\s+/).map((w) => w[0] || "").join("").slice(0, 2).toUpperCase() || "?";
 }
 
-// Claret is budgeted to exactly four roles elsewhere in the product (see
-// DESIGN.md) — avatars stay on verdigris/neutral so they never spend it.
+// Pine is budgeted to exactly four roles elsewhere in the product (see
+// DESIGN.md) — avatars stay on amber/neutral so they never spend it.
 function avatarColor(name = "") {
-  const palette = ["var(--verdigris-deep)", "var(--surface-3)", "var(--muted-2)"];
+  const palette = ["var(--amber-deep)", "var(--surface-3)", "var(--muted-2)"];
   let h = 0;
   for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xffff;
   return palette[h % palette.length];

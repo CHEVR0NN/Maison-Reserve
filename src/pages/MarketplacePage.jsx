@@ -4,7 +4,7 @@ import { useToast } from "../components/ui/ToastProvider.jsx";
 import { SGD } from "../utils.js";
 
 const CHANNEL_META = {
-  "own-site": { icon: Globe, color: "var(--verdigris)" },
+  "own-site": { icon: Globe, color: "var(--amber)" },
   lazada:     { icon: ShoppingBag, color: "color-mix(in srgb, var(--lazada) 60%, var(--cream))" },
   shopee:     { icon: Store, color: "color-mix(in srgb, var(--shopee) 60%, var(--cream))" },
 };
@@ -44,13 +44,13 @@ export default function MarketplacePage() {
           </div>
         </div>
 
-        <div className="panel-grid three">
+        <div className="mkt-channels">
           {channels.map((c) => {
             const meta = CHANNEL_META[c.id] || CHANNEL_META["own-site"];
             const Icon = meta.icon;
             const attention = c.status === "attention";
             return (
-              <article className="panel" key={c.id} style={{ minHeight: 0 }}>
+              <article className="mkt-channel" key={c.id}>
                 <div className="panel-head" style={{ marginBottom: 16 }}>
                   <div>
                     <h2 style={{ fontSize: 20 }}>{c.label}</h2>
@@ -68,7 +68,7 @@ export default function MarketplacePage() {
                   </div>
                   <div>
                     <div style={{ fontSize: 10, letterSpacing: ".1em", textTransform: "uppercase", color: "var(--ink-3)" }}>Revenue today</div>
-                    <div style={{ fontFamily: "var(--serif)", fontSize: 26, marginTop: 4, color: "var(--verdigris-2)" }}>{SGD(revenueByChannel[c.id] || 0)}</div>
+                    <div style={{ fontFamily: "var(--serif)", fontSize: 26, marginTop: 4, color: "var(--amber-2)" }}>{SGD(revenueByChannel[c.id] || 0)}</div>
                   </div>
                 </div>
                 <button type="button" className="btn" style={{ width: "100%", justifyContent: "center" }} onClick={() => resync(c.id, c.label)}>

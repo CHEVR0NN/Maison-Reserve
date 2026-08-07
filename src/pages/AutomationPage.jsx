@@ -5,7 +5,7 @@ import Toggle from "../components/ui/Toggle.jsx";
 import Badge from "../components/ui/Badge.jsx";
 
 const DOMAIN_META = {
-  inventory:   { label: "Inventory",   icon: Package, color: "var(--verdigris)" },
+  inventory:   { label: "Inventory",   icon: Package, color: "var(--amber)" },
   loyalty:     { label: "Loyalty",     icon: Gem, color: "var(--blue)" },
   marketplace: { label: "Marketplace", icon: Store, color: "var(--orange)" },
   delivery:    { label: "Delivery",    icon: Truck, color: "var(--positive)" },
@@ -71,24 +71,24 @@ export default function AutomationPage() {
         </div>
       </div>
 
-      {domains.map((domain) => {
-        const domainRules = rules.filter((r) => r.domain === domain);
-        if (!domainRules.length) return null;
-        const meta = DOMAIN_META[domain];
-        const Icon = meta.icon;
-        return (
-          <div key={domain} style={{ marginBottom: 28 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-              <Icon size={17} style={{ color: meta.color }} />
-              <span style={{ fontSize: 13, fontWeight: 700, letterSpacing: ".04em" }}>{meta.label}</span>
-              <span style={{ fontSize: 11, color: "var(--ink-3)" }}>{domainRules.filter((r) => r.enabled).length} of {domainRules.length} active</span>
-            </div>
-            <div className="card automation-list" style={{ padding: "6px 22px" }}>
+      <div className="card automation-list" style={{ padding: "6px 22px" }}>
+        {domains.map((domain, i) => {
+          const domainRules = rules.filter((r) => r.domain === domain);
+          if (!domainRules.length) return null;
+          const meta = DOMAIN_META[domain];
+          const Icon = meta.icon;
+          return (
+            <div key={domain} className="automation-domain" style={i > 0 ? { borderTop: "1px solid var(--line)" } : undefined}>
+              <div className="automation-domain-head">
+                <Icon size={17} style={{ color: meta.color }} />
+                <span className="automation-domain-label">{meta.label}</span>
+                <span className="automation-domain-count">{domainRules.filter((r) => r.enabled).length} of {domainRules.length} active</span>
+              </div>
               {domainRules.map((rule) => <RuleRow key={rule.id} rule={rule} onToggle={toggle} onRunNow={runNow} />)}
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </section>
   );
 }
