@@ -1369,13 +1369,17 @@ td .dim { color: var(--muted); font-size: 12px; }
 .camp-main .seg b { color: var(--cream-dim); font-weight: 600; }
 .camp-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 .camp-chan-chips { display: flex; gap: 6px; }
-.chan-tag { font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 0; display: flex; align-items: center; gap: 5px; }
-.chan-tag.wa { background: var(--green-bg); color: var(--green); }
-.chan-tag.em { background: var(--blue-bg); color: var(--blue); }
-.bc-status { font-size: 11px; font-weight: 700; padding: 4px 11px; border-radius: 0; }
-.bc-status.sched { background: var(--amber-glow); color: var(--amber-2); }
-.bc-status.sent { background: var(--green-bg); color: var(--green); }
-.bc-status.draft { background: var(--surface-3); color: var(--muted); }
+.chan-tag {
+  font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 5px; padding-bottom: 2px; border-bottom: 2px solid currentColor;
+}
+.chan-tag.wa { color: var(--green); }
+.chan-tag.em { color: var(--blue); }
+.bc-status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; }
+.bc-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.bc-status.sched { color: var(--amber-2); }
+.bc-status.sent { color: var(--green); }
+.bc-status.draft { color: var(--muted); }
 
 .loy-label { font-size: 12px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--amber); font-weight: 700; margin: 24px 0 14px; text-align: left; display: flex; align-items: center; gap: 10px; }
 
