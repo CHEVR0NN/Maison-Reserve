@@ -1571,6 +1571,26 @@ td .dim { color: var(--muted); font-size: 12px; }
   color: var(--amber-2);
 }
 
+/* Actions dropdown — a real elevated popover (DESIGN.md's framing-device
+   exception), not a page-level card, so it keeps a genuine drop shadow. */
+.inv-actions-menu { position: relative; }
+.inv-actions-menu > summary { list-style: none; }
+.inv-actions-menu > summary::-webkit-details-marker { display: none; }
+.inv-actions-menu > summary::after { content: " \25BE"; }
+.inv-actions-menu-list {
+  position: absolute; top: calc(100% + 6px); left: 0; z-index: 30;
+  min-width: 180px; display: flex; flex-direction: column; gap: 1px;
+  padding: 4px; background: var(--surface); border: 1px solid var(--rule-strong);
+  border-radius: var(--r); box-shadow: var(--shadow);
+}
+.inv-actions-menu-list button {
+  appearance: none; text-align: left; background: none; border: none;
+  padding: 8px 10px; font: inherit; font-size: 12.5px; color: var(--cream-dim);
+  cursor: pointer; border-radius: var(--r);
+}
+.inv-actions-menu-list button:hover { background: var(--surface-2); color: var(--cream); }
+.inv-actions-menu-list button:focus-visible { outline: 2px solid var(--cream); outline-offset: -2px; }
+
 .orders-toolbar {
   flex-direction: column;
   align-items: stretch;

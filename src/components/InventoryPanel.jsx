@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useAppData } from "../context/AppData.jsx";
 import { useToast } from "./ui/ToastProvider.jsx";
 import ConfirmDialog from "./ui/ConfirmDialog.jsx";
@@ -109,6 +109,8 @@ export default function InventoryPanel() {
   const [adjustMsg, setAdjustMsg]   = useState(null);
   const [adjustBusy, setAdjustBusy] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const actionsMenuRef = useRef(null);
+  const closeActionsMenu = () => actionsMenuRef.current?.removeAttribute("open");
 
   const reservedBySku = useMemo(() => {
     const map = new Map();
@@ -318,23 +320,36 @@ export default function InventoryPanel() {
                     <option key={k} value={k}>{v.label}</option>
                   ))}
                 </select>
-                <select className="fchip" style={{ background: "var(--surface)", border: "1px solid var(--line)" }} value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                  {SORT_OPTS.map((o) => <option key={o.value} value={o.value}>Sort: {o.label}</option>)}
+                <select
+                  className="fchip"
+                  style={{ background: "var(--surface)", border: "1px solid var(--line)" }}
+                  value={`${sortBy}:${sortAsc ? "asc" : "desc"}`}
+                  onChange={(e) => {
+                    const [field, dir] = e.target.value.split(":");
+                    setSortBy(field);
+                    setSortAsc(dir === "asc");
+                  }}
+                >
+                  {SORT_OPTS.flatMap((o) => o.value === "name"
+                    ? [
+                      <option key="name:asc" value="name:asc">Name: A to Z</option>,
+                      <option key="name:desc" value="name:desc">Name: Z to A</option>,
+                    ]
+                    : [
+                      <option key={`${o.value}:desc`} value={`${o.value}:desc`}>{o.label}: High to low</option>,
+                      <option key={`${o.value}:asc`} value={`${o.value}:asc`}>{o.label}: Low to high</option>,
+                    ])}
                 </select>
-                <button className="fchip" onClick={() => setSortAsc((v) => !v)}>
-                  {sortAsc ? "Sort: Asc" : "Sort: Desc"}
-                </button>
-                <button className="fchip on" onClick={() => { setEditItem(null); setView("add"); }}>
+                <details className="inv-actions-menu" ref={actionsMenuRef}>
+                  <summary className="fchip">Actions</summary>
+                  <div className="inv-actions-menu-list">
+                    <button type="button" onClick={() => setView("bulk-upload")}>Bulk upload</button>
+                    <button type="button" onClick={() => { setAdjustMsg(null); setView("stock-adjust"); }}>Stock adjustment</button>
+                    <button type="button" onClick={() => { handleExport(); closeActionsMenu(); }}>Export CSV</button>
+                  </div>
+                </details>
+                <button className="btn primary" onClick={() => { setEditItem(null); setView("add"); }}>
                   + Add Product
-                </button>
-                <button className="fchip" onClick={() => setView("bulk-upload")}>
-                  Bulk Upload
-                </button>
-                <button className="fchip" onClick={() => { setAdjustMsg(null); setView("stock-adjust"); }}>
-                  Stock Adjustment
-                </button>
-                <button className="fchip" onClick={handleExport}>
-                  Export CSV
                 </button>
               </div>
             </div>
