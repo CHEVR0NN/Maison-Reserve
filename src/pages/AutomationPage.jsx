@@ -32,7 +32,7 @@ function RuleRow({ rule, onToggle, onRunNow }) {
           {rule.lastRunSummary} &middot; {agoLabel(rule.lastRunAt)} &middot; {rule.schedule}
         </small>
       </div>
-      <Badge tone={rule.enabled ? "positive" : "neutral"}>{rule.enabled ? "Enabled" : "Paused"}</Badge>
+      <Badge tone={rule.enabled ? "positive" : "neutral"} dot>{rule.enabled ? "Enabled" : "Paused"}</Badge>
       <button type="button" className="fchip" onClick={() => onRunNow(rule)} style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
         <Play size={11} /> Run now
       </button>

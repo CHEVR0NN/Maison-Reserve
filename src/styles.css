@@ -1911,9 +1911,9 @@ td .dim { color: var(--muted); font-size: 12px; }
 }
 .cc-health-dot {
   width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
-  background: var(--green); box-shadow: 0 0 0 4px var(--green-bg);
+  background: var(--green);
 }
-.cc-health.warn .cc-health-dot { background: var(--orange); box-shadow: 0 0 0 4px var(--orange-bg); }
+.cc-health.warn .cc-health-dot { background: var(--orange); }
 .cc-health-status { font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--cream); line-height: 1.1; }
 .cc-health.warn .cc-health-status { color: var(--orange); }
 .cc-health-note { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
@@ -2083,13 +2083,13 @@ td .dim { color: var(--muted); font-size: 12px; }
   border: 1px solid var(--line-soft);
 }
 
-.badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 0; font-size: 10.5px; font-weight: 700; letter-spacing: .04em; white-space: nowrap; }
-.badge.positive { background: var(--positive-soft); color: var(--positive); }
-.badge.negative { background: var(--negative-soft); color: var(--negative); }
-.badge.warning  { background: var(--warning-soft);  color: var(--warning); }
-.badge.info     { background: var(--info-soft);     color: var(--info); }
-.badge.neutral  { background: var(--surface-3);      color: var(--ink-3); }
-.badge i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.badge { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 700; letter-spacing: .04em; white-space: nowrap; }
+.badge.positive { color: var(--positive); }
+.badge.negative { color: var(--negative); }
+.badge.warning  { color: var(--warning); }
+.badge.info     { color: var(--info); }
+.badge.neutral  { color: var(--ink-3); }
+.badge i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
 .toggle {
   position: relative; width: 40px; height: 22px; flex-shrink: 0;
