@@ -422,20 +422,22 @@ h1 {
 
 /* ─── Loyalty tier badges ────────────────────────────────────────────────── */
 .tier-badge {
-  padding: 2px 8px;
-  border-radius: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 10px;
   letter-spacing: .1em;
   text-transform: uppercase;
   font-weight: 700;
   white-space: nowrap;
 }
+.tier-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 /* one variant per loyalty tier (mirrors .tier-card.<cls> colors below) */
-.tier-badge.tier-worker  { background: var(--surface-3); border: 1px solid var(--rule-strong); color: var(--ink-3); }
-.tier-badge.tier-soldier { background: rgba(63,156,126,.10); border: 1px solid rgba(63,156,126,.3); color: var(--amber-2); }
-.tier-badge.tier-general { background: rgba(63,156,126,.16); border: 1px solid var(--amber-deep); color: var(--amber-2); }
-.tier-badge.tier-queen   { background: var(--amber-glow); border: 1px solid var(--amber); color: var(--amber); }
-.tier-badge.tier-black   { background: var(--pine-glow); border: 1px solid var(--pine); color: var(--pine-2); }
+.tier-badge.tier-worker  { color: var(--ink-3); }
+.tier-badge.tier-soldier { color: var(--amber-2); }
+.tier-badge.tier-general { color: var(--amber-2); }
+.tier-badge.tier-queen   { color: var(--amber); }
+.tier-badge.tier-black   { color: var(--pine-2); }
 
 /* ─── Base form input ────────────────────────────────────────────────────── */
 input {
