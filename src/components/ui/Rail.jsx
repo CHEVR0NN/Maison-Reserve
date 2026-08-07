@@ -39,37 +39,30 @@ export default function Rail({ tab, setTab, badges = {}, onResetDemo, theme, onT
       </button>
 
       <nav className="rail-nav" aria-label="Main">
-        {(() => {
-          let i = 0;
-          return NAV_GROUPS.map((group) => (
-            <div className="rail-group" key={group.label}>
-              <div className="rail-group-label">{group.label}</div>
-              {group.items.map(({ key, label, icon: Icon }) => {
-                i += 1;
-                const index = i;
-                const active = tab === key;
-                const badge = badges[key];
-                return (
-                  <button
-                    key={key}
-                    type="button"
-                    className={`rail-link${active ? " active" : ""}`}
-                    aria-current={active ? "page" : undefined}
-                    aria-label={label}
-                    title={label}
-                    onClick={() => setTab(key)}
-                  >
-                    <Icon size={18} />
-                    <span className="rail-link-label">{label}</span>
-                    {badge > 0 && <span className="rail-badge">{badge > 9 ? "9+" : badge}</span>}
-                    <span className="rail-link-leader" aria-hidden="true" />
-                    <span className="rail-link-index">{String(index).padStart(2, "0")}</span>
-                  </button>
-                );
-              })}
-            </div>
-          ));
-        })()}
+        {NAV_GROUPS.map((group) => (
+          <div className="rail-group" key={group.label}>
+            <div className="rail-group-label">{group.label}</div>
+            {group.items.map(({ key, label, icon: Icon }) => {
+              const active = tab === key;
+              const badge = badges[key];
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  className={`rail-link${active ? " active" : ""}`}
+                  aria-current={active ? "page" : undefined}
+                  aria-label={label}
+                  title={label}
+                  onClick={() => setTab(key)}
+                >
+                  <Icon size={18} />
+                  <span className="rail-link-label">{label}</span>
+                  {badge > 0 && <span className="rail-badge">{badge > 9 ? "9+" : badge}</span>}
+                </button>
+              );
+            })}
+          </div>
+        ))}
       </nav>
 
       <div className="rail-foot">

@@ -1886,21 +1886,11 @@ td .dim { color: var(--muted); font-size: 12px; }
 .rail-link:hover { color: var(--cream); }
 .rail-link:focus-visible { outline: 2px solid var(--cream); outline-offset: 1px; }
 /* Active-nav indicator — one of pine's exactly four budgeted roles (see
-   DESIGN.md). Only the index number carries pine; the row itself does not
-   get a filled background or left-accent bar (hairline system, not cards). */
-.rail-link.active { color: var(--cream); font-weight: 650; }
-.rail-link.active .rail-link-index { color: var(--pine); }
+   DESIGN.md). The row itself does not get a filled background or
+   left-accent bar (flat, borderless — no card scaffolding). */
+.rail-link.active { color: var(--pine); font-weight: 650; }
 .rail-link svg { flex-shrink: 0; color: currentColor; }
-.rail-link-label { flex: 0 0 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.rail-link-leader {
-  flex: 1; min-width: 12px; margin: 0 2px;
-  border-bottom: 1px dotted var(--line);
-  align-self: center; height: 0;
-}
-.rail-link-index {
-  flex-shrink: 0; font-family: var(--mono); font-size: 11px; color: var(--muted-2);
-  font-variant-numeric: tabular-nums;
-}
+.rail-link-label { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rail-badge {
   flex-shrink: 0; font-family: var(--mono); font-size: 11px; font-weight: 800;
   color: var(--orange);
@@ -2091,7 +2081,7 @@ td .dim { color: var(--muted); font-size: 12px; }
   }
   .rail-link:hover { background: var(--surface-2); }
   .rail-link.active { background: var(--surface-2); border-bottom: 2px solid var(--pine); }
-  .rail-link-label, .rail-link-leader, .rail-link-index { display: none; }
+  .rail-link-label { display: none; }
   .rail-badge {
     position: absolute; top: 4px; right: 4px; font-size: 9px;
     background: var(--bg-2); line-height: 1; padding: 1px 3px;
