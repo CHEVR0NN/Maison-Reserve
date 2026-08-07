@@ -193,7 +193,7 @@ export default function OrdersPage() {
                         <button
                           type="button" title="View proof of delivery"
                           onClick={(e) => { e.stopPropagation(); setPodView(o); }}
-                          style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "var(--positive-soft)", border: "1px solid rgba(94,145,81,0.4)", color: "var(--positive)", borderRadius: 20, padding: "2px 9px", fontSize: 10.5, fontWeight: 700, cursor: "pointer" }}
+                          style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "none", border: "1px solid var(--line)", color: "var(--positive)", borderRadius: "var(--r)", padding: "2px 9px", fontSize: 10.5, fontWeight: 700, cursor: "pointer" }}
                         >
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <rect x="3" y="7" width="18" height="13" rx="2" /><circle cx="12" cy="13.5" r="3.5" /><path d="M8 7l1.5-2h5L16 7" />

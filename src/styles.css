@@ -1207,13 +1207,13 @@ td .strong { font-weight: 700; color: var(--cream); }
 td .dim { color: var(--muted); font-size: 12px; }
 
 /* Src badges */
-.src { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 0; white-space: nowrap; }
-.src i { width: 7px; height: 7px; border-radius: 0; }
-.src.web { background: rgba(63,156,126,0.12); color: var(--amber-2); }
+.src { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.src i { width: 7px; height: 7px; border-radius: 50%; }
+.src.web { color: var(--amber-2); }
 .src.web i { background: var(--amber); }
-.src.lzb { background: var(--lazada-bg); color: color-mix(in srgb, var(--lazada) 55%, var(--cream)); }
+.src.lzb { color: color-mix(in srgb, var(--lazada) 55%, var(--cream)); }
 .src.lzb i { background: var(--lazada); }
-.src.spb { background: var(--shopee-bg); color: color-mix(in srgb, var(--shopee) 55%, var(--cream)); }
+.src.spb { color: color-mix(in srgb, var(--shopee) 55%, var(--cream)); }
 .src.spb i { background: var(--shopee); }
 
 .zone { font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 0; background: var(--surface-3); color: var(--cream-dim); border: 1px solid var(--line); }
