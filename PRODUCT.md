@@ -27,11 +27,12 @@ production-grade product thinking and craft, not "student demo."
 
 Not a generic admin-dashboard template with a wine skin — the claim it stakes (per its own
 `docs/superpowers/specs` history) is a *bespoke, restrained luxury-operations console*: a
-distinct hairline/typographic structural language (no card-and-shadow SaaS scaffolding), a
-tightly budgeted accent color used in exactly a few high-value roles rather than decorating
-everything, and copy/domain vocabulary specific to the wine trade. A neighboring
-electronics-or-cosmetics ops dashboard could not truthfully reuse this composition unchanged —
-though the current build only partially delivers on that claim (see Evidence on Hand).
+distinct structural language (no card-and-shadow SaaS scaffolding, no hairline-boxed grids —
+depth from background elevation and spacing as of v3.1.0), a tightly budgeted accent color used
+in exactly a few high-value roles rather than decorating everything, and copy/domain vocabulary
+specific to the wine trade. A neighboring electronics-or-cosmetics ops dashboard could not
+truthfully reuse this composition unchanged — though the current build only partially delivers
+on that claim (see Evidence on Hand).
 
 ## Operating Context
 
@@ -54,10 +55,11 @@ though the current build only partially delivers on that claim (see Evidence on 
 ## Brand Commitments
 
 - Name is fixed: **Maison Reserve**. Not open for reconsideration in this rebrand.
-- Typography is a confirmed, carried-forward commitment across two prior redesigns: Fraunces
-  (display/serif), Public Sans (UI/body), JetBrains Mono (SKUs/timestamps/tabular data) —
-  explicitly re-affirmed as recently as the approved Dark Luxury Ops spec, which rejected an
-  alternate suggestion (Fira Code/Fira Sans) as generic and identity-erasing.
+- Typography as of v3.1.0 (2026-08-07): Public Sans carries every role (headings, card titles,
+  KPI/metric digits with `tabular-nums`), JetBrains Mono stays for SKUs/timestamps/tabular data.
+  Fraunces (the prior editorial-serif display face, carried across two earlier redesigns) was
+  retired as decorative rather than functional. Fira Code/Fira Sans remain rejected as generic
+  and identity-erasing — that earlier call still stands even though Fraunces itself is gone.
 - `lucide-react` icons stay; no emoji icons, no icon-set change.
 
 ## Evidence on Hand

@@ -1,4 +1,9 @@
-<!-- SEED: established with the user via a prior spec process (docs/superpowers/specs/2026-07-24-dark-luxury-ops-redesign-design.md, status Approved, v3.0.0 target) before implementation. Re-run /impeccable document once src/styles.css is actually rewritten to capture real settled tokens. -->
+<!-- v3.0.0 established via docs/superpowers/specs/2026-07-24-dark-luxury-ops-redesign-design.md.
+     v3.1.0 (2026-08-07): retired Fraunces (serif) in favor of a single Public Sans system with
+     tabular-nums on digits, retired the nav dotted-leader/index-number convention, and dropped
+     hairline borders from card/grid/metric surfaces in favor of background elevation + spacing.
+     Directly edited in src/styles.css — re-run /impeccable document to re-sync token values if
+     they drift further. -->
 
 ---
 name: Maison Reserve
@@ -24,7 +29,7 @@ colors:
   blue: "#7C89A6"
 typography:
   display:
-    fontFamily: "Fraunces, Georgia, 'Times New Roman', serif"
+    fontFamily: "Public Sans, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
   body:
     fontFamily: "Public Sans, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
   label:
@@ -52,11 +57,19 @@ a glance, which this project's priority calls for over any other consideration.
 Confirmed visual rejections: no card/shadow/pill component scaffolding (rejected as generic
 templated-SaaS after a live-preview review), no glassmorphism/backdrop-filter blur (performance
 and contrast risk on a data-dense tool), no gold-and-burgundy liquor-store palette, no violet/
-plum accent, no Fira Code/Fira Sans typography (rejected as generic-technical-dashboard,
-erasing the boutique identity Fraunces/Public Sans already established).
+plum accent, no Fira Code/Fira Sans typography (rejected as generic-technical-dashboard).
+
+**v3.1.0 revision:** the editorial-serif display face (Fraunces) and the nav dotted-leader/
+index-number convention were retired — both read as decorative rather than functional once
+audited against a stricter "no ornament without a job" bar. Public Sans now carries every role
+(headings, card titles, KPI/metric digits) with `font-variant-numeric: tabular-nums` on numeric
+displays for stable alignment. Card, grid-cell and metric-tile surfaces dropped their hairline
+borders in the same pass — elevation now comes from background contrast and spacing alone;
+hairlines remain only as functional dividers (tables, forms, framing devices), not as a
+decorative structural device.
 
 **Key Characteristics:**
-- Hairline rules and typography carry hierarchy — not boxes and shadows
+- Depth from background elevation and spacing, not boxes, shadows, or hairline dividers
 - Claret is a genuinely rare accent (4 defined roles only), verdigris does the everyday work
 - Light mode ("Daylight Cellar") is a full companion theme, not an afterthought
 - Ambient motion (slow canvas drift, live-data flash pulses) signals the product's real-time
@@ -83,10 +96,12 @@ pale paper).
 - **Cream** (`#EBEDE9` dark / `#202422` light): high-contrast text and the dedicated
   `:focus-visible` outline color on every interactive element — deliberately never claret, so a
   focus ring firing on every tab-stop doesn't blow the four-role claret budget.
-- **Surface steps** (`--surface` → `--surface-2` → `--surface-3`): stepped luminance is how
-  depth is conveyed instead of box-shadow on content.
-- **Line** (`#454C58` dark / `#D2D5CC` light): hairline dividers and borders, the primary
-  structural device.
+- **Surface steps** (`--surface` → `--surface-2` → `--surface-3`): stepped luminance is the
+  primary way depth is conveyed — instead of box-shadow *and*, as of v3.1.0, instead of hairline
+  borders on card/grid/metric surfaces too.
+- **Line** (`#454C58` dark / `#D2D5CC` light): reserved for functional dividers only — table
+  rows, form fields, framing devices (modals/dropdowns/toasts). No longer used to outline card,
+  grid-cell, or metric-tile surfaces.
 - **Muted** (`#888C90` dark / `#6C716A` light): secondary/metadata text.
 
 ### Signal colors (status, not brand)
@@ -109,16 +124,18 @@ line.
 
 ## Typography
 
-**Display Font:** Fraunces (with Georgia, Times New Roman fallback)
-**Body Font:** Public Sans (with system-ui fallback)
+**Display/Body Font:** Public Sans (with system-ui fallback) — one sans system for everything,
+as of v3.1.0. Fraunces (editorial serif) was retired: it read as decoration rather than a
+functional signal once audited, and its removal also let numeric displays go tabular.
 **Label/Mono Font:** JetBrains Mono (SKUs, timestamps, tabular data)
 
-**Character:** An editorial serif display paired with a clean UI sans and a technical mono for
-data — boutique-wine-cellar identity, not generic-technical-dashboard. This pairing is a
-confirmed brand commitment carried across two prior redesigns; not open for reconsideration.
+**Character:** A clean, unified UI sans with a technical mono for data. Hierarchy now comes
+from weight, size and color, not a second typeface.
 
 ### Hierarchy
-- **Display** (Fraunces): large serif numerals for KPI hero metrics, headings.
+- **Headings & KPI/metric digits** (Public Sans): weight and size carry hierarchy where Fraunces
+  used to. Any selector displaying a number gets `font-variant-numeric: tabular-nums` so digits
+  don't jitter in width as they change.
 - **Label** (JetBrains Mono): SKUs, timestamps, tabular/numeric data, small-caps category tags.
 - **Body** (Public Sans): everything else — UI chrome, copy, labels.
 
@@ -131,10 +148,12 @@ their order) stays as-is; only the visual system carrying that composition chang
 ## Elevation & Depth
 
 **The Stepped-Luminance Rule.** No card-and-shadow elevation for regular page content. Depth
-comes from `--surface` → `--surface-2` → `--surface-3` luminance steps and hairline borders
-(`--line`), never `box-shadow` on individual components. The one exception: framing devices
-that are genuinely elevated above content — modals, dropdowns, toasts — keep a real drop
-shadow, because they actually float.
+comes from `--surface` → `--surface-2` → `--surface-3` luminance steps and spacing alone —
+never `box-shadow`, and as of v3.1.0, never a hairline border either, on card/grid/metric
+surfaces. Hairlines survive only where they do real functional work: table rows, form-field
+edges, and the framing devices below. The one exception to "no shadow": framing devices that
+are genuinely elevated above content — modals, dropdowns, toasts — keep a real drop shadow,
+because they actually float.
 
 ### Shadow Vocabulary (exception cases only)
 - **Frame-level lift** (`box-shadow: 0 4px 12px rgba(0,0,0,.55), 0 32px 64px -18px rgba(0,0,0,.7)`
@@ -162,11 +181,12 @@ set that read as a stock SaaS-dashboard template regardless of its custom colors
 
 ### Navigation (Rail)
 - Each item: `lucide-react` icon (kept for scannability — dropping icons was an earlier-draft
-  oversight, not a decision) + label + dotted leader line + claret-colored index number,
-  **active item only**. Not a rounded card with a left accent bar — a menu/table-of-contents
-  convention, since nav items are already a real ordered list of sections.
+  oversight, not a decision) + label. **v3.1.0:** the dotted leader line and claret-colored
+  index number were removed — audited as decoration, not information (nav items are a fixed,
+  memorized list; a running index number didn't help wayfinding). The active-nav indicator (one
+  of pine's four budgeted roles) now colors the icon+label directly instead of the index number.
 - **Nav badges** (pending/unread counts): small bold numeral in `--orange`, directly after the
-  label, before the leader line. Not a filled pill.
+  label. Not a filled pill.
 
 ### Status indicators
 Colored word + small dot. Never a pill/badge background fill.
@@ -175,13 +195,13 @@ Colored word + small dot. Never a pill/badge background fill.
 Small-caps mono label with a colored underline. Never a pill.
 
 ### KPI hero metrics
-Large serif numeral (Fraunces) + a short gradient hairline rule beneath it (`--claret-deep` →
-transparent). Not a boxed stat card.
+Large sans numeral (Public Sans, `tabular-nums`) + a short gradient hairline rule beneath it
+(`--claret-deep` → transparent). Not a boxed stat card — no border, background-elevated only.
 
 ### Loyalty tier list
-One ledger row divided by hairlines (`border-left: 1px solid --line` between columns), not five
-boxed cards. Top tier marked by a 2px `--claret` rule across just that column — part of the
-four-role claret budget — not a gradient-filled box.
+Flat elevated rows with real spacing between them (v3.1.0: previously hairline-divided within
+one bordered ledger). Top tier marked by a 2px `--claret` rule across just that column — part
+of the four-role claret budget — not a gradient-filled box.
 
 ## Do's and Don'ts
 
@@ -189,7 +209,9 @@ four-role claret budget — not a gradient-filled box.
 - **Do** budget claret to exactly its four defined roles; every other legacy accent usage
   migrates to verdigris or a neutral during implementation.
 - **Do** use `outline: 2px solid var(--cream)` on every `:focus-visible` state, unconditionally.
-- **Do** convey depth via stepped surface luminance and hairlines, never box-shadow on content.
+- **Do** convey depth via stepped surface luminance and spacing, never box-shadow or a hairline
+  border on card/grid/metric surfaces.
+- **Do** apply `font-variant-numeric: tabular-nums` to any selector that displays a number.
 - **Do** keep icons (`lucide-react`) on every nav item.
 - **Do** apply `prefers-reduced-motion: reduce` to disable ambient drift/pulse animation (live
   data updates still happen, just without the flash).
@@ -197,10 +219,10 @@ four-role claret budget — not a gradient-filled box.
 ### Don't:
 - **Don't** use claret outside its four audited roles — not borders, not hover states, not
   links, not focus rings, not brand chrome/monogram treatments.
-- **Don't** use card-and-shadow elevation, rounded-lg shapes, or pill/badge backgrounds
-  anywhere in the product.
+- **Don't** use card-and-shadow elevation, hairline borders on card/grid/metric surfaces,
+  rounded-lg shapes, or pill/badge backgrounds anywhere in the product.
 - **Don't** use `backdrop-filter` blur or glassmorphism.
 - **Don't** use overshoot/`back.out` easing on table-row or list animations — plain opacity
   fade on load only.
-- **Don't** substitute Fira Code/Fira Sans or any other typography for the confirmed
-  Fraunces/Public Sans/JetBrains Mono pairing.
+- **Don't** reintroduce Fraunces, a nav dotted-leader/index convention, or Fira Code/Fira Sans —
+  all three were evaluated and retired (v3.1.0 for the first two).
