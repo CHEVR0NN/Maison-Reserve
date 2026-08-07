@@ -1267,10 +1267,11 @@ td .dim { color: var(--muted); font-size: 12px; }
 .stop .addr { font-size: 12.5px; line-height: 1.35; text-align: left; }
 .stop .addr .o { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
 .stop .st { display: flex; align-items: center; gap: 7px; justify-self: end; }
-.ministat { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 0; white-space: nowrap; }
-.ministat.del { background: var(--green-bg); color: var(--green); }
-.ministat.enr { background: var(--orange-bg); color: var(--orange); }
-.ministat.pen { background: var(--surface-3); color: var(--muted); }
+.ministat { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 700; white-space: nowrap; }
+.ministat::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.ministat.del { color: var(--green); }
+.ministat.enr { color: var(--orange); }
+.ministat.pen { color: var(--muted); }
 .podok { width: 16px; height: 16px; opacity: 0.85; }
 
 .map-card { padding: 16px 18px 18px; position: sticky; top: 130px; }
