@@ -1,6 +1,6 @@
 # Maison Reserve
 
-**v3.1.0** · Command Center for Premium Retail Operations
+**v5.2.0** · Command Center for Premium Retail Operations
 
 A frontend-only portfolio demo: a full retail operations dashboard for a premium wine & spirits
 retailer — orders, inventory, delivery, loyalty, inbox, marketplace channels, and automation —
@@ -48,14 +48,15 @@ sidebar wipes local storage and reseeds from scratch at any time.
 
 ## Design
 
-"Twilight Cellar" — a dark-primary premium operations console for a wine & spirits retailer,
-closer to a cellar ledger than an admin panel. Cool graphite canvas, hairline rules and stepped
-surface luminance carry hierarchy instead of cards and shadows. Claret (a true Bordeaux red) is
-a genuinely rare accent budgeted to exactly four roles app-wide; verdigris (aged-copper patina)
-carries the rest of the UI's color needs. "Daylight Cellar" is the light-mode companion theme.
-Typeset in Fraunces (display/headings) and Public Sans (UI/body), with JetBrains Mono for SKUs,
-timestamps and tabular data. Tokens live in `src/styles.css` and are documented in
-[DESIGN.md](./DESIGN.md); product imagery is generated inline SVG art
+A modern SaaS operations console in the register of Linear and Vercel: zinc/slate dark canvas,
+hairline-bordered rounded cards, a collapsible sidebar, and a condensed KPI bar over a
+full-width data table with a collapsible auxiliary panel. Emerald marks live/positive status
+and primary actions; amber marks low-stock warnings. "Daylight Cellar" is the light-mode
+companion theme (toggle in the sidebar). Typeset in Public Sans (UI/body/headings) with
+JetBrains Mono for SKUs, timestamps and tabular data. Tokens are documented in
+[DESIGN.md](./DESIGN.md); styling is mid-migration from a single global stylesheet
+(`src/styles.css`) to Tailwind CSS utility classes (`src/tailwind.css`) — see CHANGELOG v5.0.0
+for which surfaces have moved. Product imagery is generated inline SVG art
 (`src/components/BottleArt.jsx`), not photography.
 
 ## Changelog

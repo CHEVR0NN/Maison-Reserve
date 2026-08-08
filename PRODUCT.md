@@ -25,14 +25,23 @@ production-grade product thinking and craft, not "student demo."
 
 ## Positioning
 
-Not a generic admin-dashboard template with a wine skin — the claim it stakes (per its own
-`docs/superpowers/specs` history) is a *bespoke, restrained luxury-operations console*: a
-distinct structural language (no card-and-shadow SaaS scaffolding, no hairline-boxed grids —
-depth from background elevation and spacing as of v3.1.0), a tightly budgeted accent color used
-in exactly a few high-value roles rather than decorating everything, and copy/domain vocabulary
-specific to the wine trade. A neighboring electronics-or-cosmetics ops dashboard could not
-truthfully reuse this composition unchanged — though the current build only partially delivers
-on that claim (see Evidence on Hand).
+**Revised 2026-08-07 (v5.0.0), explicit user override:** the bespoke-luxury-console claim below
+described v3.0–v4.1 and is retired. The product is now positioned as an *operator-grade SaaS
+console built to the craft standard of Linear and Vercel* — the differentiation claim shifts
+from "does not look like a category-standard SaaS dashboard" to "matches the polish bar of the
+best category-standard SaaS dashboards." Domain specificity (wine-trade copy, vocabulary, data
+shapes) still applies; structural distinctiveness from the SaaS-dashboard genre does not.
+
+<details>
+<summary>Prior positioning (v3.0–v4.1, superseded)</summary>
+
+Not a generic admin-dashboard template with a wine skin — the claim it staked (per its own
+`docs/superpowers/specs` history) was a *bespoke, restrained luxury-operations console*: a
+distinct structural language (no card-and-shadow SaaS scaffolding, no hairline-boxed grids),
+a tightly budgeted accent color, and copy/domain vocabulary specific to the wine trade. A
+neighboring electronics-or-cosmetics ops dashboard could not truthfully reuse this composition
+unchanged.
+</details>
 
 ## Operating Context
 
@@ -44,7 +53,11 @@ on that claim (see Evidence on Hand).
 
 ## Capabilities and Constraints
 
-- React 19 + Vite, no CSS framework, single global stylesheet (`src/styles.css`).
+- React 19 + Vite. As of v5.0.0, migrating from a single global stylesheet (`src/styles.css`)
+  to Tailwind CSS (v4, via `@tailwindcss/vite`) utility classes, in phases — new/rebuilt
+  surfaces (app shell, sidebar, Inventory, Command Center) are Tailwind-only; unmigrated pages
+  keep running on `src/styles.css` until their own migration pass. `styles.css` is not deleted
+  until every page is off it.
 - No backend, no real network calls beyond static assets (fonts, map tiles) — this constraint
   is permanent and not up for revisiting during a visual rebrand.
 - Existing shared component primitives exist (`src/components/ui/*`: Badge, Modal, Toast,
@@ -78,18 +91,63 @@ on that claim (see Evidence on Hand).
   primary buttons and muted text, a deceptive CTA that doesn't do what it says, a structural
   design-system fork (`cc-*` vs. the app's own shared components), and ~74 hardcoded hex values
   bypassing the token system. Full report: `.impeccable/critique/2026-07-24T22-40-20Z__src-pages-todaypage-jsx.md`.
+- **2026-08-07: full identity replacement, explicit user override.** Asked to redesign toward a
+  Linear/Vercel-style zinc/slate SaaS console — the same "card-and-shadow SaaS scaffolding"
+  direction v3.0/v4.1 evaluated and rejected as generic. Impeccable flagged the conflict against
+  this file's recorded history and offered three resolutions (full replace / keep structure only
+  swap palette / side-by-side comparison); user chose full replace. Recorded here rather than
+  silently overwritten so the rejection history stays legible — this is a deliberate reversal of
+  a considered prior call, not evidence the prior call was wrong.
+- **2026-08-08: v5.0.0 shipped with two real regressions and one systemic pattern problem,
+  caught by user review, fixed as v5.1.0.** Sidebar overflowed/scrolled on windows under ~700px
+  tall (rows and footer were taller than the old rail). A Tailwind arbitrary-value class with a
+  comma-separated gradient+color layer silently failed to compile, leaving the main canvas on
+  its light fallback in dark mode — near-white headings were landing on an accidentally-light
+  background, reading as invisible text. Separately, the user called the KPI bar/category
+  strip/channel cards "screaming AI-generated" — correctly: they were same-size bordered-card
+  grids, the exact pattern this project's own craft-floor guidance names as a genre default.
+  Replaced with a divided-container motif (see DESIGN.md v5.1.0). Lesson for future passes:
+  verify a new arbitrary-value Tailwind class actually appears in rendered computed styles, not
+  just that the source line looks right.
+
+- **2026-08-08: v5.2.0 density/craft pass on the Command Center**, from a detailed user brief
+  ("eliminate design artifacts that make it look like generic AI slop"). Three defects were only
+  visible in a rendered browser, not in the source diff, and all three had been shipping since
+  v5.0.0: user-agent `2px outset` button borders and `<ol>` decimal markers leaking into every
+  Tailwind surface (preflight is off during the migration and nothing reset them), and
+  `font-mono` resolving to the OS monospace stack because no `@theme` block ever bound the
+  project faces to Tailwind's font utilities. **Lesson, and it repeats v5.1.0's:** screenshot
+  the built page before claiming a visual change is done. Both regressions were invisible to
+  code review and obvious in the first screenshot.
+- **2026-08-08: the mock seed was producing self-contradicting metrics.** Order status had been
+  assigned by loop index while timestamps were assigned separately, so the two disagreed; and
+  all in-flight orders were forced into today while history spread over six days, making today
+  structurally 5–10× any prior day (the headline revenue delta read `+436%`). Status is now
+  derived from order age against the fulfilment clock, and every day is drawn from an identical
+  rolling window. Treat seeded demo data as a design surface: on a portfolio dashboard, numbers
+  that don't reconcile read as "generated" faster than any visual choice does.
+- **Standing note on the migration's visual split:** only the app shell, sidebar, Command
+  Center, and (partly) Inventory render from Tailwind + DESIGN.md v5.x tokens. Orders, Delivery,
+  Loyalty, Inbox, Marketplace, Automation, and both portals still render entirely from
+  `src/styles.css` on the older honey/cabernet token set, so they look like a different product.
+  This is the known phased-migration state, not drift — but it is the most visible unfinished
+  thing in the build and the obvious next scope.
 
 ## Product Principles
 
 1. Optimize for the portfolio read (craft signal to an evaluator), not for operational
    durability a real wine retailer would need — but the fiction must stay internally consistent.
-2. Restraint over decoration: a genuinely rare, budgeted accent beats an accent used everywhere.
-3. Domain specificity is structural, not just cosmetic — copy and color alone don't earn a
-   "bespoke luxury console" claim if the layout is interchangeable with any SaaS dashboard.
+2. **(Revised v5.0.0)** Craft parity over structural differentiation: the bar is now "as polished
+   as Linear/Vercel," not "a genuinely rare, budgeted accent that no SaaS dashboard would reuse."
+3. **(Revised v5.0.0)** Domain specificity now lives in copy, data shapes, and wine-trade
+   vocabulary rather than structural layout — the layout is intentionally in the SaaS-dashboard
+   idiom as of this revision.
 4. One design system, actually used as one — new work extends existing tokens/components
-   rather than forking parallel ones (this was the single largest gap the critique found).
-5. Name and typography are settled brand commitments; the accent palette and structural
-   language are what's actively being revised.
+   rather than forking parallel ones (this was the single largest gap the 2026-07-24 critique
+   found, and remains true independent of which visual world is current).
+5. Name and typography are settled brand commitments and were not revisited in v5.0.0; the
+   accent palette and structural language are versioned decisions — see DESIGN.md for the
+   current one and Evidence on Hand for the supersession record.
 
 ## Accessibility & Inclusion
 

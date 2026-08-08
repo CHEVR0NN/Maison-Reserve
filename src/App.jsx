@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { AppDataProvider, useAppData } from "./context/AppData.jsx";
 import { ToastProvider } from "./components/ui/ToastProvider.jsx";
-import Rail from "./components/ui/Rail.jsx";
+import Sidebar from "./components/ui/Sidebar.jsx";
 import LoginView from "./pages/LoginView.jsx";
 import TodayPage from "./pages/TodayPage.jsx";
 import OrdersPage from "./pages/OrdersPage.jsx";
@@ -30,23 +30,29 @@ function MainShell() {
   if (state.session.role !== "staff") return <LoginView />;
 
   return (
-    <div className="rail-shell">
-      <Rail
+    <div className="flex h-screen bg-zinc-50 dark:bg-zinc-950">
+      <Sidebar
         tab={tab} setTab={setTab} badges={badges}
         onResetDemo={actions.resetDemoData}
         theme={state.session.theme}
         onToggleTheme={actions.session.setTheme}
         onExitDemo={actions.session.exitDemo}
       />
-      <main className="rail-content">
-        {tab === "Today" && <TodayPage setTab={setTab} />}
-        {tab === "Orders" && <OrdersPage />}
-        {tab === "Inventory" && <InventoryPage />}
-        {tab === "Delivery" && <DeliveryPage />}
-        {tab === "Loyalty" && <LoyaltyPage />}
-        {tab === "Inbox" && <InboxPage />}
-        {tab === "Marketplace" && <MarketplacePage />}
-        {tab === "Automation" && <AutomationPage />}
+      <main className="relative flex-1 overflow-y-auto bg-zinc-50 dark:bg-zinc-950">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-[600px] dark:bg-[radial-gradient(ellipse_1200px_600px_at_20%_-10%,rgba(16,185,129,0.08),transparent_70%)]"
+        />
+        <div className="relative">
+          {tab === "Today" && <TodayPage setTab={setTab} />}
+          {tab === "Orders" && <OrdersPage />}
+          {tab === "Inventory" && <InventoryPage />}
+          {tab === "Delivery" && <DeliveryPage />}
+          {tab === "Loyalty" && <LoyaltyPage />}
+          {tab === "Inbox" && <InboxPage />}
+          {tab === "Marketplace" && <MarketplacePage />}
+          {tab === "Automation" && <AutomationPage />}
+        </div>
       </main>
     </div>
   );

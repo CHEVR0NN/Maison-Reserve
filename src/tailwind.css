@@ -1,0 +1,52 @@
+/* Tailwind utilities only — no preflight/base reset, so legacy styles.css
+   pages (not yet migrated, see Phase 2) keep rendering correctly alongside
+   Tailwind-built surfaces during the phased migration.
+
+   styles.css is pulled in through an explicit lower-priority @layer. CSS
+   cascade layers rank ABOVE specificity: an unlayered rule always beats a
+   layered one regardless of selector weight, so without this, styles.css's
+   bare element selectors (h1, input, button, ...) would silently win over
+   every Tailwind utility class on the same element. Declaring the layer
+   order up front makes `legacy` lose to `theme`/`utilities` on conflicts,
+   while pages that only use legacy classes are unaffected. */
+@layer reset, legacy, theme, utilities;
+@import "./styles.css" layer(legacy);
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
+
+/* Preflight is off (see above), so user-agent defaults still apply: every bare
+   <button> renders with `border: 2px outset ButtonBorder` and every <ol>/<ul>
+   keeps its marker. On Tailwind-built surfaces that surfaced as stray white
+   outlines around KPI segments and priority-action cards, and as "1. 2. 3."
+   numerals down the order-stage strip.
+
+   This lives in the LOWEST layer on purpose: styles.css (`legacy`) and every
+   Tailwind utility both outrank it, so unmigrated pages keep their own button
+   chrome and only surfaces that set nothing get the reset. */
+@layer reset {
+  button,
+  [type="button"],
+  [type="submit"],
+  [type="reset"] {
+    border: 0;
+    background-color: transparent;
+  }
+
+  ol,
+  ul {
+    list-style: none;
+  }
+}
+
+/* App toggles theme via document.body.dataset.theme (see App.jsx), not OS preference —
+   point Tailwind's dark: variant at that attribute instead of prefers-color-scheme. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Bind Tailwind's font utilities to the project's actual faces. Without this,
+   `font-mono` resolves to Tailwind's default ui-monospace stack rather than
+   JetBrains Mono, so mono-set figures silently rendered in the OS monospace
+   face instead of the brand one. Values mirror --sans/--mono in styles.css. */
+@theme {
+  --font-sans: "Public Sans", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+}

@@ -3,6 +3,10 @@ import { useAppData } from "../context/AppData.jsx";
 import { useToast } from "./ui/ToastProvider.jsx";
 import ConfirmDialog from "./ui/ConfirmDialog.jsx";
 import BottleArt from "./BottleArt.jsx";
+import KpiBar from "./ui/KpiBar.jsx";
+import { ActionBar, ActionSearch, ActionPrimary } from "./ui/ActionBar.jsx";
+import DataTable from "./ui/DataTable.jsx";
+import AuxPanel from "./ui/AuxPanel.jsx";
 
 const CATEGORIES = {
   "wine-champagne": { label: "Wine & Champagne", cls: "wine" },
@@ -40,37 +44,6 @@ function CatPill({ category }) {
   const cat = CATEGORIES[category];
   if (!cat) return null;
   return <span className={`inv-cat ${cat.cls}`}>{cat.label}</span>;
-}
-
-function CategoryStrip({ inventory }) {
-  return (
-    <div className="inv-cat-strip">
-      {Object.entries(CATEGORIES).map(([key, meta]) => {
-        const items  = inventory.filter((p) => p.category === key);
-        const urgent = items.filter((p) => stockStatus(p) === "urgent").length;
-        const warn   = items.filter((p) => stockStatus(p) === "warn").length;
-        const units  = items.reduce((s, p) => s + p.stock, 0);
-        const avgVel = items.length
-          ? (items.reduce((s, p) => s + (p.velocity || 0), 0) / items.length).toFixed(1)
-          : "0";
-        return (
-          <div key={key} className={`inv-cat-card inv-cat-card-${meta.cls}`}>
-            <span className="inv-cat-card-label">{meta.label}</span>
-            <div className="inv-cat-card-stat">
-              <b>{units}</b>
-              <span>units in stock</span>
-            </div>
-            <div className="inv-cat-card-badges">
-              {urgent > 0 && <span className="inv-cat-alert urgent">{urgent} restock</span>}
-              {warn   > 0 && <span className="inv-cat-alert warn">{warn} low</span>}
-              {!urgent && !warn && <span className="inv-cat-alert ok">All healthy</span>}
-            </div>
-            <span className="inv-cat-card-vel">{avgVel} avg units / day</span>
-          </div>
-        );
-      })}
-    </div>
-  );
 }
 
 function FormField({ label, children, full }) {
@@ -271,207 +244,244 @@ export default function InventoryPanel() {
   // ── List ───────────────────────────────────────────────────────────────────
   if (view === "list") {
     function coverBar(c) {
-      if (c === null) return <span className="mono">&mdash;</span>;
+      if (c === null) return <span className="font-mono text-zinc-400">&mdash;</span>;
       const pct = Math.min(100, Math.round((c / 14) * 100));
-      const col = c < 2 ? "var(--red)" : c < 5 ? "var(--orange)" : "var(--green)";
+      const barClass = c < 2 ? "bg-red-500" : c < 5 ? "bg-amber-500" : "bg-emerald-500";
       return (
-        <>
-          <span className="barmini">
-            <i style={{ width: `${pct}%`, background: col }} />
+        <div className="flex items-center gap-2">
+          <span className="h-1.5 w-14 overflow-hidden rounded-full bg-zinc-100 dark:bg-zinc-800">
+            <i className={`block h-full ${barClass}`} style={{ width: `${pct}%` }} />
           </span>
-          <span className="mono">{c.toFixed(1)}d</span>
-        </>
+          <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">{c.toFixed(1)}d</span>
+        </div>
       );
     }
 
+    const totalStock = inventory.reduce((s, p) => s + p.stock, 0);
+    const lowStockCount = inventory.filter((p) => stockStatus(p) !== "healthy").length;
+    const avgDailyBurn = inventory.length
+      ? (inventory.reduce((s, p) => s + (p.velocity || 0), 0) / inventory.length).toFixed(1)
+      : "0.0";
+
+    const kpiItems = [
+      { key: "total", label: "Total Stock", value: totalStock.toLocaleString(), sub: "units on hand" },
+      { key: "low", label: "Low Stock Alert", value: lowStockCount, tone: lowStockCount > 0 ? "amber" : "emerald", sub: "SKUs need attention" },
+      { key: "restocks", label: "Active Restocks", value: restockCount, tone: restockCount > 0 ? "red" : "emerald", sub: "critical, reorder now" },
+      { key: "burn", label: "Avg Daily Burn", value: avgDailyBurn, sub: "units / day / SKU" },
+    ];
+
     return (
-      <article className="panel active" id="inventory">
-        <div className="panel-head">
-          <div>
-            <h2>Stock Ledger</h2>
-            <div className="sub">One pool serves all storefronts &middot; deductions post automatically as orders are delivered</div>
-          </div>
-          <div className="right-note">
-            <b>{restockCount} critical / low</b><br />
-            everything else in cover
-          </div>
+      <article className="p-6 space-y-5">
+        <div>
+          <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-slate-50">Stock Ledger</h2>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            One pool serves all storefronts &middot; deductions post automatically as orders are delivered
+          </p>
         </div>
 
-        <CategoryStrip inventory={inventory} />
+        <KpiBar items={kpiItems} />
 
-        <div className="inv-grid">
-          <div>
-            <div className="toolbar" style={{ marginBottom: "16px" }}>
-              <div className="search">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="11" cy="11" r="7" />
-                  <path d="M21 21l-4-4" />
-                </svg>
-                <input
-                  placeholder="Search SKU or product..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
+        <div className="grid grid-cols-2 divide-x divide-y divide-zinc-200 overflow-hidden rounded-lg border border-zinc-200 dark:divide-zinc-800 dark:border-zinc-800 sm:grid-cols-4 lg:grid-cols-8 lg:divide-y-0">
+          {Object.entries(CATEGORIES).map(([key, meta]) => {
+            const items = inventory.filter((p) => p.category === key);
+            const urgent = items.filter((p) => stockStatus(p) === "urgent").length;
+            const warn = items.filter((p) => stockStatus(p) === "warn").length;
+            const units = items.reduce((s, p) => s + p.stock, 0);
+            return (
+              <div key={key} className="bg-white p-2.5 dark:bg-zinc-900">
+                <div className="truncate text-[11px] font-medium text-zinc-500 dark:text-zinc-400">{meta.label}</div>
+                <div className="mt-1 text-base font-semibold tabular-nums text-zinc-900 dark:text-slate-50">{units}</div>
+                <div className="mt-0.5 text-[11px]">
+                  {urgent > 0 ? (
+                    <span className="text-red-500 dark:text-red-400">{urgent} restock</span>
+                  ) : warn > 0 ? (
+                    <span className="text-amber-500 dark:text-amber-400">{warn} low</span>
+                  ) : (
+                    <span className="text-emerald-500 dark:text-emerald-400">All healthy</span>
+                  )}
+                </div>
               </div>
-              <div className="chip-row">
-                <select className="fchip" style={{ background: "var(--surface)", border: "1px solid var(--line)" }} value={filterCat} onChange={(e) => setFilterCat(e.target.value)}>
-                  <option value="">All categories</option>
-                  {Object.entries(CATEGORIES).map(([k, v]) => (
-                    <option key={k} value={k}>{v.label}</option>
-                  ))}
-                </select>
-                <select
-                  className="fchip"
-                  style={{ background: "var(--surface)", border: "1px solid var(--line)" }}
-                  value={`${sortBy}:${sortAsc ? "asc" : "desc"}`}
-                  onChange={(e) => {
-                    const [field, dir] = e.target.value.split(":");
-                    setSortBy(field);
-                    setSortAsc(dir === "asc");
-                  }}
-                >
-                  {SORT_OPTS.flatMap((o) => o.value === "name"
-                    ? [
-                      <option key="name:asc" value="name:asc">Name: A to Z</option>,
-                      <option key="name:desc" value="name:desc">Name: Z to A</option>,
-                    ]
-                    : [
-                      <option key={`${o.value}:desc`} value={`${o.value}:desc`}>{o.label}: High to low</option>,
-                      <option key={`${o.value}:asc`} value={`${o.value}:asc`}>{o.label}: Low to high</option>,
-                    ])}
-                </select>
-                <details className="inv-actions-menu" ref={actionsMenuRef}>
-                  <summary className="fchip">Actions</summary>
-                  <div className="inv-actions-menu-list">
-                    <button type="button" onClick={() => setView("bulk-upload")}>Bulk upload</button>
-                    <button type="button" onClick={() => { setAdjustMsg(null); setView("stock-adjust"); }}>Stock adjustment</button>
-                    <button type="button" onClick={() => { handleExport(); closeActionsMenu(); }}>Export CSV</button>
-                  </div>
-                </details>
-                <button className="btn primary" onClick={() => { setEditItem(null); setView("add"); }}>
-                  + Add Product
-                </button>
-              </div>
+            );
+          })}
+        </div>
+
+        <ActionBar>
+          <ActionSearch value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search SKU or product..." />
+          <select
+            className="h-9 rounded-md border border-zinc-200 bg-white px-2.5 text-sm text-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:focus-visible:outline-emerald-400"
+            value={filterCat}
+            onChange={(e) => setFilterCat(e.target.value)}
+          >
+            <option value="">All categories</option>
+            {Object.entries(CATEGORIES).map(([k, v]) => (
+              <option key={k} value={k}>{v.label}</option>
+            ))}
+          </select>
+          <select
+            className="h-9 rounded-md border border-zinc-200 bg-white px-2.5 text-sm text-zinc-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:focus-visible:outline-emerald-400"
+            value={`${sortBy}:${sortAsc ? "asc" : "desc"}`}
+            onChange={(e) => {
+              const [field, dir] = e.target.value.split(":");
+              setSortBy(field);
+              setSortAsc(dir === "asc");
+            }}
+          >
+            {SORT_OPTS.flatMap((o) => o.value === "name"
+              ? [
+                <option key="name:asc" value="name:asc">Name: A to Z</option>,
+                <option key="name:desc" value="name:desc">Name: Z to A</option>,
+              ]
+              : [
+                <option key={`${o.value}:desc`} value={`${o.value}:desc`}>{o.label}: High to low</option>,
+                <option key={`${o.value}:asc`} value={`${o.value}:asc`}>{o.label}: Low to high</option>,
+              ])}
+          </select>
+          <details ref={actionsMenuRef} className="relative">
+            <summary className="flex h-9 cursor-pointer list-none items-center rounded-md border border-zinc-200 bg-white px-3 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800">
+              Actions
+            </summary>
+            <div className="absolute right-0 z-10 mt-1.5 w-44 rounded-md border border-zinc-200 bg-white p-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-900">
+              <button type="button" className="block w-full rounded border-0 bg-transparent px-2.5 py-1.5 text-left text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800" onClick={() => setView("bulk-upload")}>Bulk upload</button>
+              <button type="button" className="block w-full rounded border-0 bg-transparent px-2.5 py-1.5 text-left text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800" onClick={() => { setAdjustMsg(null); setView("stock-adjust"); }}>Stock adjustment</button>
+              <button type="button" className="block w-full rounded border-0 bg-transparent px-2.5 py-1.5 text-left text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800" onClick={() => { handleExport(); closeActionsMenu(); }}>Export CSV</button>
             </div>
+          </details>
+          <ActionPrimary onClick={() => { setEditItem(null); setView("add"); }}>
+            + Add Product
+          </ActionPrimary>
+        </ActionBar>
 
-            <div className="tbl-wrap inv-tbl-wrap">
-              <table>
-                <thead>
+        <div className="flex items-start gap-4">
+          <div className="min-w-0 flex-1">
+            <DataTable>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Category</th>
+                  <th>On Hand</th>
+                  <th>Reserved</th>
+                  <th>Reorder</th>
+                  <th>Days Cover</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {displayed.length === 0 && (
                   <tr>
-                    <th>Product</th>
-                    <th>Category</th>
-                    <th>On Hand</th>
-                    <th>Reserved</th>
-                    <th>Reorder</th>
-                    <th>Days Cover</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <td colSpan={8} className="py-10 text-center text-zinc-500 dark:text-zinc-400">
+                      No products match your filters
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {displayed.length === 0 && (
-                    <tr>
-                      <td colSpan={8} style={{ textAlign: "center", padding: "40px 0", color: "var(--muted)" }}>
-                        No products match your filters
+                )}
+                {displayed.map((item) => {
+                  const status = stockStatus(item);
+                  const isUrgent = status === "urgent";
+                  const isWarn = status === "warn";
+                  const statusDotClass = isUrgent ? "bg-red-500" : isWarn ? "bg-amber-500" : "bg-emerald-500";
+                  const statusTextClass = isUrgent ? "text-red-500 dark:text-red-400" : isWarn ? "text-amber-500 dark:text-amber-400" : "text-emerald-500 dark:text-emerald-400";
+                  const statusText = isUrgent ? "Critical" : isWarn ? "Low" : "OK";
+                  const reserved = reservedBySku.get(item.sku) || 0;
+                  const days = daysLeft(item);
+
+                  return (
+                    <tr key={item.id}>
+                      <td>
+                        <div className="flex items-center gap-2.5">
+                          <BottleArt category={item.category} seed={item.sku} size={36} />
+                          <div className="min-w-0">
+                            <div className="truncate font-medium text-zinc-900 dark:text-slate-50">{item.name}</div>
+                            <div className="text-xs text-zinc-500 dark:text-zinc-400">{item.sku}</div>
+                          </div>
+                        </div>
+                      </td>
+                      <td><CatPill category={item.category} /></td>
+                      <td>
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            className="flex h-6 w-6 items-center justify-center rounded border border-zinc-200 text-zinc-500 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                            onClick={() => actions.inventory.adjustStock(item.id, -1)}
+                          >
+                            &minus;
+                          </button>
+                          <span className="font-mono tabular-nums text-zinc-900 dark:text-slate-50">{item.stock}</span>
+                          <button
+                            className="flex h-6 w-6 items-center justify-center rounded border border-zinc-200 text-zinc-500 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                            onClick={() => actions.inventory.adjustStock(item.id, 1)}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </td>
+                      <td className="font-mono tabular-nums text-zinc-500 dark:text-zinc-400">{reserved}</td>
+                      <td className="font-mono tabular-nums text-zinc-500 dark:text-zinc-400">{item.minStock}</td>
+                      <td>{coverBar(days)}</td>
+                      <td>
+                        <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${statusTextClass}`}>
+                          <span className={`h-1.5 w-1.5 rounded-full ${statusDotClass}`} />
+                          {statusText}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="flex gap-1.5">
+                          <button
+                            className="rounded border border-zinc-200 px-2 py-1 text-xs font-medium text-zinc-600 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                            onClick={() => { setEditItem(item); setView("edit"); }}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="rounded border border-red-200 px-2 py-1 text-xs font-medium text-red-500 hover:bg-red-50 dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-950/30"
+                            onClick={() => setDeleteTarget(item)}
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
-                  )}
-                  {displayed.map((item) => {
-                    const status = stockStatus(item);
-                    const isUrgent = status === "urgent";
-                    const isWarn = status === "warn";
-                    const pillClass = isUrgent ? "crit" : isWarn ? "low" : "ok";
-                    const pillText = isUrgent ? "CRITICAL" : isWarn ? "LOW" : "OK";
-                    const reserved = reservedBySku.get(item.sku) || 0;
-                    const days = daysLeft(item);
-
-                    return (
-                      <tr key={item.id}>
-                        <td>
-                          <div className="inv-prod">
-                            <BottleArt category={item.category} seed={item.sku} size={36} />
-                            <div className="inv-prod-info">
-                              <b>{item.name}</b>
-                              <span>{item.sku}</span>
-                            </div>
-                          </div>
-                        </td>
-                        <td><CatPill category={item.category} /></td>
-                        <td>
-                          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                            <button className="inv-adj" onClick={() => actions.inventory.adjustStock(item.id, -1)}>&minus;</button>
-                            <span className="mono">{item.stock}</span>
-                            <button className="inv-adj" onClick={() => actions.inventory.adjustStock(item.id, 1)}>+</button>
-                          </div>
-                        </td>
-                        <td className="mono dim">{reserved}</td>
-                        <td className="mono dim">{item.minStock}</td>
-                        <td>{coverBar(days)}</td>
-                        <td>
-                          <span className={`pill ${pillClass}`}>{pillText}</span>
-                        </td>
-                        <td>
-                          <div style={{ display: "flex", gap: "8px" }}>
-                            <button
-                              className="fchip"
-                              style={{ padding: "4px 8px", fontSize: "11px" }}
-                              onClick={() => { setEditItem(item); setView("edit"); }}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              className="fchip"
-                              style={{ padding: "4px 8px", fontSize: "11px", borderColor: "var(--red)" }}
-                              onClick={() => setDeleteTarget(item)}
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div>
-            <div className="card ledger-feed">
-              <div className="lf-head">
-                <div className="hl">Auto-Deduction Log</div>
-                <div className="live"><span className="dot g"></span>LIVE</div>
-              </div>
-              <div>
-                {movements.length === 0 && (
-                  <div className="lf-row"><div className="lf-main"><span className="so">No automatic deductions yet today</span></div></div>
-                )}
-                {movements.map((m, idx) => {
-                  const t = new Date(m.at).toLocaleTimeString("en-GB", { timeZone: "Asia/Singapore", hour: "2-digit", minute: "2-digit" });
-                  return (
-                    <div className="lf-row" key={idx}>
-                      <div className="lf-time">{t}</div>
-                      <div className="lf-main">
-                        <b>{m.sku}</b> <span className="so">&middot; delivered via {m.source} &middot; {m.name}</span>
-                      </div>
-                      <div className="lf-delta minus">-{m.qty}</div>
-                    </div>
                   );
                 })}
-              </div>
+              </tbody>
+            </DataTable>
+          </div>
+
+          <AuxPanel title="Auto-Deduction Log" storageKey="inventory-auxpanel-collapsed">
+            <div className="mb-3 flex items-center gap-1.5 text-xs font-medium text-emerald-500 dark:text-emerald-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              LIVE
+            </div>
+            <div className="space-y-3">
+              {movements.length === 0 && (
+                <div className="text-sm text-zinc-500 dark:text-zinc-400">No automatic deductions yet today</div>
+              )}
+              {movements.map((m, idx) => {
+                const t = new Date(m.at).toLocaleTimeString("en-GB", { timeZone: "Asia/Singapore", hour: "2-digit", minute: "2-digit" });
+                return (
+                  <div key={idx} className="flex items-start justify-between gap-2 text-sm">
+                    <div className="min-w-0">
+                      <div className="font-mono text-xs text-zinc-400">{t}</div>
+                      <div className="truncate text-zinc-700 dark:text-zinc-300">
+                        <b className="text-zinc-900 dark:text-slate-50">{m.sku}</b>{" "}
+                        <span className="text-zinc-500 dark:text-zinc-400">&middot; delivered via {m.source} &middot; {m.name}</span>
+                      </div>
+                    </div>
+                    <div className="shrink-0 font-mono text-red-500 dark:text-red-400">-{m.qty}</div>
+                  </div>
+                );
+              })}
             </div>
 
-            <div className="callout">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <div className="mt-4 flex gap-2 rounded-md border border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-600 dark:border-zinc-800 dark:bg-zinc-800/50 dark:text-zinc-400">
+              <svg className="mt-0.5 h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="9" />
                 <path d="M12 8v5M12 16h.01" />
               </svg>
-              <div className="ct">
-                Incoming stock from supplier invoices is entered <b>once</b>. Everything downstream — reservations,
-                available counts and days-of-cover — updates <b>automatically</b> as orders move through the pipeline.
+              <div>
+                Incoming stock from supplier invoices is entered <b className="text-zinc-900 dark:text-slate-50">once</b>. Everything downstream — reservations,
+                available counts and days-of-cover — updates <b className="text-zinc-900 dark:text-slate-50">automatically</b> as orders move through the pipeline.
               </div>
             </div>
-          </div>
+          </AuxPanel>
         </div>
 
         <ConfirmDialog

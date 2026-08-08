@@ -2,6 +2,179 @@
 
 All notable changes to this project are recorded here.
 
+## v5.2.0 — 2026-08-08
+
+Density/craft pass on the Command Center, per user brief ("eliminate design artifacts that make
+it look like generic AI slop"), plus the two data-integrity bugs that brief surfaced.
+
+**Data integrity (`mock/orders.js`, rewritten)**
+
+- **Fixed: the revenue delta read `+436%` every afternoon.** The old seed forced all 22
+  non-delivered orders into today while spreading 29 delivered ones across six prior days, so
+  today was structurally 5–10× any other day. Orders are now drawn per day from an identical
+  rolling 13-hour trading window, with a gentle 5%/day growth trend; the delta lands in a
+  believable −13%…+5% band. The KPI also compares yesterday *to the same clock time* rather
+  than a part-day against a whole day.
+- **Fixed: order counts didn't reconcile with their own status breakdown.** The headline
+  counted cancelled orders; the sub-label didn't, so "26 orders — 1 completed, 22 in progress"
+  silently lost 3. Status is now *derived from order age* against the fulfilment clock rather
+  than assigned by loop index, so no order can read "placed 6 hours ago" while sitting in
+  Received, and the Orders KPI now states active/delivered/canceled covering the full total.
+- Volume raised to ~30 orders/day over 7 days (~210 total, 203KB of seed state). Average basket
+  is ~S$200, which is what this catalogue actually produces — see note below.
+
+**Design system**
+
+- **New `StatusBadge.jsx`** (`components/ui/`): compact `px-2 py-0.5` rounded-full badge with a
+  solid dot, in emerald/amber/red/neutral. **This reverses the No-Pill Rule** carried since
+  v4.1.0 — at these sizes the old "colored word + floating dot" read as stray colored text
+  rather than a bounded status object. Recorded in DESIGN.md v5.2.0, not silently changed.
+- **Sidebar active state** is now a surface highlight (`bg-zinc-800/60` dark, `bg-zinc-200/70`
+  light) plus a 2px emerald indicator, replacing full emerald text on the row — which competed
+  with the amber badge counts sitting beside it. Also reverses a v4.1.0 convention.
+- **Fixed: `font-mono` never resolved to JetBrains Mono.** No `@theme` block existed, so
+  Tailwind's `font-mono` fell back to the OS monospace stack. `--font-sans`/`--font-mono` are
+  now bound to the project faces, and mono is applied to figures only (KPI values, stage
+  counts, elapsed times, action metrics) — never to the prose around them.
+- **Fixed: user-agent styles leaked into every Tailwind surface.** Preflight is deliberately
+  off during the migration, so bare `<button>`s carried `border: 2px outset ButtonBorder` —
+  visible as stray white outlines around KPI segments and priority-action cards — and the
+  order-stage `<ol>` rendered "1. 2. 3. 4." down its own numerals. A minimal reset now sits in
+  a new lowest-priority `reset` cascade layer, below `legacy`, so `styles.css` and every
+  Tailwind utility still outrank it and unmigrated pages are untouched (verified against
+  Orders, Delivery, Loyalty).
+
+**Command Center (`TodayPage.jsx`)**
+
+- Split into named sub-components: `SectionHeading`, `ChannelRow`, `PriorityAction`,
+  `StageStrip`, `SecondaryLink`.
+- Removed the decorative "Maison Reserve" eyebrow above the `h1` (the sidebar already says it);
+  `h1` down to `text-xl`. Section headings are now `text-[11px]` uppercase trackers.
+- **Copy stripped of explainer voice:** deleted the "One stock pool, every storefront" and
+  "Today's order journey" section slogans, and replaced sentences like "Restock before these
+  labels sell out across every storefront" with the figure that actually matters
+  (`4 SKUs under reorder level`).
+- The bulky two-line "Attention Required / 1 channel need review" header banner is now a note
+  plus a compact badge.
+- Action CTAs use neutral secondary styling that brightens on hover, instead of emerald text
+  that clashed with the red/amber alert badge above it.
+- Channel-row sync metadata is hidden below `xl`, where the row has no width to spare — it was
+  crushing the order count to "18 ord…" at 1024px.
+
+**Note on average order value.** The brief asked to raise revenue to ~S$710/order as more
+"luxury-realistic." Left at ~S$200 deliberately: the catalogue runs from S$7.80 pilsner to
+S$295 cognac, so a S$710 basket would be a case purchase, not a typical mixed order. The
+absurd number was the *delta*, not the basket — that is what got fixed.
+
+Verified in a real browser at 1024/1280/1440 in both themes: no console errors, no horizontal
+overflow, focus rings intact, legacy pages unaffected.
+
+## v5.1.1 — 2026-08-08
+
+Real data visualization on the Command Center, per user request ("try line js or other forms of
+data representation") — the flat "Business Pulse" segmented bar wasn't actually charting
+anything, just showing stage proportions.
+
+- **New `TrendChart.jsx`** (`components/ui/`): a small emerald line/area chart built on the
+  project's existing `chart.js`/`react-chartjs-2` dependencies (already installed, previously
+  used only by an orphaned, unused `charts/TodayCharts.jsx` built for an older data schema —
+  left untouched, out of scope). Theme-aware (dark/light), matches DESIGN.md v5.1.0 tokens.
+- **Business Pulse now shows cumulative orders-placed-today by hour** as a real line/area chart,
+  replacing the flat stage-proportion bar. Stage counts (Received/Preparing/Shipping/Completed)
+  stay below it — still useful, just no longer duplicating what the bar showed.
+- Removed `stageToneClass` and the `tone` field on `stages` entries (both dead code once the
+  segmented bar was removed).
+- **Fixed: stale-seed root cause behind "I can't see the chart."** `AppData.jsx` reused any
+  persisted `localStorage` state whose version matched, regardless of *when* it was seeded —
+  so a browser carrying state seeded on 2026-08-07 would, on 2026-08-08, filter every "today"
+  view (Command Center KPIs, order journey, the new trend chart, revenue) against yesterday's
+  timestamps and silently render empty. `loadInitialState()` now also compares the persisted
+  seed's SG calendar day to today's and reseeds fresh on any mismatch — same trigger as
+  clicking "Reset Data," but automatic. Verified by forcing a stale `meta.seededAt` and
+  confirming reload reseeds with live data.
+
+## v5.1.0 — 2026-08-08
+
+Refinement pass on v5.0.0, driven directly by user review ("kinda better but the navbar is
+scrollable now and the colors are too stale. screaming ai generated in terms of visual hierarchy
+and organization"). Two real bugs and one systemic pattern problem, all fixed.
+
+- **Fixed: sidebar scrolled on shorter windows.** `Sidebar.jsx` nav rows were 36px and the
+  footer held five full-width labeled rows — taller than the old rail, overflowing on any
+  window under ~700px tall (a very ordinary laptop/browser-chrome height, not an edge case).
+  Nav rows are now 32px; the theme toggle, Reset Data, and Sign Out moved into a compact
+  icon-only toolbar row (`IconAction`), leaving only Driver Portal/Stock Portal as full rows.
+  Confirmed no scroll overflow down to a 650px-tall viewport.
+- **Fixed: near-invisible page headings.** The ambient canvas glow added in this pass used a
+  single Tailwind arbitrary-value class combining a gradient layer and a fallback color
+  (`dark:bg-[radial-gradient(...),#09090b]`) — Tailwind's class extractor failed to compile it,
+  so `<main>` silently stayed on its light `bg-zinc-50` fallback even in dark mode. Near-white
+  heading text landing on that accidental light background read as "the text disappeared."
+  Root-caused via computed-style diffing (an inline `color:red` override painted fine; the
+  class-based color did not, isolating the bug to the background, not the text). Fixed by
+  splitting the canvas into a plain `dark:bg-zinc-950` base plus a separate absolutely-positioned
+  overlay div carrying the (now single-layer) gradient — verified via computed
+  `backgroundColor` before/after, not just visual inspection.
+- **Fixed: "screaming AI-generated" visual hierarchy.** The KPI bar (4 cards), Inventory
+  category strip (8 cards), and Command Center channel list (3 cards) were each a grid of
+  same-size bordered icon/heading/stat cards — the exact "cards are the lazy container" pattern
+  this project's own design-review guidance names as a category default, not a designed choice.
+  Replaced with a single reusable divided-container motif:
+  - `KpiCard.jsx` retired; new `KpiBar.jsx` renders one bordered container with internal
+    `divide-x`/`divide-y` hairline segments instead of four separate cards. Used on both
+    Inventory and Command Center.
+  - Inventory's category strip converted to the same divided-grid treatment (no per-cell
+    border/radius).
+  - Command Center's channel cards converted to a `divide-y` list instead of a 3-up card grid.
+  - Priority-action items dropped a `border-left` accent (a banned design-review device: colored
+    borders above 1px on cards/list items) in favor of a tinted status dot.
+  - Page titles (`Stock Ledger`, `Operations Overview`) bumped from `text-lg` to `text-2xl
+    tracking-tight` for clearer top-of-hierarchy weight.
+  - Added a subtle single-layer ambient gradient behind Command Center/Inventory content in
+    dark mode (see bug fix above) — the one authored atmospheric touch, not per-card decoration.
+- `DESIGN.md` and `PRODUCT.md` updated to record the divided-container motif as this system's
+  actual device for repeated stats/lists, and to log both bugs and their root causes for future
+  reference (see PRODUCT.md § Evidence on Hand, 2026-08-08 entry).
+
+## v5.0.0 — 2026-08-07
+
+Full layout and visual-identity replacement, explicit user override of the prior "Twilight
+Cellar" system (see `PRODUCT.md` § Evidence on Hand and `DESIGN.md` for the record). Modern
+SaaS console in the register of Linear/Vercel: zinc/slate palette, hairline-bordered cards,
+collapsible sidebar, condensed KPI bar, and a collapsible auxiliary panel.
+
+- **Collapsible sidebar navigation.** `Rail.jsx` replaced by `src/components/ui/Sidebar.jsx`:
+  ~240px expanded (logo, section headers, icon+label nav, badge counts) / ~64px collapsed
+  (icon-only with accessible hover/focus tooltips). Collapsed state persists to `localStorage`
+  (`sidebar-collapsed`) via the previously-unused `useLocalStorageState` hook.
+- **New shared workspace primitives** (`src/components/ui/`): `KpiCard`, `ActionBar` (+
+  `ActionSearch`/`ActionGhost`/`ActionPrimary`), `DataTable`, `AuxPanel` (independently
+  collapsible right-hand panel, state persisted per instance).
+- **Inventory rebuilt onto the new primitives:** condensed 4-card KPI bar (Total Stock, Low
+  Stock Alert, Active Restocks, Avg Daily Burn), action bar (search + category/sort filters +
+  Actions menu + one primary "+ Add Product" CTA), full-width bordered data table, and the
+  Auto-Deduction Log moved into a collapsible `AuxPanel`. Add/Edit/Bulk-upload/Stock-adjust
+  sub-views were left on the legacy stylesheet for this pass (see Phase 2 below).
+- **Command Center (`TodayPage.jsx`) rebuilt onto the same primitives** as the second consumer
+  — proves `KpiCard`/`AuxPanel` generalize across pages. Priority Actions now lives in an
+  `AuxPanel`.
+- **Tailwind CSS (v4, `@tailwindcss/vite`) introduced**, phased migration off the single global
+  `src/styles.css`. `styles.css` is imported through an explicit lower-priority `@layer legacy`
+  in `src/tailwind.css` so Tailwind utilities reliably win on any selector overlap (CSS cascade
+  layers rank above specificity — an unlayered rule beats a layered one regardless of selector
+  weight, which is why this had to be explicit rather than relying on source order). Preflight
+  is intentionally omitted so pages not yet migrated keep rendering on the legacy stylesheet.
+  `styles.css` itself is unchanged and stays in place until every page is migrated.
+- **Design system fully superseded, not merged:** claret/verdigris, the four-role accent
+  budget, and the no-card/no-shadow/no-pill rules are retired in favor of a zinc/slate palette,
+  emerald (live/positive) and amber (low-stock/warning) accents, and hairline-bordered
+  rounded-lg cards throughout. Full rationale and token values in `DESIGN.md` v5.0.0;
+  positioning implications in `PRODUCT.md` § Positioning and § Evidence on Hand.
+- **Phase 2 (not in this pass):** migrate `OrdersPage`, `LoyaltyPage`, `DeliveryPage`,
+  `InboxPage`, `MarketplacePage`, `AutomationPage`, the Inventory add/edit/bulk-upload/
+  stock-adjust sub-views, and the category-tag color classes (`CatPill`) off `src/styles.css`;
+  only then does `styles.css` get deleted.
+
 ## v4.1.0 — 2026-08-07
 
 Design-system revision: retired the last two decorative holdovers the "AI slop" audits kept

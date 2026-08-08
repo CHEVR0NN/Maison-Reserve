@@ -6,12 +6,19 @@ import { nextId } from "../mock/ids.js";
 
 export const AppDataContext = createContext(null);
 
+const sgDateStr = (d) => { try { return new Date(d).toLocaleDateString("en-CA", { timeZone: "Asia/Singapore" }); } catch { return ""; } };
+
 function loadInitialState() {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed?.meta?.version === STATE_VERSION) return parsed;
+      // Only reuse a persisted seed from the same SG calendar day — every "today" view
+      // (Command Center KPIs, order journey, the trend chart) filters on the real current
+      // date, so a seed from a previous day silently reads as empty/stale rather than wrong.
+      if (parsed?.meta?.version === STATE_VERSION && sgDateStr(parsed.meta.seededAt) === sgDateStr(new Date())) {
+        return parsed;
+      }
     }
   } catch {
     // corrupt/unavailable localStorage — fall through to a fresh seed
