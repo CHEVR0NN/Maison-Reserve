@@ -184,7 +184,7 @@ export default function OrdersPage() {
                   </td>
                   <td><span className="dim" style={{ fontSize: "11.5px", whiteSpace: "nowrap" }}>{fmtDate(o.placedAt)}</span></td>
                   <td><span className="zone">{o.zone}</span></td>
-                  <td><span className="mono" style={{ color: "var(--amber-2)" }}>{SGD(o.total)}</span></td>
+                  <td><span className="mono" style={{ color: "var(--ink)" }}>{SGD(o.total)}</span></td>
                   <td>{pipeDots(STATUS_TO_STAGE[o.status])}</td>
                   <td>
                     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>

@@ -33,7 +33,15 @@
      fixed three build-level defects the brief exposed: `font-mono` never resolved to JetBrains
      Mono (no @theme block existed), user-agent button borders and list markers leaked into
      every Tailwind surface (preflight is off), and the mock seed produced Command Center
-     metrics that contradicted each other. See CHANGELOG v5.2.0. -->
+     metrics that contradicted each other. See CHANGELOG v5.2.0.
+     v5.3.0 (2026-08-08): the legacy stylesheet's own token blocks — which every unmigrated page
+     still reads from — were repainted from the v3.0.0 "Twilight Cellar" warm brown/cognac
+     values to this system's zinc/emerald. The app had been shipping two live palettes at once.
+     Color only: the legacy pages keep their hairline/no-card/square-corner structure, so the
+     two halves still differ structurally by design until they migrate. `--accent` was also
+     remapped from amber to emerald (all 20 call sites are primary affordances, not warnings),
+     and selection states across chips, tabs, toggles and rows moved off amber for the same
+     reason the sidebar did in v5.2.0. See CHANGELOG v5.3.0. -->
 
 ---
 name: Maison Reserve
@@ -247,6 +255,13 @@ of the sidebar's), houses the Auto-Deduction Log feed.
 ## Do's and Don'ts
 
 ### Do:
+- **Do** express every color through a theme token, and pass it through a real CSS declaration
+  (v5.3.0). A literal hex in a component is theme-blind by construction: it renders on one
+  canvas and disappears on the other. For SVG, set `style={{ fill, stroke }}` rather than the
+  `fill`/`stroke` presentation attributes — `var()` is only reliably resolved in a declaration.
+- **Do** treat selection as a location, not a status (v5.3.0). Active chips, tabs, rows, and
+  toggles use emerald (the primary hue) or a neutral surface — never amber, which means
+  low-stock here. The same rule that governs the sidebar governs every other selected thing.
 - **Do** reset user-agent chrome on any new Tailwind surface (v5.2.0). Preflight is off for the
   duration of the migration, so a bare `<button>` still ships `border: 2px outset ButtonBorder`
   and a bare `<ol>` still ships decimal markers. A minimal reset now lives in a `reset` cascade

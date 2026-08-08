@@ -5,12 +5,15 @@ import Modal from "../components/ui/Modal.jsx";
 
 // Presentation config per tier — keyed by name so it stays in sync with
 // mock/loyalty.js#TIERS regardless of threshold/multiplier tuning.
+// Colors are theme tokens, not literals: these values render in both Night and
+// Daylight Cellar, and a fixed hex that reads on one canvas disappears on the
+// other (a near-white multiplier on a white page, for instance).
 const TIER_PRESET = {
-  "Cellar Member":   { cls: "worker",  fill: "none",    stroke: "#5C5445", mltColor: "#A6A092", bday: "S$10 worth",  entry: "None",     raf: "Not eligible" },
-  "Vintner's Circle":{ cls: "soldier", fill: "none",    stroke: "#756B57", mltColor: "#B8B2A4", bday: "S$20 worth",  entry: "500 pts",  raf: "Not eligible" },
-  "Estate Reserve":  { cls: "general", fill: "none",    stroke: "#BE7F3B", mltColor: "#D89F5F", bday: "S$50 worth",  entry: "1000 pts", raf: "0.25× mult" },
-  "Grand Cru":       { cls: "queen",   fill: "#7C531F", stroke: "#BE7F3B", mltColor: "#EDEAE2", bday: "S$100 worth", entry: "3000 pts", raf: "0.5× mult" },
-  "Maison Noir":     { cls: "black",   fill: "#1C1916", stroke: "#3D6F51", mltColor: "#5C9174", bday: "S$300 worth", entry: "5000 pts", raf: "0.75× mult" },
+  "Cellar Member":   { cls: "worker",  fill: "none",              stroke: "var(--line)",       mltColor: "var(--muted)",   bday: "S$10 worth",  entry: "None",     raf: "Not eligible" },
+  "Vintner's Circle":{ cls: "soldier", fill: "none",              stroke: "var(--muted-2)",    mltColor: "var(--ink-3)",   bday: "S$20 worth",  entry: "500 pts",  raf: "Not eligible" },
+  "Estate Reserve":  { cls: "general", fill: "none",              stroke: "var(--amber)",      mltColor: "var(--amber)",   bday: "S$50 worth",  entry: "1000 pts", raf: "0.25× mult" },
+  "Grand Cru":       { cls: "queen",   fill: "var(--amber-glow)", stroke: "var(--amber)",      mltColor: "var(--ink)",     bday: "S$100 worth", entry: "3000 pts", raf: "0.5× mult" },
+  "Maison Noir":     { cls: "black",   fill: "var(--pine-glow)",  stroke: "var(--pine)",       mltColor: "var(--pine-2)",  bday: "S$300 worth", entry: "5000 pts", raf: "0.75× mult" },
 };
 
 const CHANNELS = ["Email + SMS", "Email", "SMS", "WhatsApp"];
@@ -18,7 +21,9 @@ const CHANNELS = ["Email + SMS", "Email", "SMS", "WhatsApp"];
 function GemIcon({ fill, stroke }) {
   return (
     <svg viewBox="0 0 46 52">
-      <path d="M23 2 L44 18 L36 50 L10 50 L2 18 Z" fill={fill} stroke={stroke} strokeWidth="2" />
+      {/* via `style`, not the fill/stroke attributes — var() is only reliably
+          resolved in a real CSS declaration, not a presentation attribute. */}
+      <path d="M23 2 L44 18 L36 50 L10 50 L2 18 Z" style={{ fill, stroke }} strokeWidth="2" />
     </svg>
   );
 }

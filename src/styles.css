@@ -1,62 +1,80 @@
-/* ─── Design tokens — "Twilight Cellar": dark-primary premium operations
-   console for a wine & spirits retailer. Cool graphite canvas, hairline/
-   typographic structure — no card boxes, no shadow on content, hierarchy is
-   type, contrast and hairlines. Pine is a genuinely rare accent (4 roles
-   only: primary CTA, active-nav index, top loyalty tier, one hero KPI);
-   amber carries the rest of the UI's color needs. See DESIGN.md. */
+/* ─── Design tokens — zinc/slate SaaS operations console (DESIGN.md v5.x).
+   v5.3.0 (2026-08-08): repainted from the "Twilight Cellar" warm brown/cognac
+   palette these pages had been carrying since v3.0.0. The app shipped two live
+   palettes at once — Command Center and Inventory on Tailwind zinc/emerald,
+   every other page on warm cellar-stone — which read as two different products
+   rather than one. Only the VALUES changed here; the structural language of
+   these pages (hairline dividers, no card boxes, --r-sm: 0) is untouched and
+   still differs from the Tailwind surfaces. See CHANGELOG v5.3.0.
+
+   Values mirror DESIGN.md: zinc canvas, emerald for live/positive/primary,
+   amber for warning/low-stock, red for critical. */
 :root {
   color-scheme: dark;
 
-  --bg: #211E1A;              /* warm cellar-stone canvas — was cool blue-graphite */
-  --bg-2: #28241F;
-  --shell-bg: #1C1916;        /* nav cabinet — darkest layer */
-  --shell-bg-2: #242019;
-  --shell-border: #453E33;
+  --bg: #09090b;              /* zinc-950 — base canvas */
+  --bg-2: #18181b;
+  --shell-bg: #18181b;        /* zinc-900 — nav/panel cabinet */
+  --shell-bg-2: #27272a;
+  --shell-border: #27272a;
 
-  --surface: #2C2822;
-  --surface-2: #38332B;       /* hover / raised layer */
-  --surface-3: #443E34;       /* divider zone */
-  --line: #5C5445;            /* hairline — the primary structural device */
-  --line-soft: rgba(233,228,218,0.08);
-  --border-active: #756B57;
+  --surface: #18181b;         /* zinc-900 — card/panel */
+  --surface-2: #27272a;       /* zinc-800 — hover / raised layer */
+  --surface-3: #3f3f46;       /* zinc-700 — divider zone */
+  --line: #27272a;            /* zinc-800 — hairline, the primary structural device */
+  --line-soft: rgba(250,250,250,0.06);
+  --border-active: #52525b;   /* zinc-600 */
 
-  /* pine — deep bottle-glass green, the genuinely rare accent, budgeted to
-     exactly 4 roles (see DESIGN.md). Replaces a red that read as AI-generic
-     "dark terminal + one glowing accent." */
-  --pine: #3D6F51;
-  --pine-2: #5C9174;
-  --pine-deep: #1F3D2C;
-  --pine-glow: rgba(61,111,81,0.16);
-  --on-pine: #F2F1EA;   /* pine stays dark-saturated in both themes; button text is always light */
+  /* emerald — live / positive / primary action. Occupies the old --pine slot;
+     the variable name is kept so the 691 var() references across this file
+     don't all have to churn in a color-only pass. */
+  --pine: #10b981;            /* emerald-500 */
+  --pine-2: #34d399;          /* emerald-400 */
+  --pine-deep: #064e3b;       /* emerald-900 */
+  --pine-glow: rgba(16,185,129,0.16);
+  --on-pine: #052e16;   /* emerald-500 is light-mid in dark mode; button text must be dark (6.1:1) */
 
-  /* amber — cognac/cask amber, the workhorse secondary, carries most
-     everyday UI color. Replaces a minty green closer to the same neon-on-
-     dark cluster pine used to sit in. */
-  --amber: #BE7F3B;
-  --amber-2: #D89F5F;
-  --amber-deep: #7C531F;
-  --amber-glow: rgba(190,127,59,0.16);
-  --on-amber: #241A0C;   /* dark-mode amber is light-mid; needs dark text */
+  /* amber — warning / low stock. Occupies the old cognac --amber slot. */
+  --amber: #f59e0b;           /* amber-500 */
+  --amber-2: #fbbf24;         /* amber-400 */
+  --amber-deep: #78350f;      /* amber-900 */
+  --amber-glow: rgba(245,158,11,0.16);
+  --on-amber: #1c1917;   /* amber-500 is light; needs dark text (8.5:1) */
 
-  --cream: #EDEAE2;           /* primary text, and the universal focus-ring color */
-  --cream-dim: #B8B2A4;
-  --cream-glow: rgba(237,234,226,0.18);
-  --muted: #A6A092;            /* warm-shifted; still ~4.8:1+ against every surface step */
-  --muted-2: #625A48;
+  --cream: #f8fafc;           /* slate-50 — primary text, and the universal focus-ring color */
+  --cream-dim: #d4d4d8;       /* zinc-300 */
+  --cream-glow: rgba(248,250,252,0.18);
+  --muted: #a1a1aa;           /* zinc-400 — ~7.4:1 on zinc-900 */
+  --muted-2: #52525b;         /* zinc-600 */
 
-  --green: #6FA35C;
-  --green-bg: rgba(111,163,92,.18);
-  --red: #CD5237;
-  --red-bg: rgba(205,82,55,.18);
-  --orange: #C98A3E;
-  --orange-bg: rgba(201,138,62,.18);
-  --blue: #7C89A6;
-  --blue-bg: rgba(124,137,166,.17);
+  --green: #10b981;
+  --green-bg: rgba(16,185,129,.18);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,.18);
+  --orange: #f59e0b;
+  --orange-bg: rgba(245,158,11,.18);
+  --blue: #60a5fa;            /* blue-400, not blue-500 — 500 lands at 4.3:1 on zinc-900 */
+  --blue-bg: rgba(96,165,250,.17);
 
-  --shopee: #B65A3C;
-  --shopee-bg: rgba(182,90,60,.2);
-  --lazada: #5A7396;
-  --lazada-bg: rgba(90,115,150,.2);
+  /* Channel identity — held distinct from the status hues above so a channel
+     tag never reads as a warning or an info callout. */
+  --shopee: #fb923c;          /* orange-400 */
+  --shopee-bg: rgba(251,146,60,.18);
+  --lazada: #818cf8;          /* indigo-400 */
+  --lazada-bg: rgba(129,140,248,.18);
+
+  /* Product-category encoding — 8 hues spread around the wheel at one shared
+     lightness step, so no category reads as more important than another. Was
+     six hardcoded warm hex values that were theme-blind: identical in light
+     mode, where several fell under 2.5:1 on the light canvas. */
+  --cat-wine:    #fb7185;
+  --cat-whisky:  #fbbf24;
+  --cat-brandy:  #fb923c;
+  --cat-beer:    #a3e635;
+  --cat-mixers:  #34d399;
+  --cat-rum:     #2dd4bf;
+  --cat-vodka:   #38bdf8;
+  --cat-liqueur: #e879f9;
 
   /* semantic aliases used across the file */
   --positive: var(--green);
@@ -72,9 +90,10 @@
      mono reserved for the rare ledger/ID. */
   --sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --mono: 'JetBrains Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
-  --r: 2px;      /* buttons only */
-  --r-sm: 0px;   /* everywhere else — no rounded-lg card shapes anywhere */
-  --shadow: 0 1px 2px rgba(15,10,6,0.28);
+  --r: 6px;      /* buttons/inputs — matches DESIGN.md v5.x button radius */
+  --r-sm: 0px;   /* structural surfaces stay square: this is a color-only repaint,
+                    the legacy no-card-box layout language is deliberately kept */
+  --shadow: 0 1px 2px rgba(0,0,0,0.4);
   --shadow-lift: 0 4px 12px rgba(0,0,0,.55), 0 32px 64px -18px rgba(0,0,0,.7); /* frame-level only: modals, dropdowns, toasts */
   --glass-blur: blur(16px);
 
@@ -82,9 +101,15 @@
   --ink: var(--cream);
   --ink-2: var(--cream-dim);
   --ink-3: var(--muted);
-  --accent: var(--amber);
-  --accent-2: var(--amber-2);
-  --accent-soft: var(--amber-glow);
+  /* --accent is the primary-affordance hue (hover borders, drop zones, action
+     buttons, picked rows) — all 20 call sites are interactive, none are
+     warnings. It pointed at amber under the old system, where amber was the
+     workhorse; under v5.x emerald is primary and amber means low-stock, so
+     leaving this on amber made every button look like an alert. Genuine
+     warnings use var(--amber*) directly and are unaffected. */
+  --accent: var(--pine);
+  --accent-2: var(--pine-2);
+  --accent-soft: var(--pine-glow);
   --rule: var(--line);
   --rule-strong: var(--line-soft);
   --radius: var(--r);
@@ -102,52 +127,66 @@
 body[data-theme="light"] {
   color-scheme: light;
 
-  /* "Daylight Cellar" — warm limestone/cellar-stone companion theme, not the
-     cream-paper-and-serif cliché this category defaults to */
-  --bg:        #DDD6C8;
-  --bg-2:      #D2CAB8;
-  --surface:   #E8E2D4;
-  --surface-2: #DED7C6;
-  --surface-3: #D0C8B4;
-  --line:      #B8AF98;
-  --line-soft: rgba(33,30,25,0.09);
+  /* Light companion theme, repainted v5.3.0 to the same zinc/emerald system as
+     the dark block above (was "Daylight Cellar" warm limestone). Accent values
+     are pulled DARKER than their dark-mode counterparts so they clear 4.5:1
+     both as text on white and as a background behind white button labels —
+     PRODUCT.md records the earlier light mode failing exactly that check. */
+  --bg:        #fafafa;        /* zinc-50 — canvas */
+  --bg-2:      #f4f4f5;
+  --surface:   #ffffff;        /* cards sit above the canvas */
+  --surface-2: #f4f4f5;        /* zinc-100 — hover */
+  --surface-3: #e4e4e7;        /* zinc-200 — divider zone */
+  --line:      #e4e4e7;        /* zinc-200 — hairline */
+  --line-soft: rgba(9,9,11,0.06);
 
-  --shell-bg: #D5CDBC;
-  --shell-bg-2: #C9C0AC;
-  --shell-border: #B3A98F;
-  --border-active: #9C9179;
+  --shell-bg: #ffffff;
+  --shell-bg-2: #f4f4f5;
+  --shell-border: #e4e4e7;
+  --border-active: #d4d4d8;    /* zinc-300 */
 
-  --pine: #2F5C42;
-  --pine-2: #3F7857;
-  --pine-deep: #1D3E2B;
-  --pine-glow: rgba(47,92,66,.10);
-  --on-pine: #F4F3EC;
+  --pine: #065f46;             /* emerald-800 — 6.7:1 as text on white, 6.1:1 behind white text */
+  --pine-2: #047857;           /* emerald-700 */
+  --pine-deep: #064e3b;
+  --pine-glow: rgba(6,95,70,.10);
+  --on-pine: #ffffff;
 
-  --amber: #7C4A1E;
-  --amber-2: #96602E;
-  --amber-deep: #572F0F;
-  --amber-glow: rgba(124,74,30,.10);
-  --on-amber: #F5F0E6;   /* light-mode amber is dark and saturated; needs light text */
+  --amber: #b45309;            /* amber-700 — 4.6:1 both directions */
+  --amber-2: #92400e;
+  --amber-deep: #78350f;
+  --amber-glow: rgba(180,83,9,.10);
+  --on-amber: #ffffff;
 
-  --cream:     #211E19;
-  --cream-dim: #4A4438;
-  --cream-glow: rgba(33,30,25,0.10);
-  --muted:     #625A48;        /* holds ~5.3:1 against the new warm --surface */
-  --muted-2:   #9A9280;
+  --cream:     #09090b;        /* zinc-950 — primary text */
+  --cream-dim: #3f3f46;        /* zinc-700 */
+  --cream-glow: rgba(9,9,11,0.10);
+  --muted:     #71717a;        /* zinc-500 — 4.8:1 on white */
+  --muted-2:   #a1a1aa;        /* zinc-400 */
 
-  --green:     #5C7742;
-  --green-bg:  rgba(92,119,66,0.14);
-  --red:       #A83E26;
-  --red-bg:    rgba(168,62,38,0.12);
-  --orange:    #A9772C;
-  --orange-bg: rgba(169,119,44,0.14);
-  --blue:      #5A6A85;
-  --blue-bg:   rgba(90,106,133,0.12);
+  --green:     #047857;
+  --green-bg:  rgba(4,120,87,0.12);
+  --red:       #b91c1c;
+  --red-bg:    rgba(185,28,28,0.10);
+  --orange:    #b45309;
+  --orange-bg: rgba(180,83,9,0.12);
+  --blue:      #1d4ed8;
+  --blue-bg:   rgba(29,78,216,0.10);
 
-  --shopee: #A34B2E;
-  --shopee-bg: rgba(163,75,46,0.14);
-  --lazada: #46607D;
-  --lazada-bg: rgba(70,96,125,0.14);
+  --shopee: #c2410c;
+  --shopee-bg: rgba(194,65,12,0.12);
+  --lazada: #4338ca;
+  --lazada-bg: rgba(67,56,202,0.12);
+
+  /* Same eight category hues, pulled to their 600/700 steps so each clears
+     4.5:1 on the light canvas. */
+  --cat-wine:    #e11d48;
+  --cat-whisky:  #b45309;
+  --cat-brandy:  #c2410c;
+  --cat-beer:    #4d7c0f;
+  --cat-mixers:  #047857;
+  --cat-rum:     #0f766e;
+  --cat-vodka:   #0369a1;
+  --cat-liqueur: #a21caf;
 
   --positive: var(--green);
   --positive-soft: var(--green-bg);
@@ -158,15 +197,21 @@ body[data-theme="light"] {
   --info: var(--blue);
   --info-soft: var(--blue-bg);
 
-  --shadow-lift: 0 2px 6px rgba(30,32,28,.12), 0 20px 40px -14px rgba(30,32,28,.18);
+  --shadow-lift: 0 2px 6px rgba(9,9,11,.10), 0 20px 40px -14px rgba(9,9,11,.16);
 
   /* Legacy layout/component variables mapping */
   --ink: var(--cream);
   --ink-2: var(--cream-dim);
   --ink-3: var(--muted);
-  --accent: var(--amber);
-  --accent-2: var(--amber-2);
-  --accent-soft: var(--amber-glow);
+  /* --accent is the primary-affordance hue (hover borders, drop zones, action
+     buttons, picked rows) — all 20 call sites are interactive, none are
+     warnings. It pointed at amber under the old system, where amber was the
+     workhorse; under v5.x emerald is primary and amber means low-stock, so
+     leaving this on amber made every button look like an alert. Genuine
+     warnings use var(--amber*) directly and are unaffected. */
+  --accent: var(--pine);
+  --accent-2: var(--pine-2);
+  --accent-soft: var(--pine-glow);
   --rule: var(--line);
   --rule-strong: var(--line-soft);
 }
@@ -665,14 +710,14 @@ input:focus { border-color: var(--cream); box-shadow: 0 0 0 3px var(--cream-glow
   border-bottom: 2px solid currentColor;
   color: var(--ink-3);
 }
-.inv-cat.beer    { color: #C6963C; }
-.inv-cat.brandy  { color: #C17A50; }
-.inv-cat.whisky  { color: var(--accent-2); }
-.inv-cat.wine    { color: var(--amber-2); }
-.inv-cat.vodka   { color: #85A379; }
-.inv-cat.liqueur { color: #B87BA0; }
-.inv-cat.rum     { color: #C08A4C; }
-.inv-cat.mixers  { color: #74A48C; }
+.inv-cat.beer    { color: var(--cat-beer); }
+.inv-cat.brandy  { color: var(--cat-brandy); }
+.inv-cat.whisky  { color: var(--cat-whisky); }
+.inv-cat.wine    { color: var(--cat-wine); }
+.inv-cat.vodka   { color: var(--cat-vodka); }
+.inv-cat.liqueur { color: var(--cat-liqueur); }
+.inv-cat.rum     { color: var(--cat-rum); }
+.inv-cat.mixers  { color: var(--cat-mixers); }
 
 /* price */
 .inv-price {
@@ -1234,8 +1279,8 @@ td .dim { color: var(--muted); font-size: 12px; }
 
 .pipe { display: flex; gap: 3px; }
 .pipe i { width: 16px; height: 5px; border-radius: 0; background: var(--line); }
-.pipe i.done { background: var(--amber); }
-.pipe i.now { background: var(--amber-2); box-shadow: 0 0 6px var(--amber); }
+.pipe i.done { background: var(--pine); }
+.pipe i.now { background: var(--pine-2); box-shadow: 0 0 6px var(--pine); }
 
 /* Delivery */
 .deliv-banner {
@@ -1296,7 +1341,7 @@ td .dim { color: var(--muted); font-size: 12px; }
 }
 .tier-row:hover { background: var(--surface-2); }
 .tier-row:focus-visible { outline: 2px solid var(--cream); outline-offset: -2px; }
-.tier-row-active { background: var(--amber-glow); }
+.tier-row-active { background: var(--pine-glow); }
 .tier-row-cell { padding: 13px 16px; min-width: 0; }
 .tier-row-id { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 10px 8px; }
 .tier-row-id svg { width: 22px; height: 25px; }
@@ -1439,7 +1484,7 @@ td .dim { color: var(--muted); font-size: 12px; }
 .di-line .qty { color: var(--muted); font-family: var(--mono); font-size: 12px; }
 .di-line .amt { color: var(--cream-dim); font-family: var(--mono); }
 .di-total { display: flex; justify-content: space-between; padding: 13px 0 4px; font-weight: 700; font-size: 15px; }
-.di-total .amt { color: var(--amber-2); font-family: var(--mono); }
+.di-total .amt { color: var(--ink); font-family: var(--mono); }
 
 .sechead { font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--amber); font-weight: 700; margin: 24px 0 12px; text-align: left; }
 
@@ -1463,7 +1508,7 @@ td .dim { color: var(--muted); font-size: 12px; }
   margin-top: 8px; width: 130px; height: 86px; border-radius: 0; border: 1px solid var(--line);
   background:
     linear-gradient(135deg, rgba(0,0,0,0.08), rgba(0,0,0,0.4)),
-    repeating-linear-gradient(45deg, #15171B 0 10px, #191c21 10px 20px);
+    repeating-linear-gradient(45deg, var(--bg) 0 10px, var(--surface-2) 10px 20px);
   display: grid; place-items: center; position: relative; overflow: hidden;
 }
 .pod .cam { width: 28px; height: 28px; opacity: 0.5; }
@@ -1561,9 +1606,9 @@ td .dim { color: var(--muted); font-size: 12px; }
 .fchip:active { transform: translateY(1px); }
 
 .fchip.on {
-  background: var(--amber-glow);
-  border-color: var(--amber);
-  color: var(--amber-2);
+  background: var(--pine-glow);
+  border-color: var(--pine);
+  color: var(--pine-2);
 }
 
 /* Actions dropdown — a real elevated popover (DESIGN.md's framing-device
@@ -1642,7 +1687,7 @@ td .dim { color: var(--muted); font-size: 12px; }
   background: var(--surface-2); border: 1px solid var(--line); border-radius: 0;
 }
 .ts-seg .fchip { border: none; background: transparent; padding: 5px 12px; }
-.ts-seg .fchip.on { background: var(--surface-3); color: var(--amber); }
+.ts-seg .fchip.on { background: var(--surface-3); color: var(--pine-2); }
 
 .ts-board { display: flex; flex-direction: column; gap: 8px; margin-top: 2px; }
 
@@ -2112,8 +2157,8 @@ td .dim { color: var(--muted); font-size: 12px; }
   width: 16px; height: 16px; border-radius: 50%;
   background: var(--ink-3); transition: .18s;
 }
-.toggle.on { background: color-mix(in srgb, var(--amber) 32%, var(--surface-3)); border-color: var(--amber); }
-.toggle.on::after { transform: translateX(18px); background: var(--amber-2); }
+.toggle.on { background: color-mix(in srgb, var(--pine) 32%, var(--surface-3)); border-color: var(--pine); }
+.toggle.on::after { transform: translateX(18px); background: var(--pine-2); }
 .toggle:disabled, .toggle[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
 .toggle:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
 
@@ -2184,8 +2229,8 @@ td .dim { color: var(--muted); font-size: 12px; }
 }
 .brief-tab:hover { color: var(--ink-2); }
 .brief-tab:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
-.brief-tab.active { color: var(--amber-2); }
-.brief-tab.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--amber); border-radius: 0; }
+.brief-tab.active { color: var(--pine-2); }
+.brief-tab.active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--pine); border-radius: 0; }
 
 .brief-chart { margin-top: 16px; }
 
@@ -2296,7 +2341,7 @@ td .dim { color: var(--muted); font-size: 12px; }
 }
 .inbox-thread-row:hover { background: var(--surface-2); }
 .inbox-thread-row:focus-visible { outline: 2px solid var(--cream); outline-offset: -2px; }
-.inbox-thread-row.active { background: var(--amber-glow); }
+.inbox-thread-row.active { background: var(--pine-glow); }
 .inbox-thread-body { display: flex; gap: 10px; align-items: flex-start; }
 .inbox-thread-main { flex: 1; min-width: 0; }
 .inbox-thread-top-row { display: flex; justify-content: space-between; align-items: baseline; gap: 4px; }
@@ -2351,7 +2396,7 @@ td .dim { color: var(--muted); font-size: 12px; }
   background: var(--surface-2); color: var(--ink-2);
   font-size: 13px; line-height: 1.55; word-break: break-word;
 }
-.inbox-bubble.out { border-radius: 0 16px 4px 16px; background: var(--amber); color: var(--on-amber); }
+.inbox-bubble.out { border-radius: 0 16px 4px 16px; background: var(--pine); color: var(--on-pine); }
 .inbox-bubble-text { white-space: pre-wrap; }
 .inbox-bubble-time { font-size: 10px; opacity: .5; margin-top: 4px; text-align: left; }
 .inbox-bubble.out .inbox-bubble-time { text-align: right; }
@@ -2454,5 +2499,5 @@ td .dim { color: var(--muted); font-size: 12px; }
 }
 .seg-tab:hover { color: var(--cream-dim); }
 .seg-tab:focus-visible { outline: 2px solid var(--cream); outline-offset: 1px; }
-.seg-tab.active { background: var(--amber-glow); border-color: var(--amber-deep); color: var(--amber-2); font-weight: 700; }
+.seg-tab.active { background: var(--pine-glow); border-color: var(--pine); color: var(--pine-2); font-weight: 700; }
 

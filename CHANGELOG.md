@@ -2,6 +2,62 @@
 
 All notable changes to this project are recorded here.
 
+## v5.3.0 — 2026-08-08
+
+One app, one palette. Raised by the user: *"design not consistent? why is it brown on other tabs."*
+Correct — the build was shipping **two complete design systems at once**. Command Center and
+Inventory rendered from Tailwind zinc/emerald; the other eight surfaces still rendered from
+`src/styles.css` on the v3.0.0 "Twilight Cellar" warm brown/cognac tokens, untouched since the
+v5.0.0 rebuild repainted only four surfaces.
+
+Scope was deliberately limited to **color**. The legacy pages keep their own structural language
+(hairline dividers, no card boxes, square corners) — they still read as differently *built* from
+the Tailwind surfaces, just no longer as a different *product*. Full structural migration is
+still open.
+
+- **Repainted both theme token blocks** in `styles.css` to the DESIGN.md zinc/emerald system.
+  Because the stylesheet is well-tokenized (691 `var(--*)` references, only 32 stray hex), one
+  `:root` edit recolored all eight legacy pages at once.
+- **Light theme accents pulled darker on purpose** — emerald-800 and amber-700 rather than the
+  dark-mode 500s — so each clears 4.5:1 both as text on white *and* as a background behind white
+  button labels. PRODUCT.md records the previous light mode failing exactly this check
+  (primary button ≈3.75:1); it no longer does.
+- **`--accent` remapped from amber to emerald.** All 20 call sites are primary affordances —
+  hover borders, drop zones, action buttons, picked rows — none are warnings. Under the old
+  system amber was the workhorse; under v5.x amber means low-stock, so every legacy button was
+  reading as an alert. Genuine warnings use `var(--amber*)` directly and are unaffected.
+- **Selection states moved off amber**: filter chips, segmented tabs, tier rows, automation
+  toggles, inbox thread selection, and the outgoing message bubble. Selection is a location,
+  not a status — the same rule already applied to the sidebar in v5.2.0.
+- **Order totals and pipeline bars** no longer render in amber. Money is not a warning.
+- **Product-category chips are now per-theme tokens** (`--cat-*`): eight hues spread around the
+  wheel at one shared lightness step. They were six hardcoded warm hex values shared across both
+  themes, several of which sat under 2.5:1 on the light canvas.
+- Swept ~50 inlined hex values out of `DeliveryPage`, `DriverPortalPage`, and `LoyaltyPage`.
+
+**Bugs found by looking at the result, not the diff**
+
+- **Fixed: the Inbox composer sat below the fold — you had to scroll to send a reply.**
+  Reported by the user. `.inbox-shell` correctly asks for `height: 100%`, but the page wrapper in
+  `App.jsx` had no height for that percentage to resolve against, so the mail layout collapsed to
+  content height instead of filling the frame. The wrapper now caps height for self-sizing pages
+  only (`SELF_SIZING_TABS`); every other page still grows and lets `<main>` scroll. Verified the
+  textarea and Send button are both in view, with no page scroll, at 900px and 700px tall.
+- **Fixed: the delivery basemap was pinned to CARTO `dark_all`** — a black map inside a white
+  card in light mode. It now follows the app theme.
+- **Fixed: a regression this repaint introduced.** Loyalty tier multipliers and the zone-coverage
+  map carried theme-blind inline hex; mapping them to dark-mode values made them near-invisible
+  in light mode (a near-white `3.0×` on a white page). Both now use theme tokens, passed through
+  `style` rather than SVG presentation attributes, since `var()` is only reliably resolved in a
+  real CSS declaration.
+
+**Known, not addressed:** the Loyalty members table clips under the Automation Feed panel at
+1440px (pre-existing layout bug, not color). `src/charts/TodayCharts.jsx` is orphaned and still
+holds the old palette — left untouched, as in v5.1.1. `.inv-stock-bar` animates `width`
+(pre-existing perf nit).
+
+Verified in a real browser across all eight pages in both themes: no console errors.
+
 ## v5.2.0 — 2026-08-08
 
 Density/craft pass on the Command Center, per user brief ("eliminate design artifacts that make

@@ -14,6 +14,10 @@ import AutomationPage from "./pages/AutomationPage.jsx";
 import DriverPortalPage from "./pages/DriverPortalPage.jsx";
 import StockPortalPage from "./pages/StockPortalPage.jsx";
 
+// Pages that manage their own scrolling and must be capped to the frame height
+// rather than growing the document.
+const SELF_SIZING_TABS = new Set(["Inbox"]);
+
 function MainShell() {
   const { state, actions } = useAppData();
   const [tab, setTab] = useState("Today");
@@ -43,7 +47,14 @@ function MainShell() {
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 top-0 h-[600px] dark:bg-[radial-gradient(ellipse_1200px_600px_at_20%_-10%,rgba(16,185,129,0.08),transparent_70%)]"
         />
-        <div className="relative">
+        {/* Inbox is a mail-client layout: it fills the frame and scrolls its
+            thread list and message pane internally so the composer stays
+            pinned in view. Its CSS already asks for `height: 100%`, but this
+            wrapper had no height for that to resolve against, so the shell
+            collapsed to content height and pushed the reply box below the
+            fold. Every other page is a normal document that grows and lets
+            <main> scroll, so they must NOT be height-capped. */}
+        <div className={`relative ${SELF_SIZING_TABS.has(tab) ? "h-full" : ""}`}>
           {tab === "Today" && <TodayPage setTab={setTab} />}
           {tab === "Orders" && <OrdersPage />}
           {tab === "Inventory" && <InventoryPage />}

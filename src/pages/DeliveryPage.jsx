@@ -4,7 +4,7 @@ import { escapeHtml, zoneName } from "../utils.js";
 import { useAppData } from "../context/AppData.jsx";
 import { useToast } from "../components/ui/ToastProvider.jsx";
 
-const TRUCK_TINT = { truck_1: "#BE7F3B", truck_2: "#7C89A6" };
+const TRUCK_TINT = { truck_1: "#f59e0b", truck_2: "#60a5fa" };
 
 function statusClass(status) {
   if (status === "delivered") return "del";
@@ -18,8 +18,8 @@ function todaySGT() {
 
 // ─── Truck visual identity ──────────────────────────────────────────────────
 const TRUCK_STYLE = [
-  { stroke: "#D89F5F", fill: "#BE7F3B", icoStyle: { background: "rgba(190,127,59,0.16)", border: "1px solid var(--amber-deep)" }, no: "t1" },
-  { stroke: "#7C89A6", fill: "#5A6A85", icoStyle: { background: "rgba(124,137,166,0.16)", border: "1px solid #435066" }, no: "t2" },
+  { stroke: "#fbbf24", fill: "#f59e0b", icoStyle: { background: "rgba(190,127,59,0.16)", border: "1px solid var(--amber-deep)" }, no: "t1" },
+  { stroke: "#60a5fa", fill: "#3b82f6", icoStyle: { background: "rgba(124,137,166,0.16)", border: "1px solid #1e40af" }, no: "t2" },
 ];
 
 // Approximate centre of each zone on the stylized coverage map (viewBox 460x380).
@@ -54,11 +54,12 @@ function TruckIcon({ stroke }) {
 }
 
 // ─── Live driver tracking map (Leaflet), driven entirely by context state ──
-function LiveDriverMap({ trucks, zoneCentroids, depot }) {
+function LiveDriverMap({ trucks, zoneCentroids, depot, theme }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef({});
   const routeLayerRef = useRef(null);
+  const tileRef = useRef(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -66,16 +67,29 @@ function LiveDriverMap({ trucks, zoneCentroids, depot }) {
     import("leaflet").then((mod) => {
       const L = mod.default;
       const map = L.map(containerRef.current, { zoomControl: false, attributionControl: true });
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-        subdomains: "abcd", maxZoom: 19,
-        attribution: '© <a href="https://openstreetmap.org/copyright">OSM</a> © <a href="https://carto.com">CARTO</a>',
-      }).addTo(map);
       map.setView([1.3521, 103.8198], 11);
       mapRef.current = map;
       setReady(true);
     });
     return () => { if (mapRef.current) { mapRef.current.remove(); mapRef.current = null; } };
   }, []);
+
+  // Basemap follows the app theme. It was pinned to CARTO's dark_all, which
+  // left a black map sitting inside a white card in Daylight Cellar.
+  useEffect(() => {
+    if (!ready || !mapRef.current) return;
+    import("leaflet").then((mod) => {
+      const L = mod.default;
+      if (tileRef.current) mapRef.current.removeLayer(tileRef.current);
+      tileRef.current = L.tileLayer(
+        `https://{s}.basemaps.cartocdn.com/${theme === "light" ? "light_all" : "dark_all"}/{z}/{x}/{y}{r}.png`,
+        {
+          subdomains: "abcd", maxZoom: 19,
+          attribution: '© <a href="https://openstreetmap.org/copyright">OSM</a> © <a href="https://carto.com">CARTO</a>',
+        },
+      ).addTo(mapRef.current);
+    });
+  }, [ready, theme]);
 
   // Truck position markers.
   useEffect(() => {
@@ -84,10 +98,10 @@ function LiveDriverMap({ trucks, zoneCentroids, depot }) {
       const L = mod.default;
       Object.values(trucks).forEach((t) => {
         if (!t.position) return;
-        const color = TRUCK_TINT[t.id] || "#BE7F3B";
+        const color = TRUCK_TINT[t.id] || "#f59e0b";
         const live = t.status === "en_route";
         const html = `<div style="display:flex;flex-direction:column;align-items:center;opacity:${live ? 1 : 0.5}">`
-          + `<div style="width:18px;height:18px;border-radius:50%;background:${color};border:2px solid #1C1916;box-shadow:0 0 0 2px ${color};transform:rotate(${t.position.heading || 0}deg)"></div>`
+          + `<div style="width:18px;height:18px;border-radius:50%;background:${color};border:2px solid #09090b;box-shadow:0 0 0 2px ${color};transform:rotate(${t.position.heading || 0}deg)"></div>`
           + `<div style="margin-top:2px;font:600 10px ui-sans-serif,sans-serif;color:${color};white-space:nowrap;text-shadow:0 1px 2px #000">${escapeHtml(t.label)}</div></div>`;
         const icon = L.divIcon({ html, className: "", iconSize: [60, 34], iconAnchor: [30, 9] });
         const label = `${escapeHtml(t.label)} · ${escapeHtml(t.driverName)} · ${live ? "en route" : t.status}`;
@@ -109,7 +123,7 @@ function LiveDriverMap({ trucks, zoneCentroids, depot }) {
       const layer = L.layerGroup();
 
       Object.values(trucks).forEach((t) => {
-        const color = TRUCK_TINT[t.id] || "#BE7F3B";
+        const color = TRUCK_TINT[t.id] || "#f59e0b";
         const coords = t.stops.map((s) => zoneCentroids[s.zone]).filter(Boolean).map((c) => [c.lat, c.lng]);
         if (!coords.length) return;
         const line = depot ? [[depot.lat, depot.lng], ...coords] : coords;
@@ -117,16 +131,16 @@ function LiveDriverMap({ trucks, zoneCentroids, depot }) {
         t.stops.forEach((s, i) => {
           const c = zoneCentroids[s.zone];
           if (!c) return;
-          const html = `<div style="width:22px;height:22px;border-radius:50%;background:${color};color:#1C1916;`
+          const html = `<div style="width:22px;height:22px;border-radius:50%;background:${color};color:#09090b;`
             + `font:700 11px ui-sans-serif,sans-serif;display:flex;align-items:center;justify-content:center;`
-            + `border:2px solid #1C1916;box-shadow:0 0 0 1px ${color}">${i + 1}</div>`;
+            + `border:2px solid #09090b;box-shadow:0 0 0 1px ${color}">${i + 1}</div>`;
           const icon = L.divIcon({ html, className: "", iconSize: [22, 22], iconAnchor: [11, 11] });
           L.marker([c.lat, c.lng], { icon }).bindTooltip(`#${i + 1} · ${escapeHtml(s.customer?.name || s.orderNo)} · ${escapeHtml(s.zone)}`, { direction: "top" }).addTo(layer);
         });
       });
 
       if (depot) {
-        const whIcon = L.divIcon({ html: `<div style="width:14px;height:14px;border-radius:3px;background:#EBEDE9;border:2px solid #1C1916"></div>`, className: "", iconSize: [14, 14], iconAnchor: [7, 7] });
+        const whIcon = L.divIcon({ html: `<div style="width:14px;height:14px;border-radius:3px;background:#f8fafc;border:2px solid #09090b"></div>`, className: "", iconSize: [14, 14], iconAnchor: [7, 7] });
         L.marker([depot.lat, depot.lng], { icon: whIcon }).bindTooltip(depot.label, { direction: "top" }).addTo(layer);
       }
 
@@ -292,7 +306,7 @@ export default function DeliveryPage() {
         </div>
       </div>
 
-      <LiveDriverMap trucks={trucks} zoneCentroids={state.delivery.zoneCentroids} depot={state.delivery.depot} />
+      <LiveDriverMap trucks={trucks} zoneCentroids={state.delivery.zoneCentroids} depot={state.delivery.depot} theme={state.session.theme} />
 
       <div className="deliv-grid">
         <div className="routes-col">
@@ -309,25 +323,25 @@ export default function DeliveryPage() {
           <svg viewBox="0 0 460 380" style={{ width: "100%", height: "auto" }}>
             <defs>
               <radialGradient id="zg" cx="50%" cy="40%">
-                <stop offset="0" stopColor="#5C5445" />
-                <stop offset="1" stopColor="#1C1916" />
+                <stop offset="0" style={{ stopColor: "var(--surface-2)" }} />
+                <stop offset="1" style={{ stopColor: "var(--surface)" }} />
               </radialGradient>
             </defs>
-            <path d="M30,150 Q20,90 80,80 Q130,70 150,120 Q160,170 120,200 Q60,220 40,190 Z" fill="url(#zg)" stroke="#5C5445" strokeWidth="1.5" />
-            <text x="80" y="135" fill="#B8B2A4" fontSize="13" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">WEST</text>
-            <text x="62" y="152" fill="#A6A092" fontSize="10" fontFamily="monospace">W1 W2 W3</text>
-            <path d="M160,170 Q150,120 200,115 Q250,110 255,160 Q258,205 215,215 Q170,218 160,190 Z" fill="url(#zg)" stroke="#5C5445" strokeWidth="1.5" />
-            <text x="190" y="165" fill="#B8B2A4" fontSize="12" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">CENTRAL</text>
-            <text x="182" y="182" fill="#A6A092" fontSize="10" fontFamily="monospace">C1 C2 C3</text>
-            <path d="M180,60 Q230,30 290,55 Q320,75 300,115 Q270,140 220,120 Q180,105 180,60 Z" fill="url(#zg)" stroke="#5C5445" strokeWidth="1.5" />
-            <text x="225" y="80" fill="#B8B2A4" fontSize="13" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">NORTH</text>
-            <text x="210" y="97" fill="#A6A092" fontSize="10" fontFamily="monospace">N1 N2 N3</text>
-            <path d="M300,75 Q360,55 405,95 Q430,130 400,165 Q360,185 320,160 Q295,130 300,75 Z" fill="url(#zg)" stroke="#5C5445" strokeWidth="1.5" />
-            <text x="335" y="115" fill="#B8B2A4" fontSize="11" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">NE</text>
-            <text x="322" y="132" fill="#A6A092" fontSize="9" fontFamily="monospace">NE1 NE2 NE3</text>
-            <path d="M280,200 Q340,180 400,210 Q435,235 405,275 Q355,300 300,275 Q270,245 280,200 Z" fill="url(#zg)" stroke="#5C5445" strokeWidth="1.5" />
-            <text x="330" y="245" fill="#B8B2A4" fontSize="13" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">EAST</text>
-            <text x="312" y="262" fill="#A6A092" fontSize="10" fontFamily="monospace">E1 E2 E3</text>
+            <path d="M30,150 Q20,90 80,80 Q130,70 150,120 Q160,170 120,200 Q60,220 40,190 Z" fill="url(#zg)" style={{ stroke: "var(--line)" }} strokeWidth="1.5" />
+            <text x="80" y="135" style={{ fill: "var(--ink-2)" }} fontSize="13" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">WEST</text>
+            <text x="62" y="152" style={{ fill: "var(--muted)" }} fontSize="10" fontFamily="monospace">W1 W2 W3</text>
+            <path d="M160,170 Q150,120 200,115 Q250,110 255,160 Q258,205 215,215 Q170,218 160,190 Z" fill="url(#zg)" style={{ stroke: "var(--line)" }} strokeWidth="1.5" />
+            <text x="190" y="165" style={{ fill: "var(--ink-2)" }} fontSize="12" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">CENTRAL</text>
+            <text x="182" y="182" style={{ fill: "var(--muted)" }} fontSize="10" fontFamily="monospace">C1 C2 C3</text>
+            <path d="M180,60 Q230,30 290,55 Q320,75 300,115 Q270,140 220,120 Q180,105 180,60 Z" fill="url(#zg)" style={{ stroke: "var(--line)" }} strokeWidth="1.5" />
+            <text x="225" y="80" style={{ fill: "var(--ink-2)" }} fontSize="13" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">NORTH</text>
+            <text x="210" y="97" style={{ fill: "var(--muted)" }} fontSize="10" fontFamily="monospace">N1 N2 N3</text>
+            <path d="M300,75 Q360,55 405,95 Q430,130 400,165 Q360,185 320,160 Q295,130 300,75 Z" fill="url(#zg)" style={{ stroke: "var(--line)" }} strokeWidth="1.5" />
+            <text x="335" y="115" style={{ fill: "var(--ink-2)" }} fontSize="11" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">NE</text>
+            <text x="322" y="132" style={{ fill: "var(--muted)" }} fontSize="9" fontFamily="monospace">NE1 NE2 NE3</text>
+            <path d="M280,200 Q340,180 400,210 Q435,235 405,275 Q355,300 300,275 Q270,245 280,200 Z" fill="url(#zg)" style={{ stroke: "var(--line)" }} strokeWidth="1.5" />
+            <text x="330" y="245" style={{ fill: "var(--ink-2)" }} fontSize="13" fontFamily="Public Sans, system-ui, sans-serif" fontWeight="700">EAST</text>
+            <text x="312" y="262" style={{ fill: "var(--muted)" }} fontSize="10" fontFamily="monospace">E1 E2 E3</text>
 
             {truckList.map((truck, ti) => {
               const g = truckGeometry(truck.stops, ti, ordersById);
@@ -338,8 +352,8 @@ export default function DeliveryPage() {
                   <g fontFamily="monospace" fontSize="9" fontWeight="700">
                     {g.pts.map((p) => (
                       <g key={p.n}>
-                        <circle cx={p.x} cy={p.y} r="9" fill={p.delivered ? g.fill : "#5C5445"} stroke={p.delivered ? "none" : g.fill} strokeWidth={p.delivered ? 0 : 1.5} />
-                        <text x={p.x} y={p.y + 3.5} fill={p.delivered ? "#1C1916" : g.stroke} textAnchor="middle">{p.n}</text>
+                        <circle cx={p.x} cy={p.y} r="9" fill={p.delivered ? g.fill : "var(--surface-2)"} stroke={p.delivered ? "none" : g.fill} strokeWidth={p.delivered ? 0 : 1.5} />
+                        <text x={p.x} y={p.y + 3.5} fill={p.delivered ? "var(--on-pine)" : g.stroke} textAnchor="middle">{p.n}</text>
                       </g>
                     ))}
                   </g>

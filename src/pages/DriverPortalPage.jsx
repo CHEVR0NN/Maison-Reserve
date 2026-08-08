@@ -7,7 +7,7 @@ import { stepsForSegment } from "../mock/delivery.js";
 import { DRIVERS } from "../mock/people.js";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const TRUCK_COLOR = { truck_1: "#BE7F3B", truck_2: "#7C89A6" };
+const TRUCK_COLOR = { truck_1: "#f59e0b", truck_2: "#60a5fa" };
 const TRUCK_NAME = { truck_1: "Truck 1", truck_2: "Truck 2" };
 const PANEL_H = { mini: "76px", half: "46vh", full: "88vh" };
 const TILE_URL = {
@@ -26,8 +26,8 @@ const C = {
   green: "var(--c-green)", greenSoft: "var(--c-greenSoft)", red: "var(--c-red)",
 };
 const HEX = {
-  dark: { gold: "#BE7F3B", green: "#6FA35C", textDim: "#B8B2A4", bg: "#1C1916" },
-  light: { gold: "#7C4A1E", green: "#5C7742", textDim: "#4A4438", bg: "#E8E2D4" },
+  dark: { gold: "#f59e0b", green: "#10b981", textDim: "#d4d4d8", bg: "#09090b" },
+  light: { gold: "#b45309", green: "#047857", textDim: "#3f3f46", bg: "#ffffff" },
 };
 
 const GLOBAL_CSS = `
@@ -55,8 +55,8 @@ const GLOBAL_CSS = `
   .dp .panel { transition: height .42s cubic-bezier(.25,.46,.45,.94); overflow: hidden; will-change: height; }
   .dp .panel-scroll::-webkit-scrollbar { width: 0; }
   .dp .panel-dragging { transition: none !important; }
-  .dp.dark  .leaflet-container { background: #1C1916; }
-  .dp.light .leaflet-container { background: #E8E2D4; }
+  .dp.dark  .leaflet-container { background: #09090b; }
+  .dp.light .leaflet-container { background: #ffffff; }
   .dp .leaflet-container { font-family: inherit; }
   .dp .leaflet-control-attribution { font-size: 9px; backdrop-filter: blur(4px); border-radius: 6px !important; }
   .dp .leaflet-tooltip { background: var(--c-surface2); border: 1px solid var(--c-hair); color: var(--c-text); border-radius: 9px; font-size: 12px; font-weight: 600; box-shadow: 0 4px 14px rgba(16,11,4,.18); padding: 5px 10px; }
@@ -77,7 +77,7 @@ const S = {
   },
   loginCard: { width: "100%", maxWidth: 380, background: C.surface, border: `1px solid ${C.hair}`, borderRadius: 26, padding: "38px 28px", boxShadow: "0 28px 70px rgba(16,11,4,.35)" },
   loginSub: { fontSize: 12, color: C.textFaint, marginTop: 6, marginBottom: 28, letterSpacing: ".02em" },
-  btnGold: { width: "100%", padding: "14px", background: `linear-gradient(180deg,${C.pine},var(--c-pineDark,#1F3D2C))`, color: C.onPine, border: "none", borderRadius: 14, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 24px var(--c-pineSoft)", fontFamily: F, marginBottom: 12 },
+  btnGold: { width: "100%", padding: "14px", background: `linear-gradient(180deg,${C.pine},var(--c-pineDark,#064e3b))`, color: C.onPine, border: "none", borderRadius: 14, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 24px var(--c-pineSoft)", fontFamily: F, marginBottom: 12 },
   header: { height: 52, flexShrink: 0, background: "var(--c-headerBg)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)", borderBottom: `1px solid ${C.hair}`, display: "flex", alignItems: "center", padding: "0 14px", gap: 10, zIndex: 20 },
   progStrip: { height: 36, flexShrink: 0, background: "var(--c-headerBg)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)", borderBottom: `1px solid ${C.hair}`, display: "flex", alignItems: "center", padding: "0 16px", gap: 10, zIndex: 19 },
   hDivider: { width: 1, height: 18, background: C.hair, flexShrink: 0 },
@@ -105,7 +105,7 @@ const S = {
   chipRow: { display: "flex", gap: 7, flexWrap: "wrap", marginBottom: 16 },
   chip: { fontSize: 11, color: C.textDim, background: C.surface2, border: `1px solid ${C.hair2}`, borderRadius: 20, padding: "4px 10px", fontWeight: 500 },
   btnRow: { display: "flex", gap: 10 },
-  markBtn: { flex: 1, padding: "15px", background: `linear-gradient(180deg,${C.pine},var(--c-pineDark,#1F3D2C))`, color: C.onPine, border: "none", borderRadius: 16, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 22px var(--c-pineSoft)", fontFamily: F },
+  markBtn: { flex: 1, padding: "15px", background: `linear-gradient(180deg,${C.pine},var(--c-pineDark,#064e3b))`, color: C.onPine, border: "none", borderRadius: 16, fontWeight: 700, fontSize: 15, letterSpacing: ".01em", boxShadow: "0 8px 22px var(--c-pineSoft)", fontFamily: F },
   navBtn: { flex: 1, padding: "15px", background: C.surface2, border: `1px solid ${C.hair}`, borderRadius: 16, fontWeight: 600, fontSize: 15, color: C.text, fontFamily: F },
   stepsWrap: { borderTop: `1px solid ${C.hair2}` },
   stepsHdr: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "13px 18px", cursor: "pointer", fontSize: 12.5, color: C.textDim, fontWeight: 600, userSelect: "none" },
@@ -144,7 +144,7 @@ function makePinHtml(label, state, truckColor, hex) {
   if (state === "active") {
     return `<div class="pin-pulse" style="position:relative;width:42px;height:42px;display:flex;align-items:center;justify-content:center">`
       + `<div style="position:absolute;inset:0;border-radius:50%;background:${truckColor};opacity:.25"></div>`
-      + `<div style="width:32px;height:32px;background:${truckColor};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-weight:700;font-size:13px;color:#1C1916;box-shadow:0 3px 12px rgba(0,0,0,.5),0 0 0 2px #fff">${label}</div></div>`;
+      + `<div style="width:32px;height:32px;background:${truckColor};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-weight:700;font-size:13px;color:#09090b;box-shadow:0 3px 12px rgba(0,0,0,.5),0 0 0 2px #fff">${label}</div></div>`;
   }
   return `<div style="width:28px;height:28px;background:#fff;border:2.5px solid ${truckColor};border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:ui-monospace,monospace;font-weight:700;font-size:12px;color:${truckColor};box-shadow:0 2px 10px rgba(0,0,0,.4),0 0 0 1px rgba(0,0,0,.1)">${label}</div>`;
 }
@@ -174,7 +174,7 @@ function MapView({ stops, truckId, position, segmentIndex, polyline, depot, them
   const tileRef = useRef(null);
   const gpsRef = useRef(null);
   const [mapReady, setMapReady] = useState(false);
-  const color = TRUCK_COLOR[truckId] || "#BE7F3B";
+  const color = TRUCK_COLOR[truckId] || "#f59e0b";
   const hex = HEX[theme] || HEX.dark;
 
   useEffect(() => {
@@ -314,7 +314,7 @@ function StopCard({ stop, index, delivered, failed, active, onMarkDelivered, onR
 // ─── DriverPortal (the active in-route experience) ──────────────────────────
 function DriverPortal({ truckId, theme, onToggleTheme, onExit }) {
   const { state, actions } = useAppData();
-  const color = TRUCK_COLOR[truckId] || "#BE7F3B";
+  const color = TRUCK_COLOR[truckId] || "#f59e0b";
   const truck = state.delivery.trucks[truckId];
   const ordersById = new Map(state.orders.items.map((o) => [o.id, o]));
   const zoneCentroids = state.delivery.zoneCentroids;

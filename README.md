@@ -1,6 +1,6 @@
 # Maison Reserve
 
-**v5.2.0** · Command Center for Premium Retail Operations
+**v5.3.0** · Command Center for Premium Retail Operations
 
 A frontend-only portfolio demo: a full retail operations dashboard for a premium wine & spirits
 retailer — orders, inventory, delivery, loyalty, inbox, marketplace channels, and automation —
@@ -53,10 +53,16 @@ hairline-bordered rounded cards, a collapsible sidebar, and a condensed KPI bar 
 full-width data table with a collapsible auxiliary panel. Emerald marks live/positive status
 and primary actions; amber marks low-stock warnings. "Daylight Cellar" is the light-mode
 companion theme (toggle in the sidebar). Typeset in Public Sans (UI/body/headings) with
-JetBrains Mono for SKUs, timestamps and tabular data. Tokens are documented in
-[DESIGN.md](./DESIGN.md); styling is mid-migration from a single global stylesheet
-(`src/styles.css`) to Tailwind CSS utility classes (`src/tailwind.css`) — see CHANGELOG v5.0.0
-for which surfaces have moved. Product imagery is generated inline SVG art
+JetBrains Mono strictly for figures — currency, counts, SKUs, timestamps — never for the prose
+around them. Tokens are documented in [DESIGN.md](./DESIGN.md).
+
+Styling is mid-migration from a single global stylesheet (`src/styles.css`) to Tailwind CSS
+utility classes (`src/tailwind.css`). As of v5.3.0 both halves share one palette: the legacy
+stylesheet's token blocks were repainted to the same zinc/emerald system, so no page is still on
+the old warm "Twilight Cellar" browns. What differs between them is *structure*, not color —
+Command Center and Inventory use bordered cards and rounded surfaces, while the unmigrated pages
+keep the older hairline-divider, square-cornered language. See CHANGELOG v5.0.0 for which
+surfaces have moved and v5.3.0 for the repaint. Product imagery is generated inline SVG art
 (`src/components/BottleArt.jsx`), not photography.
 
 ## Changelog
